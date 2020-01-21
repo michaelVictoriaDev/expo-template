@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "PayGWA",
+    "description": "Everything you need to sell more real estate",
+    "slug": "PayGWA",
+    "privacy": "public",
+    "sdkVersion": "33.0.0",
+    "platforms": ["ios", "android"],
+    "version": "3.0.3",
+    "orientation": "portrait",
+    "primaryColor": "#cccccc",
+    "icon": "./assets/icons/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "usesIcloudStorage": true,
+      "bundleIdentifier": "com.xtendly.paygwa",
+      "buildNumber": "1",
+      "supportsTablet": true
+    },
+    "android": {
+      "versionCode": 1,
+      "package": "com.xtendly.paygwa",
+      "permissions": [
+        "WAKE_LOCK"
+      ]
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#3F71D7"
+    }
+  }
+}

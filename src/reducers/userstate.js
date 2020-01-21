@@ -1,0 +1,45 @@
+import {
+	STORE_USER, LOGIN_LOADING, FETCH_LOGIN_BEGIN, FETCH_LOGIN_SUCCESS, FETCH_LOGIN_FAIL, HANDLE_APPSTATE
+  } from '../actions/types';
+
+import { AppState } from 'react-native';
+
+initialState = {
+  userObject : {},
+  isLoginLoading : false,
+  loginError : null,
+  globalAppState : AppState.currentState
+}
+
+const userState = ( state = initialState , action ) => {
+  switch ( action.type ) {
+    case FETCH_LOGIN_BEGIN :
+      return {
+        ...state,
+        isLoginLoading : true,
+        loginError : null
+      };
+    case FETCH_LOGIN_SUCCESS :
+      return {
+        ...state,
+        isLoginLoading: false,
+        userObject: action.payload.userObject
+      };
+    case FETCH_LOGIN_FAIL :
+      return {
+        ...state,
+        isLoginLoading : false,
+        loginError : action.payload.error,
+        userObject : {},
+      };
+    case HANDLE_APPSTATE :
+      return {
+        ...state,
+        globalAppState : action.globalAppState
+      }
+	  default:
+		  return state;  
+  }
+}
+
+export default userState;
