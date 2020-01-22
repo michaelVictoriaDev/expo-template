@@ -1,11 +1,11 @@
 import {
-	STORE_USER, LOGIN_LOADING, FETCH_LOGIN_BEGIN, FETCH_LOGIN_SUCCESS, FETCH_LOGIN_FAIL, HANDLE_APPSTATE
+	FETCH_LOGIN_BEGIN, FETCH_LOGIN_SUCCESS, FETCH_LOGIN_FAIL, HANDLE_APPSTATE
   } from '../actions/types';
 
 import { AppState } from 'react-native';
 
 initialState = {
-  userObject : {},
+  userDetails : {},
   isLoginLoading : false,
   loginError : null,
   globalAppState : AppState.currentState
@@ -23,14 +23,14 @@ const userState = ( state = initialState , action ) => {
       return {
         ...state,
         isLoginLoading: false,
-        userObject: action.payload.userObject
+        userDetails: action.payload.userDetails
       };
     case FETCH_LOGIN_FAIL :
       return {
         ...state,
         isLoginLoading : false,
         loginError : action.payload.error,
-        userObject : {},
+        userDetails : {},
       };
     case HANDLE_APPSTATE :
       return {

@@ -9,7 +9,6 @@ import * as GoogleSignIn from 'expo-google-sign-in';
 import * as AppAuth from 'expo-app-auth';
 const { URLSchemes } = AppAuth;
 import * as Constants from 'expo-constants';
-import mobileAnalytics from '../utils/Amplitude/AmplitudeAnalytics';
 import Offline from '../components/OfflineNotice';
 
 class Login extends Component {
@@ -126,7 +125,7 @@ class Login extends Component {
 
   async componentWillMount() {
 
-    mobileAnalytics.logEvent(mobileAnalytics.events.LOGIN_PAGE);
+    // mobileAnalytics.logEvent(mobileAnalytics.events.LOGIN_PAGE);
 
     // Toast.show({text: JSON.stringify(AppAuth.URLSchemes), duration : 5000})
     try {

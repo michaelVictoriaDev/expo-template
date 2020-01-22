@@ -69,7 +69,7 @@ class MultiCustomHeader extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  userObject : state.userState.userObject,
+  userDetails : state.userState.userDetails,
 })
 
 

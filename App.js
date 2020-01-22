@@ -19,8 +19,8 @@ import { colors } from './src/utils/constants';
 import { createStackNavigator, createSwitchNavigator, createDrawerNavigator, createAnimatedSwitchNavigator } from 'react-navigation';
 import NavigationService from './src/NavigationService';
 
-import LoginScreen from './src/screens/Login';
-
+import LoginScreen from './src/screens/Paygwa/Login';
+import MyAccounts from './src/screens/Paygwa/MyAccounts';
 
 
 import { CustomDrawerContent } from './src/components';
@@ -40,26 +40,26 @@ const AuthStack = createStackNavigator(
   }
 )
 
-// const LeadsStack = createStackNavigator(
-//   {
-//     Lead: {
-//       screen: LeadsScreen,
-//     }
-//   },
-//   {
-//     initialRouteName: 'Lead',
-//     gesturesEnabled: false,
-//     navigationOptions : {
-//       header : null,
-//     }
-//   }
-// )
+const MyAccountsStack = createStackNavigator(
+  {
+    MyAccounts: {
+      screen: MyAccounts,
+    }
+  },
+  {
+    initialRouteName: 'MyAccounts',
+    gesturesEnabled: false,
+    navigationOptions : {
+      header : null,
+    }
+  }
+)
 
 
 const DrawerStack = createDrawerNavigator(
   {
-    Leads : {
-      screen : LeadsStack,
+    MyAccounts : {
+      screen: MyAccountsStack,
     }
   },
   {

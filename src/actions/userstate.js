@@ -18,9 +18,9 @@ export const fetchLoginBegin = () => ({
 	type : FETCH_LOGIN_BEGIN
 })
 
-export const fetchLoginSuccess = ( userObject ) => ({
+export const fetchLoginSuccess = ( userDetails ) => ({
 	type : FETCH_LOGIN_SUCCESS,
-	payload : { userObject }
+	payload : { userDetails }
 })
 
 export const fetchLoginFail = ( error ) => ({
@@ -54,7 +54,7 @@ export function fetchLogin (dataObject) {
 				setTimeout( 
 					()=> {
 						dispatch(fetchLoginSuccess(dataObject.data)); 
-						NavigationService.navigate('Leads'); 
+						// NavigationService.navigate('Leads'); 
 					},
 					100
 				);		
@@ -197,9 +197,9 @@ export const getPlanTypeViaEmail = (email, fetchedUserInfo) => {
 								
 							
 								//Analytics
-								let combinedUserObject = Object.assign(fetchedUserInfo,dataObject.data);
-								dispatch(fetchLoginSuccess(combinedUserObject));
-								NavigationService.navigate('Leads');
+								let combineduserDetails = Object.assign(fetchedUserInfo,dataObject.data);
+								dispatch(fetchLoginSuccess(combineduserDetails));
+								// NavigationService.navigate('Leads');
 								break
 						}
 					}).catch((error) => {

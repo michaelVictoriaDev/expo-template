@@ -15,11 +15,11 @@ class MemberPicker extends Component {
     }
 
     componentWillMount() {
-        // this.props.getAllChildLead(this.props.userObject.user_id);
+        // this.props.getAllChildLead(this.props.userDetails.user_id);
     }
 
     render(){
-        if(this.props.childList.length > 0 && this.props.userObject.pay_plan_id == 4){
+        if(this.props.childList.length > 0 && this.props.userDetails.pay_plan_id == 4){
             return (
                 <View style = { styles.container }>
                     <Item picker style={{ borderColor: '#FFFF' }}>
@@ -69,9 +69,9 @@ class MemberPicker extends Component {
                                         //based on endpoint app.prosperna.com/web/get-child-users-selection-mobile?userId=${userId}
                                         return(
                                             <Picker.Item
-                                                key={this.props.userObject.user_id}
+                                                key={this.props.userDetails.user_id}
                                                 label="Me"
-                                                value={this.props.userObject.user_id}
+                                                value={this.props.userDetails.user_id}
                                             />
                                         )
                                     }
@@ -107,7 +107,7 @@ class MemberPicker extends Component {
 
 const mapStateToProps = (state) => ({
     childList : state.userLeadRecord.childList,
-    userObject : state.userState.userObject,
+    userDetails : state.userState.userDetails,
     dashboardStore: state.dashboardStore,
 })
 

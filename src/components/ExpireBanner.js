@@ -13,7 +13,7 @@ class ExpireBanner extends Component {
   constructor(props){
     super(props);
     this.state = {
-      plan_expiry_date : this.props.userObject.plan_expiry_date,
+      plan_expiry_date : this.props.userDetails.plan_expiry_date,
       pay_plan_name : null,
       
     }
@@ -24,9 +24,9 @@ class ExpireBanner extends Component {
   }
 
   componentWillMount() {
-    // console.log(this.props.userObject.plan_expiry_date)
-    this.props.userObject.pay_plan.map((item, index) => {
-      let payPlanId = this.props.userObject.pay_plan_id;
+    // console.log(this.props.userDetails.plan_expiry_date)
+    this.props.userDetails.pay_plan.map((item, index) => {
+      let payPlanId = this.props.userDetails.pay_plan_id;
 
       if(payPlanId == item.pay_plan_id){
         this.setState({ 
@@ -38,7 +38,7 @@ class ExpireBanner extends Component {
 
   render() {
     if (_.isNil(this.state.plan_expiry_date)) {
-        let accountDisabled =  this.props.userObject.is_disabled
+        let accountDisabled =  this.props.userDetails.is_disabled
         if (_.isEqual(accountDisabled, 1)) {
           return (
             <View style={styles.container}>
@@ -90,7 +90,7 @@ class ExpireBanner extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  userObject : state.userState.userObject
+  userDetails : state.userState.userDetails
 })
 
 export default connect(mapStateToProps)(ExpireBanner);

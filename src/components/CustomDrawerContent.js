@@ -7,9 +7,8 @@ import { connect } from 'react-redux';
 import styled from 'styled-components/native';
 import { colors, pRatioToFontSize } from '../utils/constants';
 import NavigationService from '../NavigationService';
-import Leads from '../screens/Leads';
 import { API_URL, WEB_URL } from 'react-native-dotenv';
-import { listenToNotifTimeStamp } from '../actions';
+// import { listenToNotifTimeStamp } from '../actions';
 import _ from 'lodash';
 
 const ContainerView = styled.View`
@@ -72,8 +71,9 @@ class CustomDrawerContent extends Component {
         <ItemContainer>
           <ScrollView>
             {/* <DrawerItems {...this.props} /> */}
-            <Content contentContainerStyle={{ flex: 1 }}>
-            
+            <Content contentContainerStyle={{ flex: 1 }}> 
+              {/* MY ACCOUNTS BUTTONS */}
+              {this.myAccountsDrawerButton()}
               {/*LOG-OUT*/}
               {this.logoutDrawerButton()}
 
@@ -83,6 +83,15 @@ class CustomDrawerContent extends Component {
         </ItemContainer>
       </ContainerView>
     )
+  }
+
+  myAccountsDrawerButton() {
+    <Button transparent block
+      onPress={() => NavigationService.navigate('MyAccounts')}
+      style={styles.drawer_button}>
+      <Ionicons name="ios-people" color={colors.WHITE} size={20} style={styles.drawer_button_icon} />
+      <Text uppercase={false} style={styles.drawer_button_text}>My Accounts</Text>
+    </Button>
   }
  
 
@@ -114,7 +123,7 @@ class CustomDrawerContent extends Component {
 };
 
 const mapStateToProps = (state) => ({
-  // userObject: state.userState.userObject,
+  // userDetails: state.userState.userDetails,
   // notificationObject: state.notificationStore.notificationObject,
 })
 

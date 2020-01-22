@@ -20,7 +20,7 @@ class CustomHeader extends Component {
 
   componentWillMount() {
     if (this.props.leftIconName == 'menu') {
-      this.props.getNotifCount(this.props.userObject.user_id);
+      this.props.getNotifCount(this.props.userDetails.user_id);
     }
     pRatioToFontSize()
     // console.log(pRatioToFontSize())
@@ -108,7 +108,7 @@ class CustomHeader extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  userObject: state.userState.userObject,
+  userDetails: state.userState.userDetails,
   notificationStore: state.notificationStore.notificationObject,
 })
 
