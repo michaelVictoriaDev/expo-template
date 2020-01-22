@@ -24,7 +24,7 @@
 ## Getting Started
 Clone this repository
 ```
-$ git clone git@github.com:udman/prosperna_mobile_ios.git new-project
+$ git clone git@github.com:udman/gwa_mobile.git new-project
 ```
 Install node modules, [Yarn](https://yarnpkg.com/en/) is highly recommended.
 ```
@@ -49,20 +49,7 @@ All PRs are welcome 💕
 
 ## Important Note Change the slug in app.json when you want to live
 
-# iOS
-```
-$  "slug": "prosperna_mobile_ios"
-```
 
-# Android
-```
-$  "slug": "prosperna"
-```
-
-# Staging
-```
-$  "slug": "prosperna"
-```
 
 expo account
 user name : joshuaprosperna
