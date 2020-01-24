@@ -4,10 +4,9 @@ import { Button, Text, Content, Footer } from 'native-base';
 import { MaterialCommunityIcons, FontAwesome, MaterialIcons, Entypo, Ionicons } from '@expo/vector-icons';
 // import { DrawerItems } from 'react-navigation';
 import { connect } from 'react-redux';
-import styled from 'styled-components/native';
+import styled from 'styled-components';
 import { colors, pRatioToFontSize } from '../utils/constants';
 import NavigationService from '../NavigationService';
-import { API_URL, WEB_URL } from 'react-native-dotenv';
 // import { listenToNotifTimeStamp } from '../actions';
 import _ from 'lodash';
 

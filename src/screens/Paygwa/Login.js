@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, PixelRatio, Image, Keyboard, Dimensions, Alert, Linking, Platform } from 'react-native';
+import { StyleSheet, PixelRatio, Image, Keyboard, Dimensions, Alert, Linking, Platform, ImageBackground, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { View, Text, Input, Item, Button, Icon, Toast } from 'native-base';
 import { colors, pRatioToFontSize } from '../../utils/constants';
@@ -9,6 +9,8 @@ import * as GoogleSignIn from 'expo-google-sign-in';
 import * as AppAuth from 'expo-app-auth';
 const { URLSchemes } = AppAuth;
 import * as Constants from 'expo-constants';
+import CustomText from '../../components/CustomText';
+import CustomTextBold from '../../components/CustomTextBold';
 import Offline from '../../components/OfflineNotice';
 
 class Login extends Component {
@@ -123,28 +125,6 @@ class Login extends Component {
         }
     }
 
-    async componentWillMount() {
-
-        // mobileAnalytics.logEvent(mobileAnalytics.events.LOGIN_PAGE);
-
-        // Toast.show({text: JSON.stringify(AppAuth.URLSchemes), duration : 5000})
-        try {
-            await GoogleSignIn.initAsync({
-                clientId: '1042681830620-3ha27slgidqan4keboiu4go80og87oe9.apps.googleusercontent.com',
-                isPromptEnabled: true,
-                // clientId : URLSchemes,
-            })
-                .then(async () => {
-                    await GoogleSignIn.signOutAsync();
-                })
-            // Toast.show({text : 'G: Successfully initiated.', duration : 5000})
-        }
-        catch (error) {
-            // Toast.show({text : 'G: Failed initiation.' + error, duration : 5000})
-            // console.log('Google init:', error)
-        }
-    }
-
     async componentDidMount() {
         await this.getPixelRatio();
         this.keyboardDidShowListener = Keyboard.addListener(
@@ -165,82 +145,76 @@ class Login extends Component {
 
     render() {
 
-        if (this.props.curState.userState.isLoginLoading) {
+        if (this.props.payGwaUserDetails.userState.isLoginLoading) {
             return (
                 <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                    <Image source={require("../../../assets/prosperna_loading.gif")} />
+                    <ActivityIndicator size="large" color ={colors.PRIMARY_COLOR} />
                 </View>
             )
-        }
-        else {
+        } else {
+
             return (
-                <View style={[styles.container, { flex: 1, }]}>
-                    <Offline />
+                <ImageBackground source={require('../../../assets/back-ground.png')} style={{ width: '100%', height: '100%' }} >
+                    <View style={[styles.container, { flex: 1, }]}>
+                        <Offline />
 
-                    {/* LOGO */}
-                    {
-                        this.state.isOnFocusInput ? null :
-                            <Image style={styles.prosperna_logo} source={require('../../../assets/screens/Login/prosperna_mobile_logo.png')} />
-                    }
-
-                    {/* PROSPERNA LABEL*/}
-
-                    <View style={styles.prosperna_label_container}>
-                        <Text style={[styles.prosperna_label, { fontSize: pRatioToFontSize(5) }]}>Prosperna</Text>
+                        {/* LOGO */}
                         {
-                            this.state.isOnFocusInput ?
-                                null
-                                :
-                                <Text style={[styles.prosperna_label, { fontSize: pRatioToFontSize(0) }]}>Log in to your Account</Text>
+                            this.state.isOnFocusInput ? null :
+                                <Image style={styles.gpwa_logo} source={require('../../../assets/screens/Login/paygwa-logo.png')} />
                         }
-                    </View>
 
-                    {/* LOGIN FORM */}
-                    <View style={[styles.login_form, { flex: this.state.isOnFocusInput ? 4 : 3, }]}>
+                        {/* PROSPERNA LABEL*/}
 
-                        {/* EMAIL ADDRESS */}
-                        <Item regular
-                            style={styles.text_input}>
-                            <Input
-                                ref={compId => {
-                                    this.componentId['emailField'] = compId
-                                }}
-                                autoCapitalize='none'
-                                placeholder={'Email Address'}
-                                placeholderTextColor='lightgray'
-                                keyboardType='email-address'
-                                onSubmitEditing={() => this.focusNextField('passField')}
-                                onChangeText={(input) => {
-                                    this.setState({
-                                        emailAdd: input
-                                    })
-                                }}
-                                value={this.state.emailAdd}
-                                blurOnSubmit={false}
-                            />
-                            <Icon name='person' style={{ color: 'lightgray' }} />
-                        </Item>
-                        <Item regular
-                            style={styles.text_input}>
-                            <Input
-                                ref={compId => {
-                                    this.componentId['passField'] = compId
-                                }}
-                                placeholder={'Password'}
-                                placeholderTextColor='lightgray'
-                                secureTextEntry={this.state.hidePassword}
-                                onChangeText={(input) => {
-                                    this.setState({
-                                        password: input
-                                    })
-                                }}
-                                blurOnSubmit={true}
-                                onSubmitEditing={() => {
-                                    this.manualLogin(this.state.emailAdd, this.state.password);
+                        <View style={styles.gpwa_label_container}>
+                            <CustomTextBold style={[styles.gpwa_label, { fontSize: pRatioToFontSize(0) }]}>Log in to your Account</CustomTextBold>
+                        </View>
 
-                                }}
-                            />
-                            <Icon name='eye' onPress={() => {
+                        {/* LOGIN FORM */}
+                        <View style={[styles.login_form, { flex: this.state.isOnFocusInput ? 4 : 3, }]}>
+
+                            {/* EMAIL ADDRESS */}
+                            <Item regular
+                                style={styles.text_input}>
+                                <Input
+                                    ref={compId => {
+                                        this.componentId['emailField'] = compId
+                                    }}
+                                    autoCapitalize='none'
+                                    placeholder={'Email Address'}
+                                    placeholderTextColor='lightgray'
+                                    keyboardType='email-address'
+                                    onSubmitEditing={() => this.focusNextField('passField')}
+                                    onChangeText={(input) => {
+                                        this.setState({
+                                            emailAdd: input
+                                        })
+                                    }}
+                                    value={this.state.emailAdd}
+                                    blurOnSubmit={false}
+                                />
+                                {/* <Icon name='person' style={{ color: 'lightgray' }} /> */}
+                            </Item>
+                            <Item regular
+                                style={styles.text_input}>
+                                <Input
+                                    ref={compId => {
+                                        this.componentId['passField'] = compId
+                                    }}
+                                    placeholder={'Password'}
+                                    placeholderTextColor='lightgray'
+                                    secureTextEntry={this.state.hidePassword}
+                                    onChangeText={(input) => {
+                                        this.setState({
+                                            password: input
+                                        })
+                                    }}
+                                    blurOnSubmit={true}
+                                    onSubmitEditing={() => {
+                                        this.manualLogin(this.state.emailAdd, this.state.password);
+                                    }}
+                                />
+                                {/* <Icon name='eye' onPress={() => {
                                 //TOGGLE EYE COLOR
                                 if (this.state.hidePassword == true) {
                                     this.setState({ eyeColor: 'black' })
@@ -249,78 +223,49 @@ class Login extends Component {
                                 }
                                 this.setState({ hidePassword: !(this.state.hidePassword) })
                             }}
-                                style={{ color: this.state.eyeColor, }} />
-                        </Item>
+                                style={{ color: this.state.eyeColor, }} /> */}
+                            </Item>
 
-                        {/* MANUAL SIGN IN */}
-                        <Button block rounded transparent
-                            style={[styles.buttons, { backgroundColor: colors.WHITE, borderRadius: 24, borderWidth: 0.5 }]}
-                            onPress={() =>
-                                // this.manualLogin(this.state.emailAdd,this.state.password)
-                                // this.manualLogin('wetpacsholder@gmail.com', '1234')
-                                this.manualLogin('michael@xtendly.com', '1234')
-                                // this.manualLogin('gstaana@xtendly.com', '1234')
-                                // this.manualLogin('peaches@prosperna.com', '1234')
-                                // this.manualLogin('raj@xtendly.com', '1234')
-                                // this.manualLogin('joshua@prosperna.com', '1234')
-                                // this.manualLogin('dennis@prosperna.com', '1234')
-                                // this.manualLogin('liannerex@gmail.com', '0000')
-                                // this.manualLogin('pamelad@garyhablero.realtor', '1234')
-                                // this.manualLogin('joshua@xtendly.com', '1234')
-                                // this.manualLogin('plusplan914@gmail.com', '1234')
-                            }>
-                            <Text style={styles.button_login_text}>Log in</Text>
-                        </Button>
-
-                        {/* GOOGLE SIGN IN */}
-                        <View style={[styles.buttons, { flexDirection: 'row', height: 45 }]}>
-                            <View style={{
-                                flex: 1, justifyContent: 'center', alignItems: 'center', borderColor: '#3F71D7', borderWidth: 1,
-                                borderTopLeftRadius: 5, borderBottomLeftRadius: 5,
-                            }}>
-                                <Image
-                                    source={require("../../../assets/screens/Login/google_logo_48.png")}
-                                />
-                            </View>
-
-                            <Button block
-                                onPress={() => this.props.dispatch(signInWithGoogleAsync())}
-                                style={{
-                                    flex: 4, backgroundColor: '#3F71D7', borderTopRightRadius: 5, borderBottomRightRadius: 5,
-                                    borderTopLeftRadius: 0, borderBottomLeftRadius: 0,
-                                    borderColor: '#3F71D7'
-                                }}>
-                                <Text style={{ color: 'white', fontSize: 16, textAlign: 'right', marginHorizontal: 'auto', }}>Sign in with Google</Text>
+                            {/* MANUAL SIGN IN */}
+                            <Button block rounded transparent
+                                style={[styles.buttons, { backgroundColor: colors.LIGHT_GREEN, borderRadius: 6, borderWidth: 0.5, height: 50 }]}
+                                onPress={() =>
+                                    // this.manualLogin(this.state.emailAdd,this.state.password)
+                                    this.manualLogin('Relyant', 'Relyant01')
+                                }>
+                                <CustomText style={{ color: colors.WHITE }}>Login</CustomText>
                             </Button>
-                        </View>
 
-                        {/* Forgot */}
-                        <View style={{ paddingTop: 0, paddingBottom: 0, height: 35 }}>
+
+                            {/* Forgot */}
+                            <View style={{ paddingTop: 0, paddingBottom: 0, height: 70 }}>
+                                <Button block transparent
+                                    onPress={() => Linking.openURL('https://app.prosperna.com/')}
+                                    style={{ alignSelf: 'center' }}>
+                                    <CustomText style={[styles.demo_text, { color: colors.WHITE }]}>Forgot your </CustomText>
+                                    <CustomText style={[styles.demo_text, { color: colors.WHITE, textDecorationLine: 'underline' }]}> Password?</CustomText>
+                                </Button>
+                            </View>
+                            {/* DEMO */}
                             <Button block transparent
-                                onPress={() => Linking.openURL('https://app.prosperna.com/')}
-                                style={{ alignSelf: 'center' }}>
-                                <Text style={styles.demo_text}>Forgot Password</Text>
+                                onPress={() => Linking.openURL('https://www.prosperna.com/request-for-a-free-demo/')}
+                                style={{}}>
+                                <View style={{ alignSelf: 'center', flexDirection: 'row', height: 30 }}>
+                                    <CustomText style={[styles.demo_text, { color: colors.WHITE }]} >Don't have an account?</CustomText>
+                                    <CustomText style={[styles.demo_text, { color: colors.WHITE, textDecorationLine: 'underline' }]}>Sign Up Now </CustomText>
+                                </View>
                             </Button>
                         </View>
-                        {/* DEMO */}
-                        <Button block transparent
-                            onPress={() => Linking.openURL('https://www.prosperna.com/request-for-a-free-demo/')}
-                            style={{}}>
-                            <View style={{ alignSelf: 'center', flexDirection: 'row', height: 30 }}>
-                                <Text style={[styles.demo_text, { color: '#BDC2C3' }]} >Not using Prosperna? </Text>
-                                <Text style={styles.demo_text}>Book a demo today!</Text>
-                            </View>
-                        </Button>
                     </View>
-                </View>
+                </ImageBackground>
             );
         }
-
     }
 
 }
 const mapStateToProps = (state) => ({
-    curState: state
+    payGwaUserDetails: state
+
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -332,39 +277,39 @@ export default connect(mapStateToProps)(Login);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 0,
-        backgroundColor: colors.PRIMARY_COLOR
+        paddingTop: 100,
+        justifyContent: 'center',
+        // backgroundColor: colors.PRIMARY_COLOR
     },
-    prosperna_logo: {
-        flex: Dimensions.get('screen').height <= 570 ? 1 : 2,
+    gpwa_logo: {
         alignSelf: 'center',
         height: Dimensions.get('screen').height <= 570 ? 120 : 150,
         width: Dimensions.get('screen').height <= 570 ? 120 : 150,
         resizeMode: 'contain'
     },
-    prosperna_label_container: {
-        flex: 1,
+    gpwa_label_container: {
+        flex: 0.5,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    prosperna_label: {
+    gpwa_label: {
         color: '#FFF'
     },
     login_form: {
         flex: 4,
-        backgroundColor: '#FFF',
-        paddingHorizontal: 15,
+        paddingHorizontal: 35,
     },
     buttons: {
-        marginTop: 10,
+        marginTop: 25,
     },
     text_input: {
-        borderRadius: 10,
+        backgroundColor: colors.WHITE,
+        borderRadius: 6,
         borderColor: 'lightgray',
-        marginTop: 15,
+        marginTop: 25,
     },
     demo_text: {
         textAlign: 'center',
-        fontSize: pRatioToFontSize(-0.8)
+        fontSize: pRatioToFontSize(-0.5)
     }
 });

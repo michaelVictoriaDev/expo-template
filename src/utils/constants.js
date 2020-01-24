@@ -4,13 +4,13 @@ import RF from "react-native-responsive-fontsize";
 
 export const colors = {
   WHITE: '#FFFFFF',
-  PINK_50: '#FCE4EC',
-  PINK_100: '#F8BBD0',
+  LIGHT_GREEN: '#4caf50',
+  BLACK: '#000000',
   PINK_200: '#F48FB1',
   PINK_300: '#F06292',
   PINK_400: '#EC407A',
   PINK_500: '#E91E63',
-  PRIMARY_COLOR: '#3F71D7',
+  PRIMARY_COLOR: '#1788c7',
 };
 
 export const timesPicker = [

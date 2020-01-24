@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components/native';
+import styled from 'styled-components';
 import { FormattedWrapper, FormattedMessage } from 'react-native-globalize';
 
 import { Button } from '../components';
@@ -23,7 +23,7 @@ const ButtonContainer = styled.View`
 class WelcomeScreen extends Component {
 	render() {
     return (
-			<FormattedWrapper locale={this.props.curState.Language.language} messages={messages}>
+			<FormattedWrapper locale={this.props.payGwaUserDetails.Language.language} messages={messages}>
       <ContainerView>
 				<TitleText>
 				  <FormattedMessage
@@ -40,7 +40,7 @@ class WelcomeScreen extends Component {
 }
 
 const mapStateToProps = (state) => ({
-	curState:state
+	payGwaUserDetails:state
 });
 
 export default connect(mapStateToProps, {

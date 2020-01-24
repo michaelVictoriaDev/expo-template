@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { List, Button, Container, Header, Left, Body, Right, Badge, Footer, FooterTab, Icon, Input, Picker, Toast, CheckBox, Content, Text, ListItem, Form, Item } from 'native-base';
+import { List, Button, Container, Header, Left, Body, Right, Badge, Footer, FooterTab, Icon, Input, Picker, Toast, CheckBox, Content, ListItem, Form, Item } from 'native-base';
 import {
   PixelRatio, StyleSheet, Dimensions, TouchableHighlight, Image, Alert, AppState, FlatList, Linking, View, ActivityIndicator, Platform
 } from 'react-native';
-import { MaterialCommunityIcons, MaterialIcons, Entypo } from '@expo/vector-icons';
+import { SimpleLineIcons, MaterialIcons, Entypo } from '@expo/vector-icons';
 import { FontAwesome } from 'react-native-vector-icons';
 import UserAvatar from 'react-native-user-avatar';
 import Moment from 'moment';
 import Modal from 'react-native-modal';
 import { colors, pRatioToFontSize } from '../../utils/constants';
-import { API_URL, API_URLL, WEB_URL, LEADLISTING_URL, DASHBOARD_URL, QA_URL } from 'react-native-dotenv';
+import CustomText from '../../components/CustomText';
 import OfflineNotice from '../../components/OfflineNotice';
 import CustomHeader from '../../components/MultiCustomHeader'
 
@@ -121,17 +121,27 @@ class MyAccount extends Component {
         <CustomHeader
           leftIconName="menu"
           leftButtonFunction={this.props.navigation.openDrawer}
-          title="Leads"
-          RightIcon={<Right></Right>}
+          title="My Accounts"
+          RightIcon={<Right style={{ paddingRight: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, flex: 1 }}>
+            <Button
+              transparent style={{ paddingLeft: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, elevation: 0 }} onPress={() => console.log('icon')} >
+              <Icon  >
+                <SimpleLineIcons
+                  style={{ backgroundColor: colors.WHITE, color: colors.WHITE , fontSize: pRatioToFontSize(+1) > 20 ? 20 : pRatioToFontSize(+1) }} name={'user'} />
+              </Icon>
+            </Button>
+          </Right>}
         />
         <OfflineNotice />
         {/* <Content> <- This component conflicts with FlatList and crashed the infinite scrolling. */}
         <View style={{ flex: 1 }}
           onLayout={event => this.setState({ width: event.nativeEvent.layout.width, height: event.nativeEvent.layout.height })}
         >
-        Test
+        <CustomText>
+           Test
+        </CustomText>
          </View>
-        }
+        
       </Container>
     )
   }

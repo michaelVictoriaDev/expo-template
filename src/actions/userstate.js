@@ -1,7 +1,6 @@
 import { FETCH_LOGIN_BEGIN, FETCH_LOGIN_SUCCESS, FETCH_LOGIN_FAIL, HANDLE_APPSTATE } from './types';
 import { Platform, ToastAndroid } from 'react-native';
-import { IOS_CLIENT_ID, IOS_STANDALONE_APP_CLIENT_ID, ANDROID_CLIENT_ID, ANDROID_STANDALONE_APP_CLIENT_ID  } from 'react-native-dotenv';
-import { API_URL, API_URLL, WEB_URL} from 'react-native-dotenv';
+import { PAYGWA_URL } from 'react-native-dotenv';
 import { Google } from 'expo';
 import * as GoogleSignIn from 'expo-google-sign-in';
 import axios from 'react-native-axios';
@@ -18,9 +17,9 @@ export const fetchLoginBegin = () => ({
 	type : FETCH_LOGIN_BEGIN
 })
 
-export const fetchLoginSuccess = ( userDetails ) => ({
+export const fetchLoginSuccess = ( userDetails, userPersonId) => ({
 	type : FETCH_LOGIN_SUCCESS,
-	payload : { userDetails }
+	payload: { userDetails, userPersonId }
 })
 
 export const fetchLoginFail = ( error ) => ({
@@ -35,41 +34,80 @@ export function fetchLogin (dataObject) {
 		//SHOW LOADING
 		dispatch(fetchLoginBegin());
 		axios.post(
-			'/manual/login', //endpoint url
+			PAYGWA_URL+'/api/v1/user-login', //endpoint url
 			{//data
-				emailAddress : dataObject.emailAddress,
-				password : dataObject.password
+				webUserPersonIdTypeCode: 'WEB',
+				userName : dataObject.emailAddress,
+				password : dataObject.password,
+				webAccessFlag: 'ALWD',
+				wrongPasswordCountPersonCharTypeCode: 'WPCOUNT',
+				cisDivision: 'GWA',
+				wrongPasswordCountLimit: '5'
 			},
 			{//config
-				baseURL : API_URL,
+
 				headers: { 'Content-Type': 'application/json' }
 			}
 		)
-		.then (dataObject => {
-			if (dataObject.data.status == true) {
-				//Analytics
-			
-				
-				//Analytics
-				setTimeout( 
-					()=> {
-						dispatch(fetchLoginSuccess(dataObject.data)); 
-						// NavigationService.navigate('Leads'); 
-					},
-					100
-				);		
-			} else {
-				setTimeout( 
-					() => {
-						dispatch(fetchLoginFail(`Log in failed. Username or password might be incorrect. Try again or click "forgot your password".`));
-					},
-					100
-				);
+		.then (response => {
+
+			const loginSuccessful = response.data.result.loginSuccessful
+			const status = response.status
+			if (!(status === null)) {
+				if (loginSuccessful.toString() === "true") {
+					Toast.show({
+						text: `Log in successfully..Please wait.`,
+						duration: 3000,
+						type: 'success'
+					})
+					NavigationService.navigate('MyAccounts');
+				}
+				else {
+					let errMsg = ""
+					if (status.loginMessage === "Exceeded number of wrong password") {
+						errMsg = "You have exceeded the maximum number of failed login attempts"
+					}
+					else {
+						errMsg = status.loginMessage
+					}
+
+					Toast.show({
+						text: errMsg,
+						duration: 3000,
+						type: 'danger'
+					})
+				}
+			}
+			else {
 				Toast.show({
-					text: `Log in failed. Username or password might be incorrect. Try again or click "forgot your password".`,
-					duration : 3000,
-					type : 'danger'
+					text: `Server not responding.Please try again later.`,
+					duration: 3000,
+					type: 'danger'
 				})
+
+			}
+			const premiseData = response.data.result.premiseData;
+			if (Array.isArray(premiseData)) {
+				console.log('personId', premiseData[0].PersonID)
+			}
+			const personId = premiseData[0].PersonID
+			if (response.data.result.loginSuccessful !== 'false') {
+				if (premiseData.length > 1) {
+					var accountIds = []
+					for (var count = 0; count < premiseData.length; count++) {
+						accountIds.push([premiseData[count].AccountID, premiseData[count].PremiseInfo.replace(/,/g, ""), premiseData[count].customerClass])
+					}
+					// console.log('accountIds', accountIds)
+					dispatch(fetchLoginSuccess(accountIds, personId )); 
+					// localStorage.setItem('accountIds', accountIds)
+				}
+				else {
+					var accountId = []
+					accountId.push([premiseData[0].AccountID, premiseData[0].PremiseInfo.replace(/,/g, ""), premiseData[0].customerClass])
+					// console.log('accountId', accountId)
+					dispatch(fetchLoginSuccess(accountIds, personId)); 
+					// localStorage.setItem('accountId', accountId)
+				}
 			}
 		})
 		.catch(error => {
@@ -112,7 +150,7 @@ export function signInWithGoogleAsync () {
 			if (result.type === 'success') {
 				
 
-				axios.get(API_URL + 'get-user-info-via-email/' + result.user.email)
+				axios.get(PAYGWA_URL + 'get-user-info-via-email/' + result.user.email)
 					.then(response => {
 						if (response.data.data.success == true) {
 							
@@ -164,13 +202,13 @@ export function signInWithGoogleAsync () {
 //GET USER PLAN TYPE VIA EMAIL (IF USER USED GMAIL TO LOGIN)
 export const getPlanTypeViaEmail = (email, fetchedUserInfo) => {
 	return dispatch => {
-		axios.get(API_URL + 'user/get/plan-type/' + email)
+		axios.get(PAYGWA_URL + 'user/get/plan-type/' + email)
 		// .then( (response) => { return response.json() })
 		.then( (dataObject) => {
 			if (dataObject.data.status == true) {
 
 				//CHECKING EMAIL ON PROSPERNA-DB
-					axios.get(API_URL + 'user/exist?emailAddress=' + email)
+					axios.get(PAYGWA_URL + 'user/exist?emailAddress=' + email)
 					// .then((response) => response.json())
 					.then((responseJson) => {
 						switch (responseJson.data) {

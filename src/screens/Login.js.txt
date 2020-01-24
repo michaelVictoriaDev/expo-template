@@ -165,7 +165,7 @@ class Login extends Component {
 
   render() {
 
-    if (this.props.curState.userState.isLoginLoading) {
+    if (this.props.payGwaUserDetails.userState.isLoginLoading) {
       return (
         <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
           <Image source={require("../../assets/prosperna_loading.gif")} />
@@ -320,7 +320,7 @@ class Login extends Component {
 
 }
 const mapStateToProps = (state) => ({
-  curState: state
+  payGwaUserDetails: state
 });
 
 const mapDispatchToProps = (dispatch) => ({

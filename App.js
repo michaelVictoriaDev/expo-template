@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { SafeAreaView, Platform } from 'react-native';
 import { Provider, connect } from 'react-redux';
 // import { ThemeProvider } from 'styled-components';
-// import styled from 'styled-components/native';
+// import styled from 'styled-components';
 // import { FormattedWrapper } from 'react-native-globalize';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
@@ -19,6 +19,7 @@ import { colors } from './src/utils/constants';
 import { createStackNavigator, createSwitchNavigator, createDrawerNavigator, createAnimatedSwitchNavigator } from 'react-navigation';
 import NavigationService from './src/NavigationService';
 
+import InitialLoginScreen from './src/screens/Paygwa/InitialLogin';
 import LoginScreen from './src/screens/Paygwa/Login';
 import MyAccounts from './src/screens/Paygwa/MyAccounts';
 
@@ -28,15 +29,15 @@ import { Root, Container } from "native-base";
 
 const AuthStack = createStackNavigator(
   {
-    Login : {
-      screen : LoginScreen,
+    InitialLogin : {
+      screen: InitialLoginScreen,
       navigationOptions : {
         header : null
       }
     }
   },
   {
-    initialRouteName : 'Login'
+    initialRouteName: 'InitialLogin'
   }
 )
 
@@ -72,10 +73,29 @@ const DrawerStack = createDrawerNavigator(
   }
 )
 
+const InitialStack = createStackNavigator(
+  {
+    InitialLogin: {
+      screen: InitialLoginScreen,
+    },
+    Login: {
+      screen: LoginScreen
+    }
+  },
+  {
+    initialRouteName: 'InitialLogin',
+    gesturesEnabled: false,
+    navigationOptions: {
+      header: null,
+    }
+  }
+)
+
 
 const CombinedStack = createSwitchNavigator(
   {
     AuthStack : AuthStack,
+    InitialStack: InitialStack,
     DrawerStack: DrawerStack
   },
   {
@@ -96,9 +116,8 @@ export default class App extends Component {
   
   async componentDidMount() {
     await Font.loadAsync({
-      'Roboto': require('native-base/Fonts/Roboto.ttf'),
-      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
-      ...Ionicons.font,
+      'Lato': require('./assets/fonts/Lato-Regular.ttf'),
+      'Lato_Bold': require('./assets/fonts/Lato-Bold.ttf')
     });
     this.setState({
       isFontLoading : false
