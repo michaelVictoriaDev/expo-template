@@ -10,6 +10,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FontAwesome } from '@expo/vector-icons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import NavigationService from '../NavigationService';
+import { Grid, Row, Col } from 'react-native-easy-grid';
 
 // const MultiCustomHeader = (props) => {
 class MultiCustomHeader extends Component {
@@ -33,10 +34,10 @@ class MultiCustomHeader extends Component {
         <Left style={{ flex: 1 }}>
           { this.props.LeftIcon == null ? 
   
-          <Button style={{paddingLeft: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, elevation : 0}} onPress={() => this.props.leftButtonFunction()
+          <Button style={{ paddingLeft: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, elevation : 0}} onPress={() => this.props.leftButtonFunction()
           }>
             <Icon
-                style={{ color: colors.WHITE, fontSize: pRatioToFontSize(+1) > 30 ? 30 : pRatioToFontSize(+1) }}
+                style={{ color: colors.WHITE, fontSize: pRatioToFontSize(+2) > 30 ? 30 : pRatioToFontSize(+2) }}
               name={this.props.leftIconName == null ? 'arrow-back' : this.props.leftIconName}
             />
           </Button> 

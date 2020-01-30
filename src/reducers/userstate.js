@@ -5,10 +5,11 @@ import {
 import { AppState } from 'react-native';
 
 initialState = {
-  userDetails : {},
+  accountIds : {},
   userPersonId: null,
   isLoginLoading : false,
   loginError : null,
+  accountId: {},
   globalAppState : AppState.currentState
 }
 
@@ -24,16 +25,18 @@ const userState = ( state = initialState , action ) => {
       return {
         ...state,
         isLoginLoading: false,
-        userDetails: action.payload.userDetails,
-        userPersonId: action.payload.userPersonId
+        accountIds: action.payload.accountIds,
+        userPersonId: action.payload.userPersonId,
+        accountId: action.payload.accountId,
       };
     case FETCH_LOGIN_FAIL :
       return {
         ...state,
         isLoginLoading : false,
         loginError : action.payload.error,
-        userDetails : {},
-        userPersonId: null
+        accountIds : {},
+        userPersonId: null,
+        accountId: {}
       };
     case HANDLE_APPSTATE :
       return {

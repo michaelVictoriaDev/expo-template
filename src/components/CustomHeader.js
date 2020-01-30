@@ -38,7 +38,7 @@ class CustomHeader extends Component {
             <Button style={{ paddingLeft: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, elevation: 0 }} onPress={() => this.props.leftButtonFunction()
             }>
               <Icon
-                style={{ color: colors.WHITE, fontSize: pRatioToFontSize(+1) > 30 ? 30 : pRatioToFontSize(+1) }}
+                style={{ color: colors.WHITE, fontSize: pRatioToFontSize(+2) > 30 ? 30 : pRatioToFontSize(+2) }}
                 name={this.props.leftIconName == null ? 'arrow-back' : this.props.leftIconName}
               />
             </Button>

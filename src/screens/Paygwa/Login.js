@@ -265,7 +265,6 @@ class Login extends Component {
 }
 const mapStateToProps = (state) => ({
     payGwaUserDetails: state
-
 });
 
 const mapDispatchToProps = (dispatch) => ({
