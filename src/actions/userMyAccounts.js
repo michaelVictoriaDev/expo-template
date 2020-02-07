@@ -13,7 +13,7 @@ import {
     SAVE_ORDER_DATA,
     FETCH_PAYMENT_HISTORY_LIST
 } from './types';
-
+import { Toast } from 'native-base';
 import { PAYGWA_URL, DASHBOARD_URL, PAYNOW_URL } from 'react-native-dotenv';
 
 import NavigationService from '../NavigationService'; /* <-
@@ -80,6 +80,11 @@ function savePaymentToCCB(recepitNum, accountId, amount, payEezyResult) {
             })
             .catch(error => {
                 reject(error);
+                Toast.show({
+                    text: 'savePaymentToCCB, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     });
 }
@@ -104,6 +109,11 @@ function savePaymentToMarketingDB(status, recepitNum, postData, payEezyResult, f
             })
             .catch(error => {
                 reject(error);
+                Toast.show({
+                    text: 'savePaymentToMarketingDB, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     });
 }
@@ -130,6 +140,11 @@ function saveOverallPayment(postData, payEezyResult, finalTransDate) {
             })
             .catch(error => {
                 reject(error);
+                Toast.show({
+                    text: 'saveOverallPayment, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     });
 }
@@ -158,6 +173,11 @@ function sendPaymentStatEmail(postData, accountIdsList, payEezyResult, transDate
             })
             .catch(error => {
                 reject(error);
+                Toast.show({
+                    text: 'sendPaymentStatEmail, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     });
 }
@@ -237,6 +257,11 @@ export const savePaymentData = (postData) => dispatch => {
             )
             .catch((error) => {
                 reject(error)
+                Toast.show({
+                    text: 'savePaymentData, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     })
 }
@@ -265,6 +290,11 @@ export const validateVisaPayment = (accountId) => dispatch => {
             })
             .catch((error) => {
                 reject(error)
+                Toast.show({
+                    text: 'validateVisaPayment, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     });
 }
@@ -357,6 +387,11 @@ export const fetchMultipleLatestBill = (accountId) => dispatch => {
             })
             .catch((error) => {
                 reject(error)
+                Toast.show({
+                    text: 'fetchMultipleLatestBill, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     });
 }
@@ -454,6 +489,11 @@ export const fetchMultipleAddOpptyRequest = (accountId, personId) => dispatch =>
             )
             .catch((error) => {
                 reject(error)
+                Toast.show({
+                    text: 'fetchMultipleAddOpptyRequest, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     })
 }
@@ -491,6 +531,11 @@ export const submitHelpAndSupport = (postData) => dispatch => {
             })
             .catch(error => {
                 reject(error);
+                Toast.show({
+                    text: 'submitHelpAndSupport, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     });
 }
@@ -564,6 +609,11 @@ export const fetchPaymentHistory = (accountId) => dispatch => {
             })
             .catch(error => {
                 console.log(error);
+                Toast.show({
+                    text: 'fetchPaymentHistory, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     });
 }
@@ -608,6 +658,11 @@ export const fetchBillsList = (accountId) => dispatch => {
             })
             .catch(error => {
                 reject(error);
+                Toast.show({
+                    text: 'fetchBillsList, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     });
 }
@@ -666,6 +721,11 @@ export const updateUserPassword = (postData) => dispatch => {
             })
             .catch(error => {
                 reject(error);
+                Toast.show({
+                    text: 'fetchBillsList, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     });
 }
@@ -710,6 +770,11 @@ export const updateUserDetails = (postData) => dispatch => {
             })
             .catch(error => {
                 reject(error);
+                Toast.show({
+                    text: 'updateUserDetails, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     });
 }
@@ -769,6 +834,11 @@ export const getListSurvey = () => dispatch => {
             })
             .catch(error => {
                 reject(error);
+                Toast.show({
+                    text: 'getListSurvey, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     })
 }
@@ -806,6 +876,11 @@ export const submitSurvey = (postData) => dispatch => {
             })
             .catch(error => {
                 reject(error);
+                Toast.show({
+                    text: 'submitSurvey, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     });
 }
@@ -841,6 +916,11 @@ export const getViewBillData = (billID) => dispatch => {
             })
             .catch(error => {
                 reject(error);
+                Toast.show({
+                    text: 'getViewBillData, Server Error:' + error,
+                    duration: 3000,
+                    type: 'danger'
+                })
             })
     });
 }

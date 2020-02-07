@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { List, Button, Container, Header, Left, Body, Right, Badge, Footer, FooterTab, Icon, Input, Picker, Toast, CheckBox, Content, ListItem, Form, Item, Text } from 'native-base';
 import {
-  PixelRatio, StyleSheet, Dimensions, TouchableHighlight, Image, Alert, AppState, FlatList, Linking, View, ActivityIndicator, Platform
+  PixelRatio, StyleSheet, Dimensions, TouchableHighlight, Image, Alert, AppState, FlatList, Linking, View, ActivityIndicator, Platform, TouchableOpacity, TouchableWithoutFeedback
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -28,9 +28,11 @@ class MyAccount extends Component {
     super(props);
     // const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
-      selectedAccounts :[],
+      selectedAccountsId: [],
+      selectedAccounts: [],
       selectMode: false,
-      isLoading: true
+      isLoading: true,
+      selectAll: false,
     }
   }
 
@@ -40,20 +42,26 @@ class MyAccount extends Component {
       let sortedServiceLocation = []
       let sortedAccountSummary = []
       for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
-        sortedServiceLocation.push(this.props.dashboard.orderData.accountSummary[count].serviceLocation)
+        sortedServiceLocation.push(this.props.dashboard.orderData.accountSummary[count].accID)
       }
       for (let count = 0; count < sortedServiceLocation.sort().length; count++) {
         for (let count1 = 0; count1 < this.props.dashboard.orderData.accountSummary.length; count1++) {
-          if (sortedServiceLocation.sort()[count] === this.props.dashboard.orderData.accountSummary[count1].serviceLocation) {
+          if (sortedServiceLocation.sort()[count] === this.props.dashboard.orderData.accountSummary[count1].accID) {
             sortedAccountSummary.push(this.props.dashboard.orderData.accountSummary[count1])
+            break;
           }
         }
       }
+      console.log("sortedAccountSummary.lengthsortedAccountSummary.lengthsortedAccountSummary.length", sortedAccountSummary.length)
       this.setState({
         accountSummary: sortedAccountSummary,
       });
-      if (this.state.accountSummary.length >= this.state.userAccDetails.accountId.length) {
-        console.log("stopped!!!!!!")
+      if (this.state.userAccDetails.accountId.length === this.state.accountSummary.length) {
+        const getAllAccountIds = this.state.accountSummary.map(a => a.accID)
+        this.setState({
+          selectedAccountIdSorted: getAllAccountIds
+        })
+        console.log("stopped!!!!!!");
         clearInterval(timer);
       }
     }, 1000);
@@ -95,20 +103,6 @@ class MyAccount extends Component {
 
       sessionAccountId = accountIds;
     }
-    this.setState({
-      isMultipleAccount: sessionAccountId.length > 1 ? true : false
-    }, () => {
-      this.props.saveAccountId(sessionAccountId[0][0])
-        .then(() => {
-          this.props.savePremiseAddress(sessionAccountId[0][1])
-            .then(() => {
-              this.setState({
-                ...this.state,
-                child: MultipleAccView
-              })
-            })
-        })
-    })
     sessionPersonId = this.props.userPersonId
     this.setState({
       ...this.state,
@@ -175,101 +169,137 @@ class MyAccount extends Component {
       }, 1000);
     }
   }
+  //ON PRESS ON LEAD
+  
+  onPressOnAccount(i) {
+
+    if (this.state.selectMode) {
+      let selected = this.state.selectedAccounts; 
+      let selectedAccountsId = this.state.selectedAccountsId 
+
+      if (selectedAccountsId.indexOf(i.accID) == -1) {
+        
+        selectedAccountsId.push(i.accID);
+        selected.push(i) // insert array of object
+      } else {
+        let index = selectedAccountsId.indexOf(i.accID); 
+        // _.remove(selected, (e) => {
+        //   return e !== i.accID
+        // })
+        selectedAccountsId.splice(index, 1);
+        selected.splice(index, 1);
+      }
+
+      this.setState({
+        selectedAccounts: selected,
+        selectedAccountsId: selectedAccountsId
+      });
+    } else {
+      console.log('Next Screen')
+      // this.props.navigation.navigate('LeadProfile',
+      //   {
+      //     accountSummary: i
+      //   }
+
+    }
+    console.log(this.state.selectedAccounts)
+    console.log(this.state.selectedAccountsId)
+  }
 
   //FUNCTION FOR COMPONENT OF EACH ITEM IN LEAD LISTING
   renderItemsInfiniteScroll(itemIndex, i) {
-    let sl = this.state.selectedLeads;
+    let sl = this.state.selectedAccountsId
     return (
-      <TouchableHighlight underlayColor={colors.GRAYISHRED} onPress={() => alert('You tapped the button!')} onLongPress={() => alert('You long-pressed the button!') }>
-      <Grid>
-        <Row key={itemIndex} style={{ borderBottomWidth: .3, borderColor: '#3b4043', paddingTop: 10, paddingBottom: 10 }}>
-        <Col size={10} style={{
-            display: 'flex',
-            alignItems: 'center',
-          justifyContent: 'center',
-                }}>
-                
-            <MaterialIcons
-              // style={{ position: 'absolute', top: 17, }}
-              // name={_.indexOf(sl, i.accID) != -1 ? 'check-box' : 'check-box-outline-blank'} 
-              name={'check-box'}
-              size={this.state.selectMode ? pRatioToFontSize(-0.1) : pRatioToFontSize(-0.1)}
-              color={colors.PRIMARY_COLOR}
-            />
-        </Col>
-          <Col size={65}>
-            <CustomText>Account Number {itemIndex + 1}</CustomText>
-            <CustomText>{i.accID}</CustomText>
-            <Text style={{ fontFamily: 'Lato', color: colors.GRAYISHRED}} numberOfLines={1} ellipsizeMode='tail'>{i.serviceLocation}</Text>
-          </Col> 
-          <Col size={45} style={{ alignItems: 'flex-end', paddingTop: 5 }} >
+      <TouchableOpacity underlayColor={colors.GRAYISHRED}
+        onPress={() => {
+          if (this.state.selectMode) {
+            // console.log('test', sl.indexOf(i.accID) != -1 ? 'check-box' : 'check-box-outline-blank')
+            // console.log('test2', sl.indexOf(i.accID) != -1 ? 'check-box' : 'check-box-outline-blank')
+            console.log('test3', _.includes(sl, i.accID) ? 'check-box' : 'check-box-outline-blank')
+            console.log('test4', _.includes(sl, i.accID) ? 'check-box-outline-blank' : 'check-box')
+            this.onPressOnAccount(i)
+          } else {
+            console.log('Punta sa next screen')
+          }
+        }}
+        onLongPress={() => this.setState({
+          selectMode: !this.state.selectMode
+        })}>
+          <Row key={itemIndex} style={{ borderBottomWidth: .3, borderColor: '#3b4043', paddingTop: 10, paddingBottom: 10 }}>
+            <Col size={10} style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+              }}>
+            {this.state.selectMode ?
+              <MaterialIcons
+                name={_.includes(sl, i.accID) ? 'check-box' : 'check-box-outline-blank'}
+                size={pRatioToFontSize(-0.1)}
+                color={colors.PRIMARY_COLOR}
+              />
+              :
+              null
+            }
+
+                </Col>
+            <Col size={65}>
+              <CustomText>Account Number {itemIndex + 1}</CustomText>
+              <CustomText>{i.accID}</CustomText>
+              <Text style={{ fontFamily: 'Lato', color: colors.GRAYISHRED }} numberOfLines={1} ellipsizeMode='tail'>{i.serviceLocation}</Text>
+            </Col>
+            <Col size={45} style={{ alignItems: 'flex-end', paddingTop: 5 }} >
               <CustomText style={{ color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED }}>{i.dueDate + ' '}<Icon onPress={() => alert('icon press')} style={{ backgroundColor: colors.WHITE, color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED, fontSize: pRatioToFontSize(+1) > 14 ? 14 : pRatioToFontSize(+1) }} name='info-circle' type='FontAwesome5' /></CustomText>
-            <CustomText style={{ fontSize: 25 , fontWeight: 'bold' }} >${i.arrears.details.PayoffBalance}</CustomText>
-          </Col>
-          <Col size={10}></Col>
-        </Row>
-      </Grid>
-      </TouchableHighlight>
+              <CustomText style={{ fontSize: 25, fontWeight: 'bold' }} >${i.arrears.details.PayoffBalance}</CustomText>
+            </Col>
+            <Col size={10}></Col>
+          </Row>
+      </TouchableOpacity>
     )
   }
   selectModeFunction() {
-    if (!this.state.selectMode) {
+    if (this.state.selectMode) {
       return (
-        <TouchableHighlight underlayColor={colors.GRAYISHRED} onPress={() => { this.setState({ selectMode: true }); }}>
-          <Grid>
-            <Row style={{ paddingTop: 10, paddingBottom: 10 }}>
-              <Col size={10} >
-                <Text style={{ color: colors.PRIMARY_COLOR }}>Hold to select <Ionicons style={{ left: 13 }} name='ios-arrow-forward' size={14} color={colors.PRIMARY_COLOR} /></Text> 
-              </Col>
-              <Col size={65} />
-              <Col size={45} />
-              <Col size={10} />
-            </Row>
-          </Grid>
-        </TouchableHighlight>
-      );
-    } else {
-      return (
-        <TouchableHighlight
-          onPress={() => {
-            // let selected = [];
-            // if (this.state.selectAll) {
-            //   selected = []
-            // } else {
-            //   alert('Note: This will only select all the shown leads on this list.');
-            //   let fl = [];
-            //   if (this.state.filteredLeads.length == 0) {
-            //     fl = this.state.leads;
-            //   } else {
-            //     fl = this.state.filteredLeads;
-            //   }
-            //   for (var i = 0; i < fl.length; i++) {
-            //     if (!_.isNil(fl[i].contact_details[0])) {
-            //       selected.push(fl[i].lead_id);
-            //     }
-            //     else {
-            //       selected.push(fl[i].lead_id);
-            //     }
-            //   }
-            // }
-            // this.setState({
-            //   selectAll: !this.state.selectAll,
-            //   selectedLeads: selected,
-            // });
-          }}
-          style={{
-            justifyContent: 'center'
-          }}
-        >
-          <View style={{ flexDirection: 'row', backgroundColor: colors.BLACK }}>
-            <MaterialIcons name={this.state.selectAll ? 'check-box' : 'check-box-outline-blank'} style={{ top: 2 }} size={pRatioToFontSize()} color={colors.PRIMARY_COLOR} />
-            <Text style={{ color: colors.PRIMARY_COLOR, fontSize: pRatioToFontSize(), fontWeight: 'bold', paddingLeft: 5 }}>Select All</Text>
-          </View>
-        </TouchableHighlight>
-      );
+        <View style={{
+          paddingHorizontal: 7, paddingBottom: 10, flexDirection: 'row', justifyContent: 'space-between', marginTop: 10,
+          borderBottomColor: '#e2e6ea', borderBottomWidth: 1
+        }}>
+          <TouchableHighlight
+            onPress={() => {
+              debugger
+              let selected = [];
+              let selectedAccountsId = [];
+              if (this.state.selectAll) {
+                selectedAccountsId = []
+                selected = []
+              } else {
+                let fl = [];
+                fl = this.state.accountSummary;
+                for (var i = 0; i < fl.length; i++) {
+                  selectedAccountsId.push(fl[i].accID);
+                  selected.push(fl[i]);
+                }
+              }
+              console.log(selectedAccountsId)
+              console.log(selected)
+              this.setState({
+                selectAll: !this.state.selectAll,
+                selectedAccountsId: selected,
+                selectedAccounts: selected
+              });
+            }}
+            style={{
+              justifyContent: 'center'
+            }}
+          >
+            <View style={{ flexDirection: 'row', }}>
+              <MaterialIcons name={this.state.selectAll ? 'check-box' : 'check-box-outline-blank'} style={{ top: 2 }} size={pRatioToFontSize()} color={colors.PRIMARY_COLOR} />
+              <CustomText style={{ color: colors.BLACK, fontSize: pRatioToFontSize(), fontWeight: '500', paddingLeft: 5 }}>Select All</CustomText>
+            </View>
+          </TouchableHighlight>
+        </View>
+      )
     }
   }
-  
+
   //RENDER MAIN COMPONENT
   render() {
     return (
@@ -283,23 +313,29 @@ class MyAccount extends Component {
             <Button
               transparent style={{ paddingLeft: 0, elevation: 0 }} onPress={() => console.log('icon')} >
               <Icon style={{ backgroundColor: colors.PRIMARY_COLOR, color: colors.WHITE, fontSize: pRatioToFontSize(+1) > 20 ? 20 : pRatioToFontSize(+1) }} name='user-alt' type='FontAwesome5' />
-            
+
             </Button>
           </Right>}
         />
         <OfflineNotice />
         {/* <Content> <- This component conflicts with FlatList and crashed the infinite scrolling. */}
-        {this.state.isLoading ? 
+        {this.state.isLoading ?
           <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
             <ActivityIndicator size="large" color={colors.PRIMARY_COLOR} />
           </View>
           :
 
-        <View style={{ flex: 1 }}
-          onLayout={event => this.setState({ width: event.nativeEvent.layout.width, height: event.nativeEvent.layout.height })}
-        >
-          {this.selectModeFunction()}
+          <View style={{ flex: 1 }}
+            onLayout={event => this.setState({ width: event.nativeEvent.layout.width, height: event.nativeEvent.layout.height })}
+          >
+            {/* ACCOUNT MENU */}
+
+            {this.selectModeFunction()}
+
+            {/* END OF ACCOUNT MENU */}
+
             <FlatList
+              style={{ flex: 0 }}
               ref="infiniteList"
               data={this.state.accountSummary}
               keyExtractor={(x, index) => index.toString()}
@@ -309,8 +345,19 @@ class MyAccount extends Component {
                 );
               }}
             />
-        </View>
-}
+          </View>
+        }
+        {this.state.selectMode ?
+          <Footer>
+            <FooterTab style={{ backgroundColor: '#4CAF50' }}>
+              <Button full>
+                <CustomText style={{ color: colors.WHITE }}>Continue</CustomText>
+              </Button>
+            </FooterTab>
+          </Footer>
+          :
+          null
+        }
       </Container>
     )
   }
@@ -330,93 +377,3 @@ export default connect(mapStateToProps, {
   fetchMultipleLatestBill,
   saveOrderData
 })(MyAccount);
-
-const styles = StyleSheet.create({
-  func_buttons: {
-    flex: 1,
-    paddingTop: 5,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderWidth: .5,
-    width: 200,
-    borderColor: '#98a6a6',
-    borderTopWidth: 0,
-    borderBottomWidth: 0,
-    borderLeftWidth: 0,
-  },
-  social_media_container: {
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 40,
-    justifyContent: 'center'
-  },
-  prof_container_bottom: {
-    flexDirection: 'column',
-    backgroundColor: '#fff',
-    alignSelf: 'stretch',
-    width: Dimensions.get('window').width,
-  },
-  date_container: {
-    justifyContent: 'center',
-    flexDirection: 'row',
-    backgroundColor: '#069ebe',
-    padding: 10
-  },
-  date_text: {
-    color: '#fff',
-    fontSize: 11,
-    textAlign: 'center',
-  },
-  func_buttons: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.PRIMARY_COLOR,
-    height: 70,
-  },
-  func_buttons_img: {
-    width: 30,
-    height: 30,
-    resizeMode: 'contain',
-    marginBottom: 5
-  },
-  prof_container_top: {
-    padding: 30,
-    paddingTop: 20,
-    backgroundColor: '#25cef1',
-    flexDirection: 'column',
-    alignItems: 'center',
-    alignSelf: 'stretch',
-    position: 'relative',
-    width: Dimensions.get('window').width
-  },
-  bg_image: {
-    flex: 1,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    resizeMode: 'stretch',
-  },
-  full_name: {
-    textAlign: 'center',
-    paddingTop: 10,
-    fontSize: 20,
-    fontWeight: 'bold'
-  },
-  lead_status: {
-    paddingTop: 5,
-    fontSize: 16,
-    paddingBottom: 7
-  },
-  activity_btn: {
-    padding: 10,
-    paddingHorizontal: 100,
-    borderRadius: 20,
-    backgroundColor: '#fff',
-    marginTop: 15,
-  }
-});
