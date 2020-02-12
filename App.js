@@ -23,6 +23,11 @@ import InitialLoginScreen from './src/screens/Paygwa/InitialLogin';
 import LoginScreen from './src/screens/Paygwa/Login';
 import MyAccounts from './src/screens/Paygwa/MyAccounts';
 
+//Payment
+import PaymentInputScreen from './src/screens/Paygwa/Payment/PaymentInput';
+import PaymentViewScreen from './src/screens/Paygwa/Payment/PaymentView';
+import PaymentPayNowScreen from './src/screens/Paygwa/Payment/PaymentPayNow';
+
 
 import { CustomDrawerContent } from './src/components';
 import { Root, Container } from "native-base";
@@ -61,6 +66,15 @@ const DrawerStack = createDrawerNavigator(
   {
     MyAccounts : {
       screen: MyAccountsStack,
+    },
+    PaymentInput : {
+      screen: PaymentInputScreen
+    },
+    PaymentView: {
+      screen: PaymentViewScreen
+    }, 
+    PaymentPayNow: {
+      screen: PaymentPayNowScreen
     }
   },
   {

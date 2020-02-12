@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { List, Button, Container, Header, Left, Body, Right, Badge, Footer, FooterTab, Icon, Input, Picker, Toast, CheckBox, Content, ListItem, Form, Item, Text } from 'native-base';
+import { Button, Container, Right, Footer, FooterTab, Icon, Text } from 'native-base';
 import {
-  PixelRatio, StyleSheet, Dimensions, TouchableHighlight, Image, Alert, AppState, FlatList, Linking, View, ActivityIndicator, Platform, TouchableOpacity, TouchableWithoutFeedback
+ TouchableHighlight, FlatList, View, ActivityIndicator, TouchableOpacity
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import UserAvatar from 'react-native-user-avatar';
-import Moment from 'moment';
-import Modal from 'react-native-modal';
 import {
   saveAccountId,
   savePremiseAddress,
@@ -39,33 +35,86 @@ class MyAccount extends Component {
   componentDidMount() {
     let timer = setInterval(() => {
       console.log("loading!!!!!!")
-      let sortedServiceLocation = []
-      let sortedAccountSummary = []
-      for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
-        sortedServiceLocation.push(this.props.dashboard.orderData.accountSummary[count].accID)
-      }
-      for (let count = 0; count < sortedServiceLocation.sort().length; count++) {
-        for (let count1 = 0; count1 < this.props.dashboard.orderData.accountSummary.length; count1++) {
-          if (sortedServiceLocation.sort()[count] === this.props.dashboard.orderData.accountSummary[count1].accID) {
-            sortedAccountSummary.push(this.props.dashboard.orderData.accountSummary[count1])
-            break;
-          }
-        }
-      }
+      const sortedAccountSummary = this.sortAccountSummary();
       console.log("sortedAccountSummary.lengthsortedAccountSummary.lengthsortedAccountSummary.length", sortedAccountSummary.length)
       this.setState({
-        accountSummary: sortedAccountSummary,
+        accountSummary: this.props.dashboard.orderData.accountSummary,
       });
       if (this.state.userAccDetails.accountId.length === this.state.accountSummary.length) {
-        const getAllAccountIds = this.state.accountSummary.map(a => a.accID)
-        this.setState({
-          selectedAccountIdSorted: getAllAccountIds
-        })
         console.log("stopped!!!!!!");
+        this.setState({
+          isLoading: false
+        })
         clearInterval(timer);
       }
-    }, 1000);
+    }, 3000);
     this.getLocalData()
+  }
+
+  sortAccountSummary = () => {
+    console.log("sort called")
+    let sortedAccountId = [];
+    let allResidAccts = [];
+    let allNonResidAccts = [];
+    let sortedAccountSummary = [];
+
+    _.map(this.props.dashboard.orderData.accountSummary, (data, index) => {
+   
+      sortedAccountId.push(data.accID)
+    })
+
+    // for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
+    //   sortedAccountId.push(this.props.dashboard.orderData.accountSummary[count].accID)
+    // }
+
+    //get all resid accounts
+    _.map(this.props.dashboard.orderData.accountSummary, (data, index) => {
+      data.className === "RESID" ? allResidAccts.push(data) : null
+    })
+
+
+    // for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
+    //   if (this.props.dashboard.orderData.accountSummary[count].className === "RESID") {
+    //     allResidAccts.push(this.props.dashboard.orderData.accountSummary[count]);
+    //   }
+    // }
+
+
+    //get all non-resid accounts
+
+
+    _.map(this.props.dashboard.orderData.accountSummary, (data, index) => {
+      this.props.dashboard.orderData.accountSummary[index].className != "RESID" ? allNonResidAccts.push(data) : null
+    })
+    
+    // for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
+    //   if (this.props.dashboard.orderData.accountSummary[count].className != "RESID") {
+    //     allNonResidAccts.push(this.props.dashboard.orderData.accountSummary[count]);
+    //   }
+    // }
+
+
+
+    //insert all resid accounts
+
+    for (let count = 0; count < sortedAccountId.sort().length; count++) {
+      for (let count1 = 0; count1 < allResidAccts.length; count1++) {
+        if (sortedAccountId.sort()[count] === allResidAccts[count1].accID) {
+          sortedAccountSummary.push(allResidAccts[count1])
+          break;
+        }
+      }
+    }
+    //insert all non-resid accounts
+    for (let count = 0; count < sortedAccountId.sort().length; count++) {
+      for (let count1 = 0; count1 < allNonResidAccts.length; count1++) {
+        if (sortedAccountId.sort()[count] === allNonResidAccts[count1].accID) {
+          sortedAccountSummary.push(allNonResidAccts[count1]);
+          break;
+        }
+      }
+    }
+    return sortedAccountSummary;
   }
 
   getLocalData = () => {
@@ -173,37 +222,27 @@ class MyAccount extends Component {
   
   onPressOnAccount(i) {
 
-    if (this.state.selectMode) {
-      let selected = this.state.selectedAccounts; 
-      let selectedAccountsId = this.state.selectedAccountsId 
+    let selected = this.state.selectedAccounts; 
+    let selectedAccountsId = this.state.selectedAccountsId 
 
-      if (selectedAccountsId.indexOf(i.accID) == -1) {
-        
-        selectedAccountsId.push(i.accID);
-        selected.push(i) // insert array of object
-      } else {
-        let index = selectedAccountsId.indexOf(i.accID); 
-        // _.remove(selected, (e) => {
-        //   return e !== i.accID
-        // })
-        selectedAccountsId.splice(index, 1);
-        selected.splice(index, 1);
-      }
-
-      this.setState({
-        selectedAccounts: selected,
-        selectedAccountsId: selectedAccountsId
-      });
+    if (selectedAccountsId.indexOf(i.accID) == -1) {
+      
+      selectedAccountsId.push(i.accID);
+      selected.push(i) // insert array of object
     } else {
-      console.log('Next Screen')
-      // this.props.navigation.navigate('LeadProfile',
-      //   {
-      //     accountSummary: i
-      //   }
-
+      let index = selectedAccountsId.indexOf(i.accID); 
+      // _.remove(selected, (e) => {
+      //   return e !== i.accID
+      // })
+      selectedAccountsId.splice(index, 1);
+      selected.splice(index, 1);
     }
-    console.log(this.state.selectedAccounts)
-    console.log(this.state.selectedAccountsId)
+
+    this.setState({
+      selectedAccounts: selected,
+      selectedAccountsId: selectedAccountsId
+    });
+   
   }
 
   //FUNCTION FOR COMPONENT OF EACH ITEM IN LEAD LISTING
@@ -213,13 +252,9 @@ class MyAccount extends Component {
       <TouchableOpacity underlayColor={colors.GRAYISHRED}
         onPress={() => {
           if (this.state.selectMode) {
-            // console.log('test', sl.indexOf(i.accID) != -1 ? 'check-box' : 'check-box-outline-blank')
-            // console.log('test2', sl.indexOf(i.accID) != -1 ? 'check-box' : 'check-box-outline-blank')
-            console.log('test3', _.includes(sl, i.accID) ? 'check-box' : 'check-box-outline-blank')
-            console.log('test4', _.includes(sl, i.accID) ? 'check-box-outline-blank' : 'check-box')
             this.onPressOnAccount(i)
           } else {
-            console.log('Punta sa next screen')
+            console.log('Punta sa Account Summary')
           }
         }}
         onLongPress={() => this.setState({
@@ -239,8 +274,7 @@ class MyAccount extends Component {
               :
               null
             }
-
-                </Col>
+            </Col>
             <Col size={65}>
               <CustomText>Account Number {itemIndex + 1}</CustomText>
               <CustomText>{i.accID}</CustomText>
@@ -248,7 +282,7 @@ class MyAccount extends Component {
             </Col>
             <Col size={45} style={{ alignItems: 'flex-end', paddingTop: 5 }} >
               <CustomText style={{ color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED }}>{i.dueDate + ' '}<Icon onPress={() => alert('icon press')} style={{ backgroundColor: colors.WHITE, color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED, fontSize: pRatioToFontSize(+1) > 14 ? 14 : pRatioToFontSize(+1) }} name='info-circle' type='FontAwesome5' /></CustomText>
-              <CustomText style={{ fontSize: 25, fontWeight: 'bold' }} >${i.arrears.details.PayoffBalance}</CustomText>
+              <CustomText numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 25, fontWeight: 'bold' }} >${i.arrears.details.PayoffBalance}</CustomText>
             </Col>
             <Col size={10}></Col>
           </Row>
@@ -259,8 +293,8 @@ class MyAccount extends Component {
     if (this.state.selectMode) {
       return (
         <View style={{
-          paddingHorizontal: 7, paddingBottom: 10, flexDirection: 'row', justifyContent: 'space-between', marginTop: 10,
-          borderBottomColor: '#e2e6ea', borderBottomWidth: 1
+          paddingHorizontal: 7, paddingBottom: 10, flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10,
+          borderBottomColor: '#e2e6ea', borderBottomWidth: 1, backgroundColor: '#e2e6ea'
         }}>
           <TouchableHighlight
             onPress={() => {
@@ -350,8 +384,17 @@ class MyAccount extends Component {
         {this.state.selectMode ?
           <Footer>
             <FooterTab style={{ backgroundColor: '#4CAF50' }}>
-              <Button full>
+              <Button full
+              onPress={()=> {
+                this.props.navigation.navigate('PaymentInput',
+                  {
+                    selectedAccounts: this.state.selectedAccounts,
+                    selectedAccountsId: this.state.selectedAccountsId
+                  })
+              }}
+              >
                 <CustomText style={{ color: colors.WHITE }}>Continue</CustomText>
+
               </Button>
             </FooterTab>
           </Footer>
