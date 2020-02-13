@@ -25,6 +25,7 @@ class Login extends Component {
             eyeColor: 'lightgray',
             emailAdd: '',
             password: '',
+            
         }
         this.focusNextField = this.focusNextField.bind(this)
         this.componentId = {} //STORE DOM OF TEXT FIELDS (EMAIL AND PASSWORD)
