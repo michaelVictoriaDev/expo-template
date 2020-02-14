@@ -79,6 +79,9 @@ export function fetchLogin (dataObject) {
 			const status = response.status
 			if (!(status === null)) {
 				if (loginSuccessful.toString() === "true") {
+					// another call function
+
+					// end function
 					Toast.show({
 						text: `Log in successfully..Please wait.`,
 						duration: 3000,

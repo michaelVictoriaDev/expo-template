@@ -26,29 +26,38 @@ class MyAccount extends Component {
     this.state = {
       selectedAccountsId: [],
       selectedAccounts: [],
+      selectedAmountToBePaid: [],
       selectMode: false,
       isLoading: true,
       selectAll: false,
     }
   }
 
+
+
   componentDidMount() {
-    let timer = setInterval(() => {
-      console.log("loading!!!!!!")
-      const sortedAccountSummary = this.sortAccountSummary();
-      console.log("sortedAccountSummary.lengthsortedAccountSummary.lengthsortedAccountSummary.length", sortedAccountSummary.length)
-      this.setState({
-        accountSummary: this.props.dashboard.orderData.accountSummary,
-      });
-      if (this.state.userAccDetails.accountId.length === this.state.accountSummary.length) {
-        console.log("stopped!!!!!!");
-        this.setState({
-          isLoading: false
-        })
-        clearInterval(timer);
-      }
-    }, 3000);
-    this.getLocalData()
+    this.props.saveAccountId(this.props.accountIds[0][0])
+      .then(() => {
+        this.props.savePremiseAddress(this.props.accountIds[0][1])
+          .then(() => {
+            let timer = setInterval(() => {
+              console.log("loading!!!!!!")
+              const sortedAccountSummary = this.sortAccountSummary();
+              console.log("sortedAccountSummary.lengthsortedAccountSummary.lengthsortedAccountSummary.length", sortedAccountSummary.length)
+              this.setState({
+                accountSummary: this.props.dashboard.orderData.accountSummary,
+              });
+              if (this.state.userAccDetails.accountId.length === this.state.accountSummary.length) {
+                console.log("stopped!!!!!!");
+                this.setState({
+                  isLoading: false
+                })
+                clearInterval(timer);
+              }
+            }, 3000);
+            this.getLocalData()
+          })
+      })
   }
 
   sortAccountSummary = () => {
@@ -58,40 +67,40 @@ class MyAccount extends Component {
     let allNonResidAccts = [];
     let sortedAccountSummary = [];
 
-    _.map(this.props.dashboard.orderData.accountSummary, (data, index) => {
+    // _.map(this.props.dashboard.orderData.accountSummary, (data, index) => {
    
-      sortedAccountId.push(data.accID)
-    })
+    //   sortedAccountId.push(data.accID)
+    // })
 
-    // for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
-    //   sortedAccountId.push(this.props.dashboard.orderData.accountSummary[count].accID)
-    // }
+    for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
+      sortedAccountId.push(this.props.dashboard.orderData.accountSummary[count].accID)
+    }
 
     //get all resid accounts
-    _.map(this.props.dashboard.orderData.accountSummary, (data, index) => {
-      data.className === "RESID" ? allResidAccts.push(data) : null
-    })
+    // _.map(this.props.dashboard.orderData.accountSummary, (data, index) => {
+    //   data.className === "RESID" ? allResidAccts.push(data) : null
+    // })
 
 
-    // for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
-    //   if (this.props.dashboard.orderData.accountSummary[count].className === "RESID") {
-    //     allResidAccts.push(this.props.dashboard.orderData.accountSummary[count]);
-    //   }
-    // }
+    for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
+      if (this.props.dashboard.orderData.accountSummary[count].className === "RESID") {
+        allResidAccts.push(this.props.dashboard.orderData.accountSummary[count]);
+      }
+    }
 
 
     //get all non-resid accounts
 
 
-    _.map(this.props.dashboard.orderData.accountSummary, (data, index) => {
-      this.props.dashboard.orderData.accountSummary[index].className != "RESID" ? allNonResidAccts.push(data) : null
-    })
+    // _.map(this.props.dashboard.orderData.accountSummary, (data, index) => {
+    //   this.props.dashboard.orderData.accountSummary[index].className != "RESID" ? allNonResidAccts.push(data) : null
+    // })
     
-    // for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
-    //   if (this.props.dashboard.orderData.accountSummary[count].className != "RESID") {
-    //     allNonResidAccts.push(this.props.dashboard.orderData.accountSummary[count]);
-    //   }
-    // }
+    for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
+      if (this.props.dashboard.orderData.accountSummary[count].className != "RESID") {
+        allNonResidAccts.push(this.props.dashboard.orderData.accountSummary[count]);
+      }
+    }
 
 
 
@@ -122,6 +131,8 @@ class MyAccount extends Component {
     let sessionAccountId, sessionPersonId;
     let lsAccountId = this.props.accountId
     let lsAccountIds = this.props.accountIds
+    console.log('lsAccountId', this.props.accountId)
+    console.log('lsAccountIds', this.props.accountIds)
     if (!(lsAccountId === '' || lsAccountId === null || lsAccountId === undefined)) {
       var accountId = [];
       var arrAccountId = lsAccountId.split(",")
@@ -176,6 +187,7 @@ class MyAccount extends Component {
       let [result1, result2] = await Promise.all([this.props.fetchMultipleLatestBill(sessionAccountId), this.props.fetchMultipleAddOpptyRequest(accountId, personId)]);
       if (result1 && result2.dataFetched) {
         const userAccountDetails = this.props.dashboard.userAccountDetails;
+        console.log(userAccountDetails)
         let sortedServiceLocation = []
         let sortedAccountSummary = []
         for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
@@ -226,7 +238,6 @@ class MyAccount extends Component {
     let selectedAccountsId = this.state.selectedAccountsId 
 
     if (selectedAccountsId.indexOf(i.accID) == -1) {
-      
       selectedAccountsId.push(i.accID);
       selected.push(i) // insert array of object
     } else {
@@ -240,7 +251,7 @@ class MyAccount extends Component {
 
     this.setState({
       selectedAccounts: selected,
-      selectedAccountsId: selectedAccountsId
+      selectedAccountsId: selectedAccountsId,
     });
    
   }
@@ -298,7 +309,7 @@ class MyAccount extends Component {
         }}>
           <TouchableHighlight
             onPress={() => {
-              debugger
+        
               let selected = [];
               let selectedAccountsId = [];
               if (this.state.selectAll) {
@@ -371,7 +382,7 @@ class MyAccount extends Component {
             <FlatList
               style={{ flex: 0 }}
               ref="infiniteList"
-              data={this.state.accountSummary}
+              data={this.sortAccountSummary()}
               keyExtractor={(x, index) => index.toString()}
               renderItem={(data) => {
                 return (
@@ -386,11 +397,25 @@ class MyAccount extends Component {
             <FooterTab style={{ backgroundColor: '#4CAF50' }}>
               <Button full
               onPress={()=> {
+                let subtotal = 0
+                const arrAccountSummary = this.state.selectedAccounts
+
+                _.map(arrAccountSummary, (data, index) => {
+                  subtotal = subtotal + parseFloat(data.amountToBePaid === "" ? 0 : data.amountToBePaid)
+                })
+
                 this.props.navigation.navigate('PaymentInput',
                   {
                     selectedAccounts: this.state.selectedAccounts,
-                    selectedAccountsId: this.state.selectedAccountsId
+                    selectedAccountsId: this.state.selectedAccountsId,
+                    subtotal: subtotal
                   })
+                this.setState({
+                  selectMode: false,
+                  selectedAccounts:[],
+                  selectedAccountsId: []
+
+                })
               }}
               >
                 <CustomText style={{ color: colors.WHITE }}>Continue</CustomText>

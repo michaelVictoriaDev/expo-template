@@ -4,9 +4,6 @@ import { List, Button, Container, Header, Left, Body, Right, Badge, Footer, Foot
 import {
   PixelRatio, StyleSheet, Dimensions, TouchableHighlight, Image, Alert, AppState, FlatList, Linking, View, ActivityIndicator, Platform, TouchableOpacity, TouchableWithoutFeedback
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import UserAvatar from 'react-native-user-avatar';
 import Moment from 'moment';
 import Modal from 'react-native-modal';
 import {
@@ -33,7 +30,7 @@ class PaymentInput extends Component {
       selectedAccounts: this.props.navigation.state.params.selectedAccounts,
       selectedAccountsId: this.props.navigation.state.params.selectedAccountsId,
       setOfAmountValue: [],
-      subtotal: 0
+      subtotal: this.props.navigation.state.params.subtotal
     }
   }
   componentDidMount (){
@@ -128,11 +125,11 @@ class PaymentInput extends Component {
             {_.map(this.state.selectedAccounts, (data, index) => {
               return(
                 <Row style={{ paddingBottom: 25}}>              
-                <Col>
+                <Col size={45}>
                   <CustomText style={{fontSize: 18}} >{data.accID}</CustomText>
                   <CustomTextBold style={{ fontSize: 20 }}>${data.arrears.details.PayoffBalance}</CustomTextBold>
                 </Col>
-                <Col>
+                <Col size={45}>
                     <Item regular
                       style={{
                         backgroundColor: colors.WHITE,
@@ -147,9 +144,17 @@ class PaymentInput extends Component {
                         value={data.amountToBePaid}
                         onChangeText={(text) => this.amountToBePaidOnChange(data.accID, text)}
                       />
-                      {/* <Icon name='person' style={{ color: 'lightgray' }} /> */}
                     </Item>
                 </Col>
+                  {!data.validAmountToBePaid ?
+                  <Col size={10} style={{
+                    alignItems: 'center',
+                    justifyContent: 'center'}}>
+                    <Icon name='warning' style={{ color: 'red' }} />
+                </Col>
+                :
+                null
+                }
               </Row>)
               })
             }
@@ -157,17 +162,17 @@ class PaymentInput extends Component {
         </Content>
         <Footer>
           <FooterTab style={{ backgroundColor: '#4CAF50' }}>
-            <Button full
+            <Button full disabled={this.state.subtotal == 0 ? true : false}
               onPress={() => {
-                // this.props.navigation.navigate('PaymentInput',
-                //   {
-                //     selectedAccounts: this.state.selectedAccounts,
-                //     selectedAccountsId: this.state.selectedAccountsId
-                //   })
+                this.props.navigation.navigate('PaymentView',
+                  {
+                    selectedAccounts: this.state.selectedAccounts,
+                    selectedAccountsId: this.state.selectedAccountsId,
+                    subtotal: this.state.subtotal
+                  })
               }}
             >
               <CustomText style={{ color: colors.WHITE }}>Continue </CustomText>
-              <CustomText style={{ color: colors.WHITE }}>Sub Total: $ {parseFloat(Math.round(this.state.subtotal * 100) / 100).toFixed(2)}</CustomText>
             </Button>
           </FooterTab>
         </Footer>

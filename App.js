@@ -50,7 +50,17 @@ const MyAccountsStack = createStackNavigator(
   {
     MyAccounts: {
       screen: MyAccounts,
+    },
+    PaymentInput: {
+      screen: PaymentInputScreen
+    },
+    PaymentView: {
+      screen: PaymentViewScreen
+    },
+    PaymentPayNow: {
+      screen: PaymentPayNowScreen
     }
+    
   },
   {
     initialRouteName: 'MyAccounts',
@@ -66,15 +76,6 @@ const DrawerStack = createDrawerNavigator(
   {
     MyAccounts : {
       screen: MyAccountsStack,
-    },
-    PaymentInput : {
-      screen: PaymentInputScreen
-    },
-    PaymentView: {
-      screen: PaymentViewScreen
-    }, 
-    PaymentPayNow: {
-      screen: PaymentPayNowScreen
     }
   },
   {
