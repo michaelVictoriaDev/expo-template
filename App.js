@@ -28,6 +28,11 @@ import PaymentInputScreen from './src/screens/Paygwa/Payment/PaymentInput';
 import PaymentViewScreen from './src/screens/Paygwa/Payment/PaymentView';
 import PaymentPayNowScreen from './src/screens/Paygwa/Payment/PaymentPayNow';
 
+//PaymentResult
+import PaymentSuccessScreen from './src/screens/Paygwa/Payment/PaymentResult/PaymentSuccess';
+import PaymentUserFailedScreen from './src/screens/Paygwa/Payment/PaymentResult/PaymentUserFailed';
+import PaymentServerFailedScreen from './src/screens/Paygwa/Payment/PaymentResult/PaymentServerFailed';
+
 
 import { CustomDrawerContent } from './src/components';
 import { Root, Container } from "native-base";
@@ -59,8 +64,16 @@ const MyAccountsStack = createStackNavigator(
     },
     PaymentPayNow: {
       screen: PaymentPayNowScreen
+    },
+    PaymentSuccess: {
+      screen: PaymentSuccessScreen
+    },
+    PaymentUserFailed: {
+      screen: PaymentUserFailedScreen
+    },
+    PaymentServerFailed: {
+      screen: PaymentServerFailedScreen
     }
-    
   },
   {
     initialRouteName: 'MyAccounts',

@@ -78,13 +78,13 @@ class PaymentView extends Component {
                         })
                         }
                     </View>
-                    <View style={{ paddingHorizontal: 25, height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                        <CustomTextBold style={{ paddingBottom: 5, fontSize: 24, textAlign: 'center' }} >$ {parseFloat(this.state.subtotal).toFixed(2)}</CustomTextBold>
+                    <View style={{ paddingHorizontal: 25, height: '75%', alignItems: 'center', justifyContent: 'center' }}>
+                        <CustomTextBold style={{ paddingBottom: 5, fontSize: 24 }} >$ {parseFloat(this.state.subtotal).toFixed(2)}</CustomTextBold>
                         <CustomText style={{ color: '#998B8C' }}>TOTAL</CustomText>
                     </View>
                 </Content>
                 <Footer>
-                    <FooterTab style={{ backgroundColor: '#4CAF50' }}>
+                    <FooterTab style={{ backgroundColor: colors.LIGHT_GREEN }}>
                         <Button full
                             onPress={() => {
                                 this.props.navigation.navigate('PaymentPayNow',

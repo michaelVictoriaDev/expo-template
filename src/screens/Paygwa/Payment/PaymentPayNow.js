@@ -14,7 +14,9 @@ import {
     savePremiseAddress,
     fetchMultipleAddOpptyRequest,
     fetchMultipleLatestBill,
-    saveOrderData
+    saveOrderData,
+    validateVisaPayment,
+    savePaymentData
 } from '../../../actions/userMyAccounts';
 import { colors, pRatioToFontSize } from '../../../utils/constants';
 import CustomText from '../../../components/CustomText';
@@ -24,6 +26,8 @@ import CustomHeader from '../../../components/MultiCustomHeader'
 import _ from 'lodash'
 import { Grid, Row, Col } from 'react-native-easy-grid';
 import moment from 'moment'
+import NumberFormat from 'react-number-format';
+import { TextInputMask } from 'react-native-masked-text'
 
 class PaymentPayNow extends Component {
     constructor(props) {
@@ -33,24 +37,19 @@ class PaymentPayNow extends Component {
             selectedAccounts: this.props.navigation.state.params.selectedAccounts,
             selectedAccountsId: this.props.navigation.state.params.selectedAccountsId,
             subtotal: this.props.navigation.state.params.subtotal,
+            isPaymentProcessing: false,
             cardDetails: {
-                cardHolderName: "",
-                cardNumber: "",
+                cardHolderName: "XtendlyDev",
+                cardNumber: "4111111111111111",
                 expDate: new Date(),
                 validExpDate: "",
-                cvv: "",
-                billingZipCode: "",
+                cvv: "123",
+                billingZipCode: "123",
                 confirmationEmail: this.props.dashboard.userAccountDetails.emailAddress
             },
         }
     }
     
-
-
-    componentWillMount(){
-        debugger
-        console.log(this.props.dashboard)
-    }
 
     showCardType = () => {
         if (this.state.cardDetails.cardNumber.charAt(0) === "4") {
@@ -72,6 +71,8 @@ class PaymentPayNow extends Component {
 
     _handleMultiInput(name) {
         return text => {
+
+
             this.setState({
                 ...this.state,
                 cardDetails: {
@@ -106,44 +107,43 @@ class PaymentPayNow extends Component {
             let arrIsAmountValid = []
             if (this.state.cardDetails.cardNumber.charAt(0) === "4" || this.state.cardDetails.cardNumber.charAt(0) === "6") {
                 for (let count = 0; count < accountSummary.length; count++) {
-                    if (accountSummary[count].checked) {
-                        try {
-                            let result = await Promise.all([this.props.validateVisaPayment(accountSummary[count].accID, this.state.usedCC)]);
-                            let paymentAmount = result[0].data.result.data.PaymentAmount;
-                            let customerClass = result[0].data.result.data.CustomerClass;
-                            const totalPayment = parseInt(accountSummary[count].amountToBePaid) + parseInt(paymentAmount);
+                    try {
+                        let result = await Promise.all([this.props.validateVisaPayment(accountSummary[count].accID, this.state.usedCC)]);
+                        let paymentAmount = result[0].data.result.data.PaymentAmount;
+                        let customerClass = result[0].data.result.data.CustomerClass;
+                        const totalPayment = parseInt(accountSummary[count].amountToBePaid) + parseInt(paymentAmount);
 
-                            if (totalPayment > 500 && !(customerClass === "RESID")) {
-                                accountSummary[count].validAmountToBePaid = false;
-                                accountSummary[count].alreadyPaid = paymentAmount;
-                                accountSummary[count].usedCC = usedCC;
-                                arrIsAmountValid.push(false);
+                        if (totalPayment > 500 && !(customerClass === "RESID")) {
+                            accountSummary[count].validAmountToBePaid = false;
+                            accountSummary[count].alreadyPaid = paymentAmount;
+                            accountSummary[count].usedCC = usedCC;
+                            arrIsAmountValid.push(false);
 
-                            }
-                            else {
-                                accountSummary[count].validAmountToBePaid = true;
-                                arrIsAmountValid.push(true);
-                            }
                         }
-                        catch (error) {
-                            console.log("errorerrorerrorerrorerror", error)
-                            let result = {
-                                status: "serverFailed"
-                            };
-                            this.props.navigation.navigate('PaymentView',
-                                {
-                                    selectedAccounts: accountSummary,
-                                    selectedAccountsId: this.state.selectedAccountsId,
-                                    subtotal: this.state.subtotal
-                                })
-
-                            localStorage.setItem('accountSummary', JSON.stringify(this.state.accountSummary));
-                            localStorage.setItem('paymentResult', JSON.stringify(result));
-                            this.setState({
-                                isPaymentProcessing: false
-                            })
-                            this.showPaymentResult();
+                        else {
+                            accountSummary[count].validAmountToBePaid = true;
+                            arrIsAmountValid.push(true);
                         }
+                    }
+                    catch (error) {
+                        console.log("errorerrorerrorerrorerror", error)
+
+                        this.props.navigation.navigate('PaymentServerFailed')
+                        // SERVER FAILED ilalabas mo dito
+
+
+
+                        // this.props.navigation.navigate('PaymentInput',
+                        //     {
+                        //         selectedAccounts: accountSummary,
+                        //         selectedAccountsId: this.state.selectedAccountsId,
+                        //         subtotal: this.state.subtotal
+                        //     })
+
+                        this.setState({
+                            isPaymentProcessing: false
+                        })
+                        // this.showPaymentResult();
                     }
                 }
             }
@@ -247,7 +247,7 @@ class PaymentPayNow extends Component {
                     accountSummary: sortedAccountSummary,
                     isHasInvalid: false
                 }
-                this.props.saveOrderData(postData)
+                // this.props.saveOrderData(postData)
                 this.validUserInputs(subtotal, accountSummary)
             }
         });
@@ -334,14 +334,14 @@ class PaymentPayNow extends Component {
             })
             // this.props.showMessage(true, 'Please enter a valid Dicover Card Number!')
         }
-
         else {
             this.setState({
                 subtotal: subtotal,
-                accountSummary: accountSummary
+                accountSummary: accountSummary, // sorted na all
+                isPaymentProcessing: true
             }, () => {
                     console.log('executeRequests')
-                // this.executeRequests()
+                this.executeRequests()                                                                                                                                    
             })
         }
     }
@@ -349,33 +349,48 @@ class PaymentPayNow extends Component {
 
     // execute payment na 
 
-    // executeRequests = () => {
-    //     localStorage.setItem('reload', 'false')
-    //     this.props.savePaymentData(this.state)
-    //         .then((result) => {
-    //             // localStorage.setItem('accountSummary', JSON.stringify(this.props.dashboard.orderData.accountSummary))
-                
-    //             localStorage.setItem('paymentResult', JSON.stringify(result))
-    //             this.showPaymentResult();
-    //             // if(result.data.Transaction_Approved === "true"){
-    //             //     // this.setState({ show: false, isVisaChecked: false, isMasterCardChecked: false });
-    //             //     this.showPaymentResult();
-    //             // }
-    //             // else{
-    //             //     this.props.showMessage(true, result.data.Bank_Message)
-    //             // }
-    //         })
-    //         .catch((error) => {
-    //             let result = {
-    //                 data: {
-    //                     Transaction_Approved: "serverFailed"
-    //                 }
-    //             }
-    //             localStorage.setItem('accountSummary', JSON.stringify(this.state.accountSummary))
-    //             localStorage.setItem('paymentResult', JSON.stringify(result))
-    //             this.showPaymentResult();
-    //         })
-    // }
+    executeRequests = () => {
+        this.props.savePaymentData(this.state)
+            .then((result) => {
+                console.log('paymentResult', JSON.stringify(result))
+                console.log('accountSummary', this.state.accountSummary)
+                debugger
+                this.setState({
+                    isPaymentProcessing: false
+                })
+
+                if (result.data.Transaction_Approved === true ){
+                    this.props.navigation.navigate('PaymentSuccess',
+                        {
+                            paymentResult: result,
+                            accountSummary: this.state.accountSummary
+
+                        })
+                } else {
+                    this.props.navigation.navigate('PaymentUserFailed',
+                        {
+                            paymentResult: result,
+                            accountSummary: this.state.accountSummary
+
+                        })
+                }
+
+            })
+            .catch((error) => {
+                this.setState({
+                    isPaymentProcessing: false
+                })
+
+                this.props.navigation.navigate('PaymentServerFailed')
+                console.log('error')
+                console.log('accountSummary', JSON.stringify(this.state.accountSummary))
+                console.log('paymentResult', JSON.stringify(result))
+
+                // localStorage.setItem('accountSummary', JSON.stringify(this.state.accountSummary))
+                // localStorage.setItem('paymentResult', JSON.stringify(result))
+                // this.showPaymentResult();
+            })
+    }
     //RENDER MAIN COMPONENT
     render() {
         return (
@@ -400,8 +415,8 @@ class PaymentPayNow extends Component {
                                 borderColor: 'lightgray',
                                 marginBottom: 5
                             }}>
-                            <Input
 
+                            <Input
                                 autoCapitalize='none'
                                 placeholderTextColor='lightgray'
                                 keyboardType="default"
@@ -411,7 +426,7 @@ class PaymentPayNow extends Component {
 
 
                         </Item>
-                        <CustomText style={{ paddingBottom: 5, fontSize: 16 }} >Card Holder name</CustomText>
+                        <CustomText style={{ paddingBottom: 5, fontSize: 16 }} >Card Number</CustomText>
                         <Item regular
                             style={{
                                 marginLeft: 0,
@@ -420,19 +435,27 @@ class PaymentPayNow extends Component {
                                 borderColor: 'lightgray',
                                 marginBottom: 5
                             }}>
-                            <Input
-                                autoCapitalize='none'
-                                placeholderTextColor='lightgray'
-                                keyboardType="numeric"
-                                value={this.state.cardDetails.cardNumber}
-                                onChangeText={this._handleMultiInput('cardNumber')}
-                            />
 
+                            <NumberFormat
+                                mask="_"
+                                value={this.state.cardDetails.cardNumber}
+                                displayType={'text'} format="#### #### #### ####" 
+                                renderText={value => (
+                                    <Input
+                                        textAlign={'left'}
+                                        autoCapitalize='none'
+                                        placeholderTextColor='lightgray'
+                                        keyboardType="numeric"
+                                        value={value}
+                                        onChangeText={this._handleMultiInput('cardNumber')}
+                                    />
+                                )}
+                            />
                             {
                                 this.showCardType()
                             }
-
                         </Item>
+
                         <Row>   
                         <Col size={70}>
                             <CustomText style={{ paddingBottom: 5, fontSize: 16 }} >Expiration Date</CustomText>
@@ -445,8 +468,8 @@ class PaymentPayNow extends Component {
                                     borderColor: 'lightgray',
                                     marginBottom: 5
                                 }}>
-
                                 <DatePicker
+                                    dateFormat="MM/YYYY"
                                     locale={"en"}
                                     animationType={"fade"}
                                     androidMode={"default"}
@@ -482,7 +505,7 @@ class PaymentPayNow extends Component {
                         </Row>
                         <Row>
                             <Col size={27}>
-                                <CustomText style={{ paddingBottom: 5, fontSize: 16 }} >Billing Zip Code</CustomText>
+                                <CustomText numberOfLines={1} ellipsizeMode='tail' style={{ width: 100, paddingBottom: 5, fontSize: pRatioToFontSize() > 16 ? 16 : pRatioToFontSize() }} >Billing Zip Code</CustomText>
                                 <Item regular
                                     style={{
                                         marginLeft: 0,
@@ -526,13 +549,20 @@ class PaymentPayNow extends Component {
                     </View>
                 </Content>
                 <Footer>
-                    <FooterTab style={{ backgroundColor: '#4CAF50' }}>
+                    <FooterTab style={{ backgroundColor: colors.LIGHT_GREEN }}>
                         <Button full
+                            disabled={this.state.isPaymentProcessing}
                             onPress={() => {
-                                // this.savePayment()
+                                this.savePayment()
+                                // this.props.navigation.navigate('PaymentSuccess')
                             }}
                         >
-                            <CustomText style={{ color: colors.WHITE }}>Pay Now </CustomText>
+                            <CustomText style={{ color: colors.WHITE }}>{
+                                this.state.isPaymentProcessing ?
+                                'Please wait...'
+                                : 
+                                'Pay Now '
+                                }</CustomText>
                         </Button>
                     </FooterTab>
                 </Footer>
@@ -553,5 +583,7 @@ export default connect(mapStateToProps, {
     savePremiseAddress,
     fetchMultipleAddOpptyRequest,
     fetchMultipleLatestBill,
-    saveOrderData
+    saveOrderData,
+    validateVisaPayment,
+    savePaymentData
 })(PaymentPayNow);

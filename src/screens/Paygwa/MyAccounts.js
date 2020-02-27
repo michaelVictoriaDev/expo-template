@@ -20,9 +20,19 @@ import _ from 'lodash'
 import { Grid, Row, Col } from 'react-native-easy-grid';
 
 class MyAccount extends Component {
+  willFocus = this.props.navigation.addListener(
+    'willFocus',
+    payload => {
+      this.setState({
+        isLoading: true,
+      })
+      this.getApiData();
+    }
+  );
   constructor(props) {
+    
     super(props);
-    // const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    
     this.state = {
       selectedAccountsId: [],
       selectedAccounts: [],
@@ -30,12 +40,18 @@ class MyAccount extends Component {
       selectMode: false,
       isLoading: true,
       selectAll: false,
+      isFetching: false
     }
   }
 
-
-
   componentDidMount() {
+
+    this.getApiData()
+
+  }
+
+  getApiData(){
+
     this.props.saveAccountId(this.props.accountIds[0][0])
       .then(() => {
         this.props.savePremiseAddress(this.props.accountIds[0][1])
@@ -50,8 +66,10 @@ class MyAccount extends Component {
               if (this.state.userAccDetails.accountId.length === this.state.accountSummary.length) {
                 console.log("stopped!!!!!!");
                 this.setState({
-                  isLoading: false
+                  isLoading: false,
+                  isFetching: false 
                 })
+
                 clearInterval(timer);
               }
             }, 3000);
@@ -218,8 +236,7 @@ class MyAccount extends Component {
             mobilePhone: userAccountDetails.mobilePhone,
             workPhone: userAccountDetails.workPhone,
             emailAddress: userAccountDetails.emailAddress,
-          },
-          isLoading: false
+          }
         })
       }
     }
@@ -287,7 +304,7 @@ class MyAccount extends Component {
             }
             </Col>
             <Col size={65}>
-              <CustomText>Account Number {itemIndex + 1}</CustomText>
+              <CustomText>Account Number</CustomText>
               <CustomText>{i.accID}</CustomText>
               <Text style={{ fontFamily: 'Lato', color: colors.GRAYISHRED }} numberOfLines={1} ellipsizeMode='tail'>{i.serviceLocation}</Text>
             </Col>
@@ -345,6 +362,9 @@ class MyAccount extends Component {
     }
   }
 
+  onRefresh() {
+    this.setState({ isFetching: true }, function () { this.getApiData() });
+  }
   //RENDER MAIN COMPONENT
   render() {
     return (
@@ -384,6 +404,8 @@ class MyAccount extends Component {
               ref="infiniteList"
               data={this.sortAccountSummary()}
               keyExtractor={(x, index) => index.toString()}
+              onRefresh={() => this.onRefresh()}
+              refreshing={this.state.isFetching}
               renderItem={(data) => {
                 return (
                   this.renderItemsInfiniteScroll(data.index, data.item)
@@ -394,7 +416,7 @@ class MyAccount extends Component {
         }
         {this.state.selectMode ?
           <Footer>
-            <FooterTab style={{ backgroundColor: '#4CAF50' }}>
+            <FooterTab style={{ backgroundColor: colors.LIGHT_GREEN }}>
               <Button full
               onPress={()=> {
                 let subtotal = 0

@@ -3,6 +3,7 @@ import * as Constants from 'expo-constants';
 import RF from "react-native-responsive-fontsize";
 
 export const colors = {
+  PIGMENT_GREEN: '#008C48',
   WHITE: '#FFFFFF',
   LIGHT_GREEN: '#4caf50',
   BLACK: '#000000',

@@ -24,27 +24,6 @@ USED FOR NAVIGATING WITHOUT PROPS
 */
 
 
-function fetchLatestPayment(accountId) {
-    return axios
-        .post(DASHBOARD_URL + '/api/v1/validate',
-            {
-                accountId: accountId
-            },
-            {
-                headers: { 'Content-Type': 'application/json' }
-            })
-}
-
-export const saveOrderData = (postData) => dispatch => {
-    const orderData = {
-        accountSummary: postData.accountSummary,
-        subTotal: postData.subTotal
-    }
-    dispatch({
-        type: SAVE_ORDER_DATA,
-        payload: orderData
-    })
-}
 function saveToPayEezy(postData) {
     return axios
         .post(PAYNOW_URL + '/api/v1/payeezy',
@@ -59,6 +38,118 @@ function saveToPayEezy(postData) {
             {
                 headers: { 'Content-Type': 'application/json' }
             })
+}
+
+
+export const savePaymentData = (postData) => dispatch => {
+    console.log("postDatapostDatapostDatapostData", postData)
+    let arrSavePaymentToCCBRequests = [], arrSaveToMarketingDBRequests = [], accountIdsList = "";
+    const accountSummary = postData.accountSummary
+    for (let count = 0; count < accountSummary.length; count++) {
+        if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
+            accountIdsList += (accountSummary[count].accID + ', ')
+        }
+    }
+    return new Promise((resolve, reject) => {
+        axios.all([saveToPayEezy(postData)])
+            .then(axios.spread(
+                async (saveToPayEezyResponse) => {
+                    const payEezyResult = saveToPayEezyResponse.data.result
+                    const transDate = doTheSearch("DATE/TIME", payEezyResult)
+                    const arrTransDate = transDate.split(" ")
+                    let finalTransDate = arrTransDate[1] + "-" + arrTransDate[2] + "-" + arrTransDate[3]
+                    let d = new Date(finalTransDate);
+                    finalTransDate = "20" + arrTransDate[3] + "/" + (d.getMonth() + 1) + "/" + arrTransDate[1]
+                    let paymentTotal = 0
+                    for (let count = 0; count < accountSummary.length; count++) {
+                        if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
+                            paymentTotal++;
+                        }
+                    }
+                    let receiptCount = 1;
+                    for (let count = 0; count < accountSummary.length; count++) {
+                        if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
+
+                            if (paymentTotal === 1) {
+                                const recepitNum = payEezyResult.data.Reference_No
+                                arrSavePaymentToCCBRequests.push(savePaymentToCCB(postData.usedCC, recepitNum, accountSummary[count].accID, accountSummary[count].amountToBePaid, payEezyResult))
+                            }
+                            else {
+                                const str = payEezyResult.data.Reference_No + "-" + (receiptCount);
+                                const recepitNum = str.substring(str.length - 14, str.length);
+                                arrSavePaymentToCCBRequests.push(savePaymentToCCB(postData.usedCC, recepitNum, accountSummary[count].accID, accountSummary[count].amountToBePaid, payEezyResult))
+                            }
+                            receiptCount++;
+                        }
+                    }
+                    const [sendPaymentStatEmailResponse, saveOverallPaymentResponse, savePaymentToCCBResponse] = await Promise.all([
+                        sendPaymentStatEmail(postData, accountIdsList, payEezyResult, transDate),
+                        saveOverallPayment(postData, payEezyResult, finalTransDate),
+                        arrSavePaymentToCCBRequests
+                    ]);
+                    const emailStat = sendPaymentStatEmailResponse.soapenvBody.soapenvFault.detail.ouafFault.ResponseStatus === "F" ? true : true;
+                    receiptCount = 1;
+                    const secondReq = setInterval(async () => {
+                        if (emailStat && saveOverallPaymentResponse.result === "Success") {
+                            for (let count = 0; count < accountSummary.length; count++) {
+                                if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
+                                    const status = payEezyResult.data.Transaction_Approved === "true" ? "PAID" : "DECLINED"
+                                    if (paymentTotal === 1) {
+                                        const recepitNum = payEezyResult.data.Reference_No
+                                        arrSaveToMarketingDBRequests.push(savePaymentToMarketingDB(status, recepitNum, postData, payEezyResult, finalTransDate, accountSummary[count].accID, saveOverallPaymentResponse.overallId, accountSummary[count].amountToBePaid))
+                                    }
+                                    else {
+                                        const str = payEezyResult.data.Reference_No + "-" + (receiptCount);
+                                        const recepitNum = str.substring(str.length - 14, str.length);
+                                        arrSaveToMarketingDBRequests.push(savePaymentToMarketingDB(status, recepitNum, postData, payEezyResult, finalTransDate, accountSummary[count].accID, saveOverallPaymentResponse.overallId, accountSummary[count].amountToBePaid))
+                                    }
+                                    receiptCount++;
+                                }
+                            }
+                            const [saveToMarketingDBRequestsResponse] = await Promise.all([
+                                arrSaveToMarketingDBRequests
+                            ]);
+                            if (savePaymentToCCBResponse.length === arrSavePaymentToCCBRequests.length) {
+                                clearInterval(secondReq);
+                                console.log("save payment to ccb done!");
+                                const thirdReq = setInterval(async () => {
+                                    if (arrSaveToMarketingDBRequests.length === saveToMarketingDBRequestsResponse.length) {
+                                        clearInterval(thirdReq);
+                                        resolve(payEezyResult)
+                                    }
+                                }, 1000);
+                            }
+                        }
+                    }, 1000);
+
+                })
+            )
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+function fetchLatestPayment(accountId, tenderType) {
+    return axios
+        .post(DASHBOARD_URL + '/api/v1/validate',
+            {
+                accountId: accountId,
+                tenderType: tenderType
+            },
+            {
+                headers: { 'Content-Type': 'application/json' }
+            })
+}
+export const saveOrderData = (postData) => dispatch => {
+    const orderData = {
+        accountSummary: postData.accountSummary,
+        subTotal: postData.subTotal
+    }
+    dispatch({
+        type: SAVE_ORDER_DATA,
+        payload: orderData
+    })
 }
 function savePaymentToCCB(recepitNum, accountId, amount, payEezyResult) {
     return new Promise((resolve, reject) => {
@@ -181,120 +272,22 @@ function sendPaymentStatEmail(postData, accountIdsList, payEezyResult, transDate
             })
     });
 }
-export const savePaymentData = (postData) => dispatch => {
-    console.log("postDatapostDatapostDatapostData", postData)
-    let arrSavePaymentToCCBRequests = [], arrSaveToMarketingDBRequests = [], accountIdsList = "";
-    const accountSummary = postData.accountSummary
-    for (let count = 0; count < accountSummary.length; count++) {
-        if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
-            accountIdsList += (accountSummary[count].accID + ', ')
-        }
-    }
-    return new Promise((resolve, reject) => {
-        axios.all([saveToPayEezy(postData)])
-            .then(axios.spread(
-                async (saveToPayEezyResponse) => {
-                    const payEezyResult = saveToPayEezyResponse.data.result
-                    const transDate = doTheSearch("DATE/TIME", payEezyResult)
-                    const arrTransDate = transDate.split(" ")
-                    let finalTransDate = arrTransDate[1] + "-" + arrTransDate[2] + "-" + arrTransDate[3]
-                    let d = new Date(finalTransDate);
-                    finalTransDate = "20" + arrTransDate[3] + "/" + (d.getMonth() + 1) + "/" + arrTransDate[1]
-                    let paymentTotal = 0
-                    for (let count = 0; count < accountSummary.length; count++) {
-                        if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
-                            paymentTotal++;
-                        }
-                    }
-                    for (let count = 0; count < accountSummary.length; count++) {
-                        if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
-                            if (paymentTotal === 1) {
-                                const recepitNum = payEezyResult.data.Reference_No
-                                arrSavePaymentToCCBRequests.push(savePaymentToCCB(recepitNum, accountSummary[count].accID, accountSummary[count].amountToBePaid, payEezyResult))
-                            }
-                            else {
-                                const recepitNum = payEezyResult.data.Reference_No.substr(2) + "-" + (count + 1)
-                                arrSavePaymentToCCBRequests.push(savePaymentToCCB(recepitNum, accountSummary[count].accID, accountSummary[count].amountToBePaid, payEezyResult))
-                            }
 
-                        }
-                    }
-                    const [sendPaymentStatEmailResponse, saveOverallPaymentResponse, savePaymentToCCBResponse] = await Promise.all([
-                        sendPaymentStatEmail(postData, accountIdsList, payEezyResult, transDate),
-                        saveOverallPayment(postData, payEezyResult, finalTransDate),
-                        arrSavePaymentToCCBRequests
-                    ]);
-                    const emailStat = sendPaymentStatEmailResponse.soapenvBody.soapenvFault.detail.ouafFault.ResponseStatus === "F" ? true : true;
-                    const secondReq = setInterval(async () => {
-                        if (emailStat && saveOverallPaymentResponse.result === "Success" && savePaymentToCCBResponse.length === arrSavePaymentToCCBRequests.length) {
-                            clearInterval(secondReq);
-                            for (let count = 0; count < accountSummary.length; count++) {
-                                if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
-                                    const status = payEezyResult.data.Transaction_Approved === "true" ? "PAID" : "DECLINED"
-                                    if (paymentTotal === 1) {
-                                        const recepitNum = payEezyResult.data.Reference_No
-                                        arrSaveToMarketingDBRequests.push(savePaymentToMarketingDB(status, recepitNum, postData, payEezyResult, finalTransDate, accountSummary[count].accID, saveOverallPaymentResponse.overallId, accountSummary[count].amountToBePaid))
-                                    }
-                                    else {
-                                        const recepitNum = payEezyResult.data.Reference_No.substr(2) + "-" + (count + 1)
-                                        arrSaveToMarketingDBRequests.push(savePaymentToMarketingDB(status, recepitNum, postData, payEezyResult, finalTransDate, accountSummary[count].accID, saveOverallPaymentResponse.overallId, accountSummary[count].amountToBePaid))
-                                    }
-                                }
-                            }
-                            const [saveToMarketingDBRequestsResponse] = await Promise.all([
-                                arrSaveToMarketingDBRequests
-                            ]);
-                            const thirdReq = setInterval(async () => {
-                                if (arrSaveToMarketingDBRequests.length === saveToMarketingDBRequestsResponse.length) {
-                                    clearInterval(thirdReq);
-                                    resolve(payEezyResult)
-                                }
-                            }, 500);
-                        }
-                    }, 500);
-
-                })
-            )
-            .catch((error) => {
-                reject(error)
-                Toast.show({
-                    text: 'savePaymentData, Server Error:' + error,
-                    duration: 3000,
-                    type: 'danger'
-                })
-            })
-    })
-}
-export const validateVisaPayment = (accountId) => dispatch => {
+export const validateVisaPayment = (accountId, usedCC) => dispatch => {
+    const tenderType = usedCC === "visa" ? 'CCV' : usedCC === "discover" ? 'CCD' : usedCC === "master" ? 'CCM' : "" //CCV if VISA, CCD for Discover, CCM for MasterCard
     let arrLatestPayment = []
     for (let count = 0; count < 1; count++) {
-        arrLatestPayment.push(fetchLatestPayment(accountId))
+        arrLatestPayment.push(fetchLatestPayment(accountId, tenderType))
     }
     return new Promise((resolve, reject) => {
         axios.all(arrLatestPayment)
             .then((response) => {
                 const resLatestPayment = response[0];
                 let arrResults = []
-                console.log("wawawawawawdadwdwadawdawdwadadwdwawdadwad", resLatestPayment)
-                // for(let count = 0; count < resLatestPayment.length; count++){
-                //     resLatestPayment[count].then(paymentResult => {
-                //         const paymentResponse = paymentResult.data.result.data
-                //         arrResults.push(
-                //             {
-                //                 alreadyPaid: paymentResponse.PaymentAmount,
-                //             }
-                //         )
-                //     })
-                // }
                 resolve(resLatestPayment)
             })
             .catch((error) => {
                 reject(error)
-                Toast.show({
-                    text: 'validateVisaPayment, Server Error:' + error,
-                    duration: 3000,
-                    type: 'danger'
-                })
             })
     });
 }

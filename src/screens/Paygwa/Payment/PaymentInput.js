@@ -21,6 +21,7 @@ import CustomHeader from '../../../components/MultiCustomHeader'
 import _ from 'lodash'
 import { Grid, Row, Col } from 'react-native-easy-grid';
 import { FETCH_CONSUMPTION_DETAILS } from '../../../actions/types';
+import NumberFormat from 'react-number-format';
 
 class PaymentInput extends Component {
   constructor(props) {
@@ -109,15 +110,15 @@ class PaymentInput extends Component {
         <OfflineNotice />
         <Content>
           <View style={{ borderBottomWidth: .3, borderColor: '#3b4043', paddingVertical: 25, paddingHorizontal: 25 }}>
-            <CustomTextBold style={{ color:colors.PRIMARY_COLOR, fontSize: 20 }}>Enter Payment Amount</CustomTextBold>
-            <CustomText>Kindly review before you proceed.</CustomText>
+            <CustomTextBold style={{ color:colors.PRIMARY_COLOR, fontSize: 25 }}>Enter Payment Amount</CustomTextBold>
+            <CustomText style={{ fontSize: 16 }}>Kindly review before you proceed.</CustomText>
           </View>
           <View style={{ borderBottomWidth: .3, borderColor: '#3b4043', paddingVertical: 25, paddingHorizontal: 25 }}>
-            <CustomTextBold >Payment Reference Number</CustomTextBold>
-            <CustomText style={{ paddingTop: 5, paddingBottom: 5, fontSize: 16 }}>{this.state.selectedAccountsId.length === 1 ? 
+            <CustomTextBold style={{ fontSize: 16 }} >Payment Reference Number</CustomTextBold>
+            <CustomText style={{ paddingTop: 5, paddingBottom: 5, fontSize: 18 }}>{this.state.selectedAccountsId.length === 1 ? 
               this.state.selectedAccountsId[0] :
               _.join(this.state.selectedAccountsId, ', ')}</CustomText>
-            <CustomTextBold >Account Name</CustomTextBold>
+            <CustomTextBold style={{ fontSize: 16 }} >Account Name</CustomTextBold>
             <CustomText style={{ paddingTop: 5, fontSize: 16 }}>{this.state.selectedAccounts[0].fullName}</CustomText>
           </View>
           <View style={{ paddingVertical: 25, paddingHorizontal: 25 }}>
@@ -136,13 +137,21 @@ class PaymentInput extends Component {
                         borderRadius: 6,
                         borderColor: 'lightgray',
                       }}>
-                      <Input
-                        textAlign={'center'}
-                        autoCapitalize='none'
-                        placeholderTextColor='lightgray'
-                        keyboardType="numeric"
+                      <NumberFormat
                         value={data.amountToBePaid}
-                        onChangeText={(text) => this.amountToBePaidOnChange(data.accID, text)}
+                        displayType={'text'}
+                        thousandSeparator={true}
+                        prefix={'$ '}
+                        renderText={value => (
+                          <Input
+                            textAlign={'center'}
+                            autoCapitalize='none'
+                            placeholderTextColor='lightgray'
+                            keyboardType="numeric"
+                            value={value}
+                            onChangeText={(value) => this.amountToBePaidOnChange(data.accID, value)}
+                          />
+                        )}
                       />
                     </Item>
                 </Col>
@@ -161,7 +170,7 @@ class PaymentInput extends Component {
           </View>
         </Content>
         <Footer>
-          <FooterTab style={{ backgroundColor: '#4CAF50' }}>
+          <FooterTab style={{ backgroundColor: colors.LIGHT_GREEN }}>
             <Button full disabled={this.state.subtotal == 0 ? true : false}
               onPress={() => {
                 this.props.navigation.navigate('PaymentView',
