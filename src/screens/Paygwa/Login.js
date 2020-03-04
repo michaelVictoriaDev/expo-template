@@ -249,7 +249,9 @@ class Login extends Component {
                             </View>
                             {/* DEMO */}
                             <Button block transparent
-                                onPress={() => Linking.openURL('https://www.prosperna.com/request-for-a-free-demo/')}
+                                onPress={() => this.props.navigation.navigate('SignUpCreateAccount'
+                                    )
+                                    }
                                 style={{}}>
                                 <View style={{ alignSelf: 'center', flexDirection: 'row', height: 30 }}>
                                     <CustomText style={[styles.demo_text, { color: colors.WHITE }]} >Don't have an account?</CustomText>

@@ -49,6 +49,14 @@ class PaymentPayNow extends Component {
             },
         }
     }
+    componentWillMount(){
+        this.setState({
+            userFullName: this.props.dashboard.userAccountDetails.fullName === undefined ? "" : this.props.dashboard.userAccountDetails.fullName,
+            username: this.props.userName,
+        })
+        console.log('userFullName' , this.props.dashboard.userAccountDetails.fullName === undefined ? "" : this.props.dashboard.userAccountDetails.fullName)
+        console.log('username', this.props.userName)
+    }
     
 
     showCardType = () => {
@@ -112,7 +120,7 @@ class PaymentPayNow extends Component {
                         let paymentAmount = result[0].data.result.data.PaymentAmount;
                         let customerClass = result[0].data.result.data.CustomerClass;
                         const totalPayment = parseInt(accountSummary[count].amountToBePaid) + parseInt(paymentAmount);
-
+ 
                         if (totalPayment > 500 && !(customerClass === "RESID")) {
                             accountSummary[count].validAmountToBePaid = false;
                             accountSummary[count].alreadyPaid = paymentAmount;
@@ -130,16 +138,6 @@ class PaymentPayNow extends Component {
 
                         this.props.navigation.navigate('PaymentServerFailed')
                         // SERVER FAILED ilalabas mo dito
-
-
-
-                        // this.props.navigation.navigate('PaymentInput',
-                        //     {
-                        //         selectedAccounts: accountSummary,
-                        //         selectedAccountsId: this.state.selectedAccountsId,
-                        //         subtotal: this.state.subtotal
-                        //     })
-
                         this.setState({
                             isPaymentProcessing: false
                         })
@@ -166,21 +164,21 @@ class PaymentPayNow extends Component {
             //get all checked rows
             let checkedRows = [];
             for (let count = 0; count < accountSummary.length; count++) {
-                if (accountSummary[count].validAmountToBePaid && accountSummary[count].checked) {
+                if (accountSummary[count].validAmountToBePaid ) {
                     checkedRows.push(accountSummary[count]);
                 }
             }
             //get all resid accounts
             let residAccts = [];
             for (let count = 0; count < accountSummary.length; count++) {
-                if (accountSummary[count].className === "RESID" && accountSummary[count].validAmountToBePaid && !accountSummary[count].checked) {
+                if (accountSummary[count].className === "RESID" && accountSummary[count].validAmountToBePaid) {
                     residAccts.push(accountSummary[count]);
                 }
             }
             //get all non-resid accounts
             let nonResidAccts = [];
             for (let count = 0; count < accountSummary.length; count++) {
-                if (accountSummary[count].className != "RESID" && accountSummary[count].validAmountToBePaid && !accountSummary[count].checked) {
+                if (accountSummary[count].className != "RESID" && accountSummary[count].validAmountToBePaid) {
                     nonResidAccts.push(accountSummary[count]);
                 }
             }
@@ -354,25 +352,27 @@ class PaymentPayNow extends Component {
             .then((result) => {
                 console.log('paymentResult', JSON.stringify(result))
                 console.log('accountSummary', this.state.accountSummary)
-                debugger
+                 
                 this.setState({
                     isPaymentProcessing: false
                 })
 
-                if (result.data.Transaction_Approved === true ){
+                if (result.data.Transaction_Approved == 'true' ){
                     this.props.navigation.navigate('PaymentSuccess',
                         {
                             paymentResult: result,
                             accountSummary: this.state.accountSummary
 
                         })
-                } else {
+                } else if (result.data.Transaction_Approved == 'false') {
                     this.props.navigation.navigate('PaymentUserFailed',
                         {
                             paymentResult: result,
                             accountSummary: this.state.accountSummary
 
                         })
+                } else {
+                    this.props.navigation.navigate('PaymentServerFailed')
                 }
 
             })
@@ -572,6 +572,7 @@ class PaymentPayNow extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    userName: state.userState.userName,
     userPersonId: state.userState.userPersonId,
     accountIds: state.userState.accountIds,
     accountId: state.userState.accountId,

@@ -171,7 +171,7 @@ class PaymentInput extends Component {
         </Content>
         <Footer>
           <FooterTab style={{ backgroundColor: colors.LIGHT_GREEN }}>
-            <Button full disabled={this.state.subtotal == 0 ? true : false}
+            <Button full disabled={this.state.subtotal == 0 || _.isNaN(this.state.subtota)? true : false}
               onPress={() => {
                 this.props.navigation.navigate('PaymentView',
                   {

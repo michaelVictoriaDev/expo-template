@@ -17,9 +17,9 @@ export const fetchLoginBegin = () => ({
 	type : FETCH_LOGIN_BEGIN
 })
 
-export const fetchLoginSuccess = (accountIds, userPersonId, accountId) => ({
+export const fetchLoginSuccess = (accountIds, userPersonId, accountId, userName) => ({
 	type : FETCH_LOGIN_SUCCESS,
-	payload: { accountIds, userPersonId, accountId }
+	payload: { accountIds, userPersonId, accountId, userName }
 })
 
 export const fetchLoginFail = ( error ) => ({
@@ -50,6 +50,7 @@ export function fetchLogin (dataObject) {
 			}
 		)
 		.then (response => {
+			 
 			const premiseData = response.data.result.premiseData;
 			if (Array.isArray(premiseData)) {
 				console.log('personId', premiseData[0].PersonID)
@@ -63,7 +64,7 @@ export function fetchLogin (dataObject) {
 					}
 					console.log('accountIds', accountIds)
 					var empty = ''
-					dispatch(fetchLoginSuccess(accountIds, personId, empty));
+					dispatch(fetchLoginSuccess(accountIds, personId, empty, dataObject.emailAddress));
 					// localStorage.setItem('accountIds', accountIds)
 				}
 				else {
@@ -71,7 +72,7 @@ export function fetchLogin (dataObject) {
 					accountId.push([premiseData[0].AccountID, premiseData[0].PremiseInfo.replace(/,/g, ""), premiseData[0].customerClass])
 					console.log('accountId', accountId)
 					var empty = ''
-					dispatch(fetchLoginSuccess(empty, personId, accountId));
+					dispatch(fetchLoginSuccess(empty, personId, accountId, dataObject.emailAddress));
 					// localStorage.setItem('accountId', accountId)
 				}
 			}

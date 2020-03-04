@@ -5,6 +5,7 @@ import {
 import { AppState } from 'react-native';
 
 initialState = {
+  userName: null,
   accountIds : {},
   userPersonId: null,
   isLoginLoading : false,
@@ -28,6 +29,7 @@ const userState = ( state = initialState , action ) => {
         accountIds: action.payload.accountIds,
         userPersonId: action.payload.userPersonId,
         accountId: action.payload.accountId,
+        userName: action.payload.userName
       };
     case FETCH_LOGIN_FAIL :
       return {
@@ -36,7 +38,8 @@ const userState = ( state = initialState , action ) => {
         loginError : action.payload.error,
         accountIds : {},
         userPersonId: null,
-        accountId: {}
+        accountId: {},
+        userName: null
       };
     case HANDLE_APPSTATE :
       return {

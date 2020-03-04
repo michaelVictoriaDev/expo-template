@@ -25,6 +25,7 @@ USED FOR NAVIGATING WITHOUT PROPS
 
 
 function saveToPayEezy(postData) {
+     
     return axios
         .post(PAYNOW_URL + '/api/v1/payeezy',
             {
@@ -46,10 +47,11 @@ export const savePaymentData = (postData) => dispatch => {
     let arrSavePaymentToCCBRequests = [], arrSaveToMarketingDBRequests = [], accountIdsList = "";
     const accountSummary = postData.accountSummary
     for (let count = 0; count < accountSummary.length; count++) {
-        if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
+        if ((accountSummary[count].amountToBePaid > 0)) {
             accountIdsList += (accountSummary[count].accID + ', ')
         }
     }
+     
     return new Promise((resolve, reject) => {
         axios.all([saveToPayEezy(postData)])
             .then(axios.spread(
@@ -62,13 +64,13 @@ export const savePaymentData = (postData) => dispatch => {
                     finalTransDate = "20" + arrTransDate[3] + "/" + (d.getMonth() + 1) + "/" + arrTransDate[1]
                     let paymentTotal = 0
                     for (let count = 0; count < accountSummary.length; count++) {
-                        if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
+                        if ((accountSummary[count].amountToBePaid > 0)) {
                             paymentTotal++;
                         }
                     }
                     let receiptCount = 1;
                     for (let count = 0; count < accountSummary.length; count++) {
-                        if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
+                        if ((accountSummary[count].amountToBePaid > 0)) {
 
                             if (paymentTotal === 1) {
                                 const recepitNum = payEezyResult.data.Reference_No
@@ -92,7 +94,7 @@ export const savePaymentData = (postData) => dispatch => {
                     const secondReq = setInterval(async () => {
                         if (emailStat && saveOverallPaymentResponse.result === "Success") {
                             for (let count = 0; count < accountSummary.length; count++) {
-                                if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
+                                if ((accountSummary[count].amountToBePaid > 0)) {
                                     const status = payEezyResult.data.Transaction_Approved === "true" ? "PAID" : "DECLINED"
                                     if (paymentTotal === 1) {
                                         const recepitNum = payEezyResult.data.Reference_No
@@ -131,6 +133,7 @@ export const savePaymentData = (postData) => dispatch => {
 }
 
 function fetchLatestPayment(accountId, tenderType) {
+     
     return axios
         .post(DASHBOARD_URL + '/api/v1/validate',
             {
@@ -152,6 +155,7 @@ export const saveOrderData = (postData) => dispatch => {
     })
 }
 function savePaymentToCCB(recepitNum, accountId, amount, payEezyResult) {
+     
     return new Promise((resolve, reject) => {
         axios
             .post(PAYNOW_URL + '/api/v1/make-payment',
@@ -180,6 +184,7 @@ function savePaymentToCCB(recepitNum, accountId, amount, payEezyResult) {
     });
 }
 function savePaymentToMarketingDB(status, recepitNum, postData, payEezyResult, finalTransDate, accountId, overallId, amountToBePaid) {
+     
     return new Promise((resolve, reject) => {
         axios
             .post(PAYNOW_URL + '/api/v1/save-payment',
@@ -209,6 +214,7 @@ function savePaymentToMarketingDB(status, recepitNum, postData, payEezyResult, f
     });
 }
 function saveOverallPayment(postData, payEezyResult, finalTransDate) {
+     
     return new Promise((resolve, reject) => {
         axios
             .post(PAYNOW_URL + '/api/v1/save-overall-payment',
@@ -241,6 +247,7 @@ function saveOverallPayment(postData, payEezyResult, finalTransDate) {
 }
 function sendPaymentStatEmail(postData, accountIdsList, payEezyResult, transDate) {
     const auth_num = payEezyResult.data.Authorization_Num.length === 0 ? "" : payEezyResult.data.Authorization_Num
+     
     return new Promise((resolve, reject) => {
         axios
             .post(PAYNOW_URL + '/api/v1/confirm-email',
@@ -279,6 +286,7 @@ export const validateVisaPayment = (accountId, usedCC) => dispatch => {
     for (let count = 0; count < 1; count++) {
         arrLatestPayment.push(fetchLatestPayment(accountId, tenderType))
     }
+     
     return new Promise((resolve, reject) => {
         axios.all(arrLatestPayment)
             .then((response) => {

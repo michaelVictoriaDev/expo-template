@@ -33,6 +33,12 @@ import PaymentSuccessScreen from './src/screens/Paygwa/Payment/PaymentResult/Pay
 import PaymentUserFailedScreen from './src/screens/Paygwa/Payment/PaymentResult/PaymentUserFailed';
 import PaymentServerFailedScreen from './src/screens/Paygwa/Payment/PaymentResult/PaymentServerFailed';
 
+//SignUp Create Account
+
+import SignUpAccountDetailsScreen from './src/screens/Paygwa/SignUp/SignUpAccountDetails';
+import SignUpCreateAccountScreen from './src/screens/Paygwa/SignUp/SignUpCreateAccount';
+import SignUpLoginDetailsScreen from './src/screens/Paygwa/SignUp/SignUpLoginDetails';
+
 
 import { CustomDrawerContent } from './src/components';
 import { Root, Container } from "native-base";
@@ -108,6 +114,15 @@ const InitialStack = createStackNavigator(
     },
     Login: {
       screen: LoginScreen
+    },
+    SignUpAccountDetails: {
+      screen: SignUpAccountDetailsScreen
+    },
+    SignUpCreateAccount: {
+      screen: SignUpCreateAccountScreen
+    },
+    SignUpLoginDetails: {
+      screen: SignUpLoginDetailsScreen
     }
   },
   {
