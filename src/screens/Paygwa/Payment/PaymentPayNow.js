@@ -393,6 +393,7 @@ class PaymentPayNow extends Component {
     }
     //RENDER MAIN COMPONENT
     render() {
+        let mytextvar = 'Billing Zip Code'
         return (
             /* MAIN VIEW COMPONENT */
             <Container >
@@ -504,8 +505,11 @@ class PaymentPayNow extends Component {
                         </Col>
                         </Row>
                         <Row>
+                            <View >
                             <Col size={27}>
-                                <CustomText numberOfLines={1} ellipsizeMode='tail' style={{ width: 100, paddingBottom: 5, fontSize: pRatioToFontSize() > 16 ? 16 : pRatioToFontSize() }} >Billing Zip Code</CustomText>
+                                <CustomText style={{
+                                    paddingBottom: 5, fontSize: pRatioToFontSize() > 16 ? 16 : pRatioToFontSize(), flex: 1
+                                }} ellipsizeMode='tail' numberOfLines={1}  >Billing Zip Code</CustomText>
                                 <Item regular
                                     style={{
                                         marginLeft: 0,
@@ -523,6 +527,7 @@ class PaymentPayNow extends Component {
                                     />
                                 </Item>
                             </Col>
+                            </View>
                             <Col size={3} />
                             <Col size={70}>
                                 <CustomText style={{ paddingBottom: 5, fontSize: 16 }} >Confirmation Email</CustomText>

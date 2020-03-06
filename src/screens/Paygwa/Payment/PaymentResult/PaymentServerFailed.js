@@ -13,7 +13,7 @@ import CustomTextBold from '../../../../components/CustomTextBold';
 import OfflineNotice from '../../../../components/OfflineNotice';
 import CustomHeader from '../../../../components/MultiCustomHeader'
 import { Grid, Row, Col } from 'react-native-easy-grid';
-
+import { FontAwesome } from '@expo/vector-icons';
 class PaymentServerFailed extends Component {
     constructor(props) {
         super(props);

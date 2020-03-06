@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { List, Button, Container, Header, Left, Body, Right, Badge, Footer, FooterTab, Icon, Input, Picker, Toast, CheckBox, Content, ListItem, Form, Item, Text } from 'native-base';
 import {
+    KeyboardAvoidingView,
   PixelRatio, StyleSheet, Dimensions, TouchableHighlight, Image, Alert, AppState, FlatList, Linking, View, ActivityIndicator, Platform, TouchableOpacity, TouchableWithoutFeedback
 } from 'react-native';
 import Moment from 'moment';
@@ -109,6 +110,9 @@ class PaymentInput extends Component {
         />
         <OfflineNotice />
         <Content>
+          <KeyboardAvoidingView
+            behavior="padding"
+          >
           <View style={{ borderBottomWidth: .3, borderColor: '#3b4043', paddingVertical: 25, paddingHorizontal: 25 }}>
             <CustomTextBold style={{ color:colors.PRIMARY_COLOR, fontSize: 25 }}>Enter Payment Amount</CustomTextBold>
             <CustomText style={{ fontSize: 16 }}>Kindly review before you proceed.</CustomText>
@@ -168,6 +172,7 @@ class PaymentInput extends Component {
               })
             }
           </View>
+          </KeyboardAvoidingView>
         </Content>
         <Footer>
           <FooterTab style={{ backgroundColor: colors.LIGHT_GREEN }}>

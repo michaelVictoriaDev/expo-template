@@ -5,13 +5,16 @@ import PropTypes from 'prop-types';
 import ProgressButtons from './ProgressButtons';
 
 class ProgressStep extends Component {
-  onNextStep = async (e) => {
-    this.props.onNext && (await this.props.onNext(e));
+  onNextStep = async () => {
 
     // Return out of method before moving to next step if errors exist.
     if (this.props.errors) {
       return;
     }
+    
+    this.props.onNext && (await this.props.onNext());
+
+
 
     this.props.setActiveStep(this.props.activeStep + 1);
   };
@@ -49,7 +52,7 @@ class ProgressStep extends Component {
     return (
       <TouchableOpacity
         style={btnStyle}
-        onPress={this.props.activeStep === this.props.stepCount - 1 ? this.onSubmit : this.onNextStep(e)}
+        onPress={this.props.activeStep === this.props.stepCount - 1 ? this.onSubmit : this.onNextStep}
         disabled={this.props.nextBtnDisabled}
       >
         <Text style={textStyle}>

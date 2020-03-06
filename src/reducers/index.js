@@ -5,8 +5,11 @@ import { combineReducers } from 'redux';
 // import Navigator from './navigation';
 import userState from './userstate';
 import dashboard from './userMyAccounts'
+import users from './userSignUp'
 
 export default combineReducers({
 	userState,
-	dashboard
+	dashboard,
+	// user in sign up
+	users,
 });

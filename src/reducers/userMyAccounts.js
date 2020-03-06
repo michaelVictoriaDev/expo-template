@@ -14,7 +14,7 @@ import {
     FETCH_PAYMENT_HISTORY_LIST
 } from '../actions/types';
 
-const initialState = {
+initialState = {
     selectedAccountId: '',
     selectedPremAdd: '',
     userAccountDetails: [],
