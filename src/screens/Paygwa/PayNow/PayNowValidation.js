@@ -4,20 +4,20 @@ import { Button, Container, Right, Input, Content, Item, Text } from 'native-bas
 import {
     KeyboardAvoidingView, View
 } from 'react-native';
-import Modal from 'react-native-modal'
 import { colors, pRatioToFontSize } from '../../../utils/constants';
 import CustomText from '../../../components/CustomText';
 import CustomTextBold from '../../../components/CustomTextBold';
 import OfflineNotice from '../../../components/OfflineNotice';
 import CustomHeader from '../../../components/MultiCustomHeader'
 import _ from 'lodash'
-import SignUpLoginDetails from './SignUpLoginDetails'
-import SignUpCreateAccount from './SignUpCreateAccount'
+import PayNowCustomerInformation from './PayNowCustomerInformation'
+import PayNowEnterPayment from './PayNowEnterPayment'
+// import SignUpCreateAccount from './SignUpCreateAccount'
 import StepIndicator from 'react-native-step-indicator';
 import NavigationService from '../../../NavigationService';
 
 
-const labels = ["ENTER ACCOUNT NO.", "ACCOUNT DETAILS", "LOGIN DETAILS"];
+const labels = ["Customer Information", "Validation", "Enter Payment"];
 const customStyles = {
     stepIndicatorSize: 35,
     currentStepIndicatorSize: 40,
@@ -42,7 +42,7 @@ const customStyles = {
     currentStepLabelColor: colors.BLACK
 }
 
-class SignUpAccountDetails extends Component {
+class PayNowValidation extends Component {
     constructor(props) {
         super(props);
 
@@ -56,85 +56,37 @@ class SignUpAccountDetails extends Component {
     }
 
 
-    handleClose() {
-        this.setState({ showModal: false });
-    }
-    handleShow() {
-        this.setState({ showModal: true });
-    }
-
 
     //RENDER MAIN COMPONENT
     render() {
-        // const userBasicInfo = this.props.users.userBasicInfo;
 
-        // let fullName = userBasicInfo.fullName;
         let fullName = 'Michael Roevie Victoria'
         const slice1Fname = fullName.slice(0, 2);
         const slice2Fname = fullName.slice(2).replace(/[\S]/g, "*");
         fullName = slice1Fname + slice2Fname;
 
-        // let userAddressDetails = this.props.users.userAddressDetails, userPremAddressDetails = this.props.users.userPremAddressDetails, userAcovAddressDetails = this.props.users.userAcovAddressDetails, addressDetails;
-        // if (this.props.billAddressSource === "PER") {
-        //     addressDetails = userAddressDetails.address1 + ", " + userAddressDetails.city + ", " + userAddressDetails.state + ", " + userAddressDetails.postal + ", " + userAddressDetails.country
-        // }
-        // else if (this.props.billAddressSource === "PREM") {
-        //     addressDetails = userPremAddressDetails.address1 + ", " + userPremAddressDetails.city + ", " + userPremAddressDetails.state + ", " + userPremAddressDetails.postal + ", " + userPremAddressDetails.country
-        // }
-        // else if (this.props.billAddressSource === "ACOV") {
-        //     addressDetails = userAcovAddressDetails.address1 + ", " + userAcovAddressDetails.city + ", " + userAcovAddressDetails.state + ", " + userAcovAddressDetails.postal + ", " + userAcovAddressDetails.country
-        // }
 
-        // const slice1AddDetails = addressDetails.slice(0, 10);
-        // const slice2AddDetails = addressDetails.slice(10).replace(/[\S]/g, "X");
-        // const finalAddressDetails = slice1AddDetails + slice2AddDetails;
-
-        const modalMessage = "Should the above address be incorrect, please select cancel and call GWA 7:30am to 6:00pm) or email us at customers@guamwaterworks.org";
-        let modalShow = <Modal isVisible={this.state.showModal} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1} animationIn={'zoomInDown'} animationOut={'zoomOutUp'}
-            animationInTiming={1000} animationOutTiming={1000} backdropTransitionInTiming={1000} backdropTransitionOutTiming={1000}
-            onRequestClose={() => this.setState({ showModal: false })}
-        >
-            <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 20, paddingVertical: 20 }}>
-                <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                    <CustomTextBold style={{ paddingVertical: 5 }}>Confirm Your Address</CustomTextBold>
-                    <CustomTextBold style={{ paddingVertical: 5 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit</CustomTextBold>
-                    <CustomText style={{ paddingVertical: 5 }}>{modalMessage}</CustomText>
-                </View>
-                <View style={{ paddingVertical: 10 }}>
-                    <Button block success onPress={() => {
-                        this.setState({
-                            showModal: false,
-                            isSuccess: true
-                        })
-                    }
-                    }>
-                        <Text>Yes, Proceed</Text>
-                    </Button>
-                </View>
-                <View style={{ paddingVertical: 10 }} >
-                    <Button block light onPress={() => this.setState({ showModal: false })}  >
-                        <Text style={{ color: colors.BLACK }}>Cancel</Text>
-                    </Button>
-                </View>
-            </View>
-        </Modal>;
+        let fullAddress = 'Unit 503, Prime Land Tower, Venture St, Ayala Alabang, Muntinlupa, 1770 Metro Manila'
+        const slice1Faddress = fullAddress.slice(0, 2);
+        const slice2Faddress = fullAddress.slice(2).replace(/[\S]/g, "*");
+        fullAddress = slice1Faddress + slice2Faddress;
 
         return (
             /* MAIN VIEW COMPONENT */
             (this.state.isSuccess === true && this.state.showModal === false) ?
-                <SignUpLoginDetails />
+                <PayNowEnterPayment/>
                 :
                 this.state.isGoBack === true ?
-                    <SignUpCreateAccount />
+                     <PayNowCustomerInformation />
                     :
-            <Container >
-                <CustomHeader
-                    fontSizeLeft={pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1)}
-                    leftButtonFunction={() => NavigationService.goBack('Login')}
-                    title="Create Account"
-                    RightIcon={<Right />}
-                />
-                <OfflineNotice />
+                    <Container >
+                        <CustomHeader
+                            fontSizeLeft={pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1)}
+                            leftButtonFunction={() => NavigationService.goBack('Login')}
+                            title="Create Account"
+                            RightIcon={<Right />}
+                        />
+                        <OfflineNotice />
                         <View style={{ paddingVertical: 10, paddingHorizontal: 40 }} >
                             <StepIndicator
                                 stepCount={3}
@@ -143,11 +95,12 @@ class SignUpAccountDetails extends Component {
                                 labels={labels}
                             />
                         </View>
-                        <Content style={{ backgroundColor: '#FFFF', paddingHorizontal: 40, paddingTop: 30  }}>
+                       
+                        <Content style={{ backgroundColor: '#FFFF', paddingHorizontal: 40, paddingTop: 30 }}>
                             <KeyboardAvoidingView
                                 behavior="padding"
                             >
-                                {modalShow}
+                                <CustomTextBold style={{ paddingVertical: 10, fontSize: 18 }}>Is This You ?</CustomTextBold>
                                 <CustomText style={{ paddingVertical: 10 }}>Customer Name</CustomText>
                                 <Item regular
                                     style={{
@@ -167,7 +120,7 @@ class SignUpAccountDetails extends Component {
 
                                 </Item>
 
-                                <CustomText style={{ paddingVertical: 10 }}>Billing Zip Code: (Enter your 5-digit zip code.)</CustomText>
+                                <CustomText style={{ paddingVertical: 10 }}>Address</CustomText>
                                 <Item regular
                                     style={{
                                         borderStyle: 'solid',
@@ -179,20 +132,16 @@ class SignUpAccountDetails extends Component {
                                         borderWidth: 1
                                     }}>
                                     <Input
-                                        keyboardType='numeric'
-                                        autoCapitalize='none'
-                                        value={this.state.billingZipCode}
-                                        onChangeText={(text) => {
-                                            this.setState({
-                                                ...this.state,
-                                                billingZipCode: text
-                                            })
-                                        }}
+                                        disabled
+                                        value={fullAddress}
                                     />
 
                                 </Item>
                                 <View style={{ paddingVertical: 15 }}>
-                                    <Button block success onPress={() => this.setState({ showModal: true })} >
+                                    <Button block success onPress={() => this.setState({
+                                        showModal: false,
+                                        isSuccess: true
+                                    })} >
                                         <Text>Continue</Text>
                                     </Button>
                                 </View>
@@ -205,9 +154,9 @@ class SignUpAccountDetails extends Component {
                                         <Text>Back</Text>
                                     </Button>
                                 </View>
-                                </KeyboardAvoidingView>
+                            </KeyboardAvoidingView>
                         </Content>
-            </Container>
+                    </Container>
         )
     }
 }
@@ -218,4 +167,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
 
-})(SignUpAccountDetails);
+})(PayNowValidation);

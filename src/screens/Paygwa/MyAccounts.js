@@ -17,7 +17,7 @@ import CustomText from '../../components/CustomText';
 import OfflineNotice from '../../components/OfflineNotice';
 import CustomHeader from '../../components/MultiCustomHeader'
 import _ from 'lodash'
-import { Grid, Row, Col } from 'react-native-easy-grid';
+import { Row, Col } from 'react-native-easy-grid';
 
 class MyAccount extends Component {
   willFocus = this.props.navigation.addListener(

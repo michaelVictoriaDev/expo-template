@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, PixelRatio, Image, Keyboard, Dimensions, Alert, Linking, Platform, ImageBackground, ActivityIndicator } from 'react-native';
+import { StyleSheet, PixelRatio, Image, Keyboard, Dimensions, Linking, ImageBackground, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import { View, Text, Input, Item, Button, Icon, Toast } from 'native-base';
+import { View, Input, Item, Button, Toast } from 'native-base';
 import { colors, pRatioToFontSize } from '../../utils/constants';
-import { fetchLogin, signInWithGoogleAsync } from '../../actions';
+import { fetchLogin } from '../../actions';
 import _ from 'lodash';
-import * as GoogleSignIn from 'expo-google-sign-in';
 import * as AppAuth from 'expo-app-auth';
-const { URLSchemes } = AppAuth;
-import * as Constants from 'expo-constants';
 import CustomText from '../../components/CustomText';
 import CustomTextBold from '../../components/CustomTextBold';
 import Offline from '../../components/OfflineNotice';

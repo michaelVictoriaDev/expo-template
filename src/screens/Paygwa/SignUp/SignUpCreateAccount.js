@@ -1,25 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { List, Button, Container, Header, Left, Body, Right, Badge, Footer, FooterTab, Icon, Input, Picker, Toast, CheckBox, Content, ListItem, Form, Item, Text, Spinner } from 'native-base';
+import { Button, Container, Right, Icon, Input, Content, Item, Text } from 'native-base';
 import {
-    PixelRatio, StyleSheet, Dimensions, TouchableHighlight, Image, Alert, AppState, FlatList, Linking, View, ActivityIndicator, Platform, TouchableOpacity, TouchableWithoutFeedback
+    View
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import UserAvatar from 'react-native-user-avatar';
-import Moment from 'moment';
-import Modal from 'react-native-modal';
-// import ProgressSteps from '../../../components/ProgressSteps/ProgressSteps'
-// import ProgressStep  from '../../../components/ProgressSteps/ProgressStep';
-// import { ProgressSteps, ProgressStep } from 'react-native-progress-steps'
+
 import SignUpAccountDetails from './SignUpAccountDetails'
 import { colors, pRatioToFontSize } from '../../../utils/constants';
 import CustomText from '../../../components/CustomText';
-import CustomTextBold from '../../../components/CustomTextBold';
 import OfflineNotice from '../../../components/OfflineNotice';
 import CustomHeader from '../../../components/MultiCustomHeader'
 import _ from 'lodash'
-import { Grid, Row, Col } from 'react-native-easy-grid';
 import {
     checkAccountNumber,
     getOtherDetails,
@@ -40,17 +31,17 @@ const customStyles = {
     stepStrokeCurrentColor: colors.PRIMARY_COLOR,
     stepStrokeWidth: 3,
     stepStrokeFinishedColor: colors.PRIMARY_COLOR,
-    stepStrokeUnFinishedColor: colors.PRIMARY_COLOR,
+    stepStrokeUnFinishedColor: colors.LINK_WATER,
     separatorFinishedColor: colors.PRIMARY_COLOR,
-    separatorUnFinishedColor: colors.PRIMARY_COLOR,
+    separatorUnFinishedColor: colors.LINK_WATER,
     stepIndicatorFinishedColor: colors.PRIMARY_COLOR,
-    stepIndicatorUnFinishedColor: '#ffffff',
-    stepIndicatorCurrentColor: '#ffffff',
+    stepIndicatorUnFinishedColor: colors.LINK_WATER,
+    stepIndicatorCurrentColor: colors.PRIMARY_COLOR,
     stepIndicatorLabelFontSize: 14,
     currentStepIndicatorLabelFontSize: 14,
-    stepIndicatorLabelCurrentColor: colors.PRIMARY_COLOR,
+    stepIndicatorLabelCurrentColor: colors.WHITE,
     stepIndicatorLabelFinishedColor: colors.WHITE,
-    stepIndicatorLabelUnFinishedColor: '#aaaaaa',
+    stepIndicatorLabelUnFinishedColor: colors.WHITE,
     labelColor: colors.BLACK,
     labelSize: 14,
     currentStepLabelColor: colors.BLACK
@@ -94,12 +85,7 @@ class SignUpCreateAccount extends Component {
 
 
 
-    onPageChange(position) {
-        this.setState({ currentPosition: position });
-    }
-
     onSubmit = () => {
-        this.onPageChange(1)
         this.setState({
             isLoading: false,
             isSuccess: true,
@@ -262,18 +248,20 @@ class SignUpCreateAccount extends Component {
                     </View>
                     <Content style={{ backgroundColor: colors.WHITE, paddingHorizontal: 60, paddingTop: 30 }} >
                         <CustomText style={{ paddingVertical: 5 }}>Enter the 10-digit account number </CustomText>
-                        <CustomText style={{
-                            color: colors.RED, paddingVertical: this.state.isValid ?
-                                5
-                                :
-                                0 }}>
-                            {
-                                this.state.isValid ?
-                                    this.state.resultMessage
-                                    :
-                                    null
-                            }
-                        </CustomText>
+                        {this.state.isValid ?
+                            <CustomText style={{
+                                color: colors.RED, paddingVertical: 5
+                            }}>
+                                {
+                                    this.state.isValid ?
+                                        this.state.resultMessage
+                                        :
+                                        null
+                                }
+                            </CustomText>
+                            :
+                            null
+                        }
                             <Item regular
                                 style={{
                                     borderStyle: 'solid',

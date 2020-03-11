@@ -12,6 +12,8 @@ export const colors = {
   PINK_400: '#EC407A',
   PINK_500: '#E91E63',
   PRIMARY_COLOR: '#1788c7',
+  DARK_GRAY: '#AAAAAA',
+  LINK_WATER: '#D0D1D3',
 };
 
 export const timesPicker = [

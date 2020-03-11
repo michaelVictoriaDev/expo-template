@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { List, Button, Container, Header, Left, Body, Right, Badge, Footer, FooterTab, Icon, Input, Picker, Toast, CheckBox, Content, ListItem, Form, Item, Text } from 'native-base';
+import { Button, Container, Right, Content } from 'native-base';
 import {
-    PixelRatio, StyleSheet, Dimensions, TouchableHighlight, Image, Alert, AppState, FlatList, Linking, View, ActivityIndicator, Platform, TouchableOpacity, TouchableWithoutFeedback
+    View
 } from 'react-native';
-import Moment from 'moment';
-import Modal from 'react-native-modal';
-
 import { colors, pRatioToFontSize } from '../../../../utils/constants';
 import CustomText from '../../../../components/CustomText';
 import CustomTextBold from '../../../../components/CustomTextBold';
 import OfflineNotice from '../../../../components/OfflineNotice';
 import CustomHeader from '../../../../components/MultiCustomHeader'
-import { Grid, Row, Col } from 'react-native-easy-grid';
 import { FontAwesome } from '@expo/vector-icons';
 class PaymentServerFailed extends Component {
     constructor(props) {

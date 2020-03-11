@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, PixelRatio, Image, Keyboard, Dimensions, Alert, Linking, Platform, ImageBackground } from 'react-native';
+import { StyleSheet, PixelRatio, Image, Keyboard, Dimensions, ImageBackground } from 'react-native';
 import { connect } from 'react-redux';
-import { View, Input, Item, Button, Icon, Toast } from 'native-base';
+import { View, Button } from 'native-base';
 import { colors, pRatioToFontSize } from '../../utils/constants';
-import { fetchLogin, signInWithGoogleAsync } from '../../actions';
 import _ from 'lodash';
-import * as GoogleSignIn from 'expo-google-sign-in';
-import * as AppAuth from 'expo-app-auth';
-const { URLSchemes } = AppAuth;
-import * as Constants from 'expo-constants';
 import CustomText from '../../components/CustomText';
 import CustomTextBold from '../../components/CustomTextBold';
 import Offline from '../../components/OfflineNotice';
@@ -121,7 +116,7 @@ class InitialLogin extends Component {
                         <Button block rounded transparent
                             style={[styles.buttons, { backgroundColor: colors.LIGHT_GREEN, borderRadius: 6, borderWidth: 0.5, height: 50 }]}
                             onPress={() =>
-                                console.log('pay now')
+                                this.props.navigation.navigate("Paynow")
                             }>
                             <CustomTextBold style={{ color: colors.WHITE }}>Pay Now</CustomTextBold>
                         </Button>

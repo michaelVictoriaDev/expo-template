@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { List, Button, Container, Header, Left, Body, Right, Badge, Footer, FooterTab, Icon, Input, Picker, Toast, CheckBox, Content, ListItem, Form, Item, Text, DatePicker } from 'native-base';
+import {  Button, Container, Right, Footer, FooterTab, Input, Toast, Content, Item,  DatePicker } from 'native-base';
 import {
-    PixelRatio, StyleSheet, Dimensions, TouchableHighlight, Image, Alert, AppState, FlatList, Linking, View, ActivityIndicator, Platform, TouchableOpacity, TouchableWithoutFeedback
+   Image, View
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import UserAvatar from 'react-native-user-avatar';
-import Moment from 'moment';
-import Modal from 'react-native-modal';
 import {
     saveAccountId,
     savePremiseAddress,
@@ -27,7 +22,6 @@ import _ from 'lodash'
 import { Grid, Row, Col } from 'react-native-easy-grid';
 import moment from 'moment'
 import NumberFormat from 'react-number-format';
-import { TextInputMask } from 'react-native-masked-text'
 
 class PaymentPayNow extends Component {
     constructor(props) {

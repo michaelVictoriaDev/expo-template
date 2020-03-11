@@ -12,10 +12,13 @@ import OfflineNotice from '../../../components/OfflineNotice';
 import CustomHeader from '../../../components/MultiCustomHeader'
 import _ from 'lodash'
 import StepIndicator from 'react-native-step-indicator';
-import SignUpAccountDetails from './SignUpAccountDetails'
+import PayNowValidation from './PayNowValidation'
 import NavigationService from '../../../NavigationService';
+import NumberFormat from 'react-number-format';
+import { Row, Col, Grid } from 'react-native-easy-grid';
 
-const labels = ["ENTER ACCOUNT NO.", "ACCOUNT DETAILS", "LOGIN DETAILS"];
+
+const labels = ["Customer Information", "Validation", "Enter Payment"];
 const customStyles = {
     stepIndicatorSize: 35,
     currentStepIndicatorSize: 40,
@@ -39,7 +42,8 @@ const customStyles = {
     labelSize: 14,
     currentStepLabelColor: colors.BLACK
 }
-class SignUpLoginDetails extends Component {
+
+class PayNowEnterPayment extends Component {
     constructor(props) {
         super(props);
 
@@ -49,6 +53,7 @@ class SignUpLoginDetails extends Component {
             selected2: 'key0',
             currentPosition: 3,
             isGoBack: false,
+            amountToBePaid: '1000.00'
         }
     }
 
@@ -62,10 +67,21 @@ class SignUpLoginDetails extends Component {
 
     //RENDER MAIN COMPONENT
     render() {
+
+        let fullName = 'Michael Roevie Victoria'
+        const slice1Fname = fullName.slice(0, 2);
+        const slice2Fname = fullName.slice(2).replace(/[\S]/g, "*");
+        fullName = slice1Fname + slice2Fname;
+
+
+        let fullAddress = 'Unit 503, Prime Land Tower, Venture St, Ayala Alabang, Muntinlupa, 1770 Metro Manila'
+        const slice1Faddress = fullAddress.slice(0, 2);
+        const slice2Faddress = fullAddress.slice(2).replace(/[\S]/g, "*");
+        fullAddress = slice1Faddress + slice2Faddress;
         return (
             /* MAIN VIEW COMPONENT */
             (this.state.isGoBack === true) ?
-                <SignUpAccountDetails />
+                <PayNowValidation />
                 :
                 <Container >
                     <CustomHeader
@@ -100,8 +116,7 @@ class SignUpLoginDetails extends Component {
                                 // border: '10px solid blue'
 
                             }}>
-                                <CustomTextBold style={{ paddingBottom: 5, fontSize: 16 }}>Login Details</CustomTextBold>
-                                <CustomText style={{ paddingVertical: 5 }}>UserName</CustomText>
+                                <CustomText style={{ paddingVertical: 5 }}>Amount to be paid</CustomText>
                                 <Item regular
                                     style={{
                                         borderStyle: 'solid',
@@ -112,21 +127,29 @@ class SignUpLoginDetails extends Component {
                                         marginBottom: 5,
                                         borderWidth: 1
                                     }}>
-                                    <Input
-                                        textContentType='username'
-                                        keyboardType='default'
-                                        autoCapitalize='none'
-                                        value={this.state.userName}
-                                        onChangeText={(text) => {
-                                            this.setState({
-                                                ...this.state,
-                                                userName: text
-                                            })
-                                        }}
+                                    <NumberFormat
+                                    fixedDecimalScale
+                                        
+                                        value={this.state.amountToBePaid}
+                                        displayType={'text'}
+                                        thousandSeparator={true}
+                                        prefix={'$ '}
+                                        renderText={value => (
+                                            <Input
+                                                textAlign={'left'}
+                                                autoCapitalize='none'
+                                                placeholderTextColor='lightgray'
+                                                keyboardType="numeric"
+                                                value={value}
+                                                onChangeText={(value) => this.setState({
+                                                    amountToBePaid: value
+                                                })}
+                                            />
+                                        )}
                                     />
 
                                 </Item>
-                                <CustomText style={{ paddingVertical: 5 }}>Password</CustomText>
+                                <CustomText style={{ paddingVertical: 5 }}>Card Holder Name</CustomText>
                                 <Item regular
                                     style={{
                                         borderStyle: 'solid',
@@ -138,29 +161,18 @@ class SignUpLoginDetails extends Component {
                                         borderWidth: 1
                                     }}>
                                     <Input
-                                        // placeholder={'Password'}
-                                        // placeholderTextColor='lightgray'
-                                        secureTextEntry={this.state.hidePassword}
+
                                         onChangeText={(input) => {
                                             this.setState({
-                                                password: input
+                                                cardHolderName: input
                                             })
                                         }}
                                         blurOnSubmit={true}
                                     />
-                                    <Icon name='eye' onPress={() => {
-                                        //TOGGLE EYE COLOR
-                                        if (this.state.hidePassword == true) {
-                                            this.setState({ eyeColor: 'black' })
-                                        } else {
-                                            this.setState({ eyeColor: 'lightgray' })
-                                        }
-                                        this.setState({ hidePassword: !(this.state.hidePassword) })
-                                    }}
-                                        style={{ color: this.state.eyeColor, }} />
+
                                 </Item>
 
-                                <CustomText style={{ paddingVertical: 5 }}>Confirm Password</CustomText>
+                                <CustomText style={{ paddingVertical: 5 }}>Card Number</CustomText>
                                 <Item regular
                                     style={{
                                         borderStyle: 'solid',
@@ -172,45 +184,16 @@ class SignUpLoginDetails extends Component {
                                         borderWidth: 1
                                     }}>
                                     <Input
-                                        // placeholder={'Password'}
-                                        // placeholderTextColor='lightgray'
-                                        secureTextEntry={this.state.hidePasswordConfirm}
                                         onChangeText={(input) => {
                                             this.setState({
-                                                confirmPassword: input
+                                                cardNumber: input
                                             })
                                         }}
                                         blurOnSubmit={true}
                                     />
-                                    <Icon name='eye' onPress={() => {
-                                        //TOGGLE EYE COLOR
-                                        if (this.state.hidePasswordConfirm == true) {
-                                            this.setState({ eyeColorCormfirmPassword: 'black' })
-                                        } else {
-                                            this.setState({ eyeColorCormfirmPassword: 'lightgray' })
-                                        }
-                                        this.setState({ hidePasswordConfirm: !(this.state.hidePasswordConfirm) })
-                                    }}
-                                        style={{ color: this.state.eyeColorCormfirmPassword, }} />
+
                                 </Item>
-                            </View>
-
-                            <View style={{ paddingVertical: 20 }} />
-
-                            <View style={{
-                                boxSizing: 'border-box',
-                                paddingHorizontal: 25,
-                                paddingVertical: 25,
-                                // padding: 30,  
-                                borderRadius: 6,
-                                borderStyle: 'solid',
-                                borderWidth: 1,
-                                borderColor: 'lightgray'
-                                // border: '10px solid blue'
-
-                            }}>
-                                <CustomTextBold style={{ paddingBottom: 5, fontSize: 16 }}>Contact Details</CustomTextBold>
-                                <CustomText style={{ paddingVertical: 5 }}>Email Address</CustomText>
+                                <CustomText style={{ paddingVertical: 5 }}>Expiration Date</CustomText>
                                 <Item regular
                                     style={{
                                         borderStyle: 'solid',
@@ -222,73 +205,39 @@ class SignUpLoginDetails extends Component {
                                         borderWidth: 1
                                     }}>
                                     <Input
-                                        blurOnSubmit={true}
-                                        keyboardType='email-address'
-                                        textContentType='emailAddress'
-                                        autoCapitalize='none'
-                                        value={this.state.emailAdd}
-                                        onChangeText={(text) => {
-                                            this.setState({
-                                                ...this.state,
-                                                emailAdd: text
-                                            })
-                                        }}
-                                    />
-
-                                </Item>
-                                <CustomText style={{ paddingVertical: 5 }}>Home Phone</CustomText>
-                                <Item regular
-                                    style={{
-                                        borderStyle: 'solid',
-                                        marginLeft: 0,
-                                        backgroundColor: colors.WHITE,
-                                        borderRadius: 6,
-                                        borderColor: 'lightgray',
-                                        marginBottom: 5,
-                                        borderWidth: 1
-                                    }}>
-                                    <Input
-                                        keyboardType='numeric'
-                                        textContentType='telephoneNumber'
-                                        autoCapitalize='none'
-                                        secureTextEntry={this.state.homePhone}
                                         onChangeText={(input) => {
                                             this.setState({
-                                                homePhone: input
+                                                cardNumber: input
                                             })
                                         }}
                                         blurOnSubmit={true}
                                     />
 
                                 </Item>
+                                <CustomText style={{ paddingVertical: 5 }}>CVV</CustomText>
+                                    <Item regular
+                                        style={{
+                                            borderStyle: 'solid',
+                                            marginLeft: 0,
+                                            backgroundColor: colors.WHITE,
+                                            borderRadius: 6,
+                                            borderColor: 'lightgray',
+                                            marginBottom: 5,
+                                            borderWidth: 1
+                                        }}>
+                                        <Input
+                                            onChangeText={(input) => {
+                                                this.setState({
+                                                    cardNumber: input
+                                                })
+                                            }}
+                                            blurOnSubmit={true}
+                                        />
 
-                                <CustomText style={{ paddingVertical: 5 }}>Mobile Phone</CustomText>
-                                <Item regular
-                                    style={{
-                                        borderStyle: 'solid',
-                                        marginLeft: 0,
-                                        backgroundColor: colors.WHITE,
-                                        borderRadius: 6,
-                                        borderColor: 'lightgray',
-                                        marginBottom: 5,
-                                        borderWidth: 1
-                                    }}>
+                                    </Item>
 
-                                    <Input
-                                        keyboardType='numeric'
-                                        textContentType='telephoneNumber'
-                                        autoCapitalize='none'
-                                        secureTextEntry={this.state.mobilePhone}
-                                        onChangeText={(input) => {
-                                            this.setState({
-                                                mobilePhone: input
-                                            })
-                                        }}
-                                        blurOnSubmit={true}
-                                    />
-
-                                </Item>
-                                <CustomText style={{ paddingVertical: 5 }}>Work Phone</CustomText>
+               
+                                <CustomText style={{ paddingVertical: 5 }}>Confirmation Email</CustomText>
                                 <Item regular
                                     style={{
                                         borderStyle: 'solid',
@@ -300,91 +249,54 @@ class SignUpLoginDetails extends Component {
                                         borderWidth: 1
                                     }}>
                                     <Input
-                                        keyboardType='numeric'
-                                        textContentType='telephoneNumber'
-                                        autoCapitalize='none'
-                                        secureTextEntry={this.state.workPhone}
                                         onChangeText={(input) => {
                                             this.setState({
-                                                workPhone: input
+                                                cardNumber: input
                                             })
                                         }}
                                         blurOnSubmit={true}
+                                    />
+
+                                </Item>
+                                <CustomText style={{ paddingVertical: 10 }}>Customer Name</CustomText>
+                                <Item regular
+                                    style={{
+                                        borderStyle: 'solid',
+                                        marginLeft: 0,
+                                        backgroundColor: colors.WHITE,
+                                        borderRadius: 6,
+                                        borderColor: 'lightgray',
+                                        marginBottom: 5,
+                                        borderWidth: 1,
+                                    }}>
+                                    <Input
+                                        disabled
+                                        value={fullName}
+
+                                    />
+
+                                </Item>
+
+                                <CustomText style={{ paddingVertical: 10 }}>Address</CustomText>
+                                <Item regular
+                                    style={{
+                                        borderStyle: 'solid',
+                                        marginLeft: 0,
+                                        backgroundColor: colors.WHITE,
+                                        borderRadius: 6,
+                                        borderColor: 'lightgray',
+                                        marginBottom: 5,
+                                        borderWidth: 1
+                                    }}>
+                                    <Input
+                                        disabled
+                                        value={fullAddress}
                                     />
 
                                 </Item>
                             </View>
 
-                            <View style={{ paddingVertical: 20 }} />
-
-                            <View style={{
-                                boxSizing: 'border-box',
-                                paddingHorizontal: 25,
-                                paddingVertical: 25,
-                                // padding: 30,  
-                                borderRadius: 6,
-                                borderStyle: 'solid',
-                                borderWidth: 1,
-                                borderColor: 'lightgray'
-                                // border: '10px solid blue'
-
-                            }}>
-
-                                <CustomTextBold style={{ paddingBottom: 5, fontSize: 16 }}>Security Details</CustomTextBold>
-                                <CustomText style={{ paddingVertical: 5 }}>Security Question</CustomText>
-                                <Item regular
-                                    style={{
-                                        flex: 1,
-                                        width: null,
-                                        borderStyle: 'solid',
-                                        marginLeft: 0,
-                                        backgroundColor: colors.WHITE,
-                                        borderRadius: 6,
-                                        borderColor: 'lightgray',
-                                        marginBottom: 5,
-                                        borderWidth: 1
-                                    }}>
-
-                                    <Picker
-                                        mode="dropdown"
-                                        placeholderIconColor="#007aff"
-                                        selectedValue={this.state.selected2}
-                                        onValueChange={this.onValueChange2.bind(this)}
-                                    >
-                                        <Picker.Item style={{ color: "#bfc6ea" }} label="Select your Security Question" value="key0" />
-                                        <Picker.Item label="ATM Card" value="key1" />
-                                        <Picker.Item label="Debit Card" value="key2" />
-                                        <Picker.Item label="Credit Card" value="key3" />
-                                        <Picker.Item label="Net Banking" value="key4" />
-                                    </Picker>
-
-                                </Item>
-                                <CustomText style={{ paddingVertical: 5 }}>Security Answer</CustomText>
-                                <Item regular
-                                    style={{
-                                        borderStyle: 'solid',
-                                        marginLeft: 0,
-                                        backgroundColor: colors.WHITE,
-                                        borderRadius: 6,
-                                        borderColor: 'lightgray',
-                                        marginBottom: 5,
-                                        borderWidth: 1
-                                    }}>
-                                    <Input
-
-                                        autoCapitalize='none'
-                                        secureTextEntry={this.state.securityAnswer}
-                                        onChangeText={(input) => {
-                                            this.setState({
-                                                securityAnswer: input
-                                            })
-                                        }}
-                                        blurOnSubmit={true}
-                                    />
-
-                                </Item>
-
-                            </View>
+                           
                             <View style={{ paddingTop: 30, paddingHorizontal: 30 }}>
                                 <Button block success onPress={() => console.log('Done')} >
                                     <Text>Submit</Text>
@@ -413,4 +325,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
 
-})(SignUpLoginDetails);
+})(PayNowEnterPayment);
