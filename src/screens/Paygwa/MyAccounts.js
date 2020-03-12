@@ -376,7 +376,8 @@ class MyAccount extends Component {
           title="My Accounts"
           RightIcon={<Right style={{ paddingRight: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, flex: 1 }}>
             <Button
-              transparent style={{ paddingLeft: 0, elevation: 0 }} onPress={() => console.log('icon')} >
+              transparent style={{ paddingLeft: 0, elevation: 0 }} onPress={() =>
+                this.props.navigation.navigate('AccountProfile')} >
               <Icon style={{ backgroundColor: colors.PRIMARY_COLOR, color: colors.WHITE, fontSize: pRatioToFontSize(+1) > 20 ? 20 : pRatioToFontSize(+1) }} name='user-alt' type='FontAwesome5' />
 
             </Button>

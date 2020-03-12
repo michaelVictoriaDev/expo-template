@@ -9,14 +9,28 @@ import { colors, pRatioToFontSize } from '../utils/constants';
 import NavigationService from '../NavigationService';
 // import { listenToNotifTimeStamp } from '../actions';
 import _ from 'lodash';
+import UserAvatar from 'react-native-user-avatar';
+import CustomText from '../components/CustomText';
+import CustomTextBold from '../components/CustomTextBold';
 
 const ContainerView = styled.View`
   flex: 1;
-  backgroundColor: #3F71D7;
+  backgroundColor: #FFFFFF;
   opacity : 0.95;
   
 `;
 
+const AvatarContainer = styled.View`
+  backgroundColor: #E2E6EA;
+  flex: 1;
+  flexDirection: row;
+  paddingVertical: 50;
+  paddingHorizontal: 40;
+  overflow: hidden;
+  justifyContent: center;
+  alignItems: center;
+  paddingRight: 0;
+`;
 // const Avatar = styled.View`
 //   width: 120;
 //   height: 120;
@@ -42,9 +56,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20
   },
   drawer_button_text: {
-    color: colors.WHITE,
-    fontSize: 16,
-    paddingLeft: 20,
+    color: colors.BLACK,
+    fontSize: 18,
+    paddingLeft: 30,
   }
 })
 
@@ -54,7 +68,7 @@ class CustomDrawerContent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      colors: ['#1788c7']
     }
   }
 
@@ -66,13 +80,43 @@ class CustomDrawerContent extends Component {
     
     return (
       <ContainerView>
+        <AvatarContainer>
+          <UserAvatar
+            name={'Neil Urbano'}
+            // scr={this.props.userObject.social_img}
+            color={colors.PRIMARY_COLOR}
+            size={'70'}
+          />
+          <View style={{
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            // width : PixelRatio.getPixelSizeForLayoutSize(100),
+            // paddingVertical: PixelRatio.getPixelSizeForLayoutSize(Platform.OS === 'ios' ? 10 : 20), 
+            // paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10), 
+            width: 200,
+            paddingVertical: pRatioToFontSize(),
+            paddingHorizontal: pRatioToFontSize(),
+          }}>
+            <Text
+              style={{
+                color: colors.BLACK,
+                fontSize: pRatioToFontSize() > 30 ? 30 : pRatioToFontSize(),
+              }}
+              ellipsizeMode='tail'
+              numberOfLines={1}
+            >
+              Neil Urbano</Text>
 
+          </View>
+        </AvatarContainer>
         <ItemContainer>
           <ScrollView>
             {/* <DrawerItems {...this.props} /> */}
-            <Content contentContainerStyle={{ flex: 1 }}> 
-              {/* MY ACCOUNTS BUTTONS */}
-              {this.myAccountsDrawerButton()}
+            <Content contentContainerStyle={{ flex: 1, paddingTop: 20 }}> 
+              {this.surveyDrawerButton()}
+              {this.newsDrawerButton()}
+              {this.helpAndSupportDrawerButton()}
+              <View style={{ paddingVertical: 20 }} />
               {/*LOG-OUT*/}
               {this.logoutDrawerButton()}
 
@@ -84,15 +128,39 @@ class CustomDrawerContent extends Component {
     )
   }
 
-  myAccountsDrawerButton() {
-    <Button transparent block
-      onPress={() => NavigationService.navigate('MyAccounts')}
-      style={styles.drawer_button}>
-      <Ionicons name="ios-people" color={colors.WHITE} size={20} style={styles.drawer_button_icon} />
-      <Text uppercase={false} style={styles.drawer_button_text}>My Accounts</Text>
-    </Button>
-  }
+
  
+  // SURVEY DRAWER BUTTON
+  surveyDrawerButton() {
+    return (
+      <Button transparent block onPress={() => {
+        console.log('Cancel Pressed')
+      }} style={styles.drawer_button}>
+        <CustomText uppercase={false} style={styles.drawer_button_text}>Survey</CustomText>
+      </Button>
+    )
+  }
+
+  helpAndSupportDrawerButton() {
+    return (
+      <Button transparent block onPress={() => {
+        console.log('Cancel Pressed')
+      }} style={styles.drawer_button}>
+        <CustomText uppercase={false} style={styles.drawer_button_text}>Help & Support</CustomText>
+      </Button>
+    )
+  }
+
+  newsDrawerButton() {
+    return (
+      <Button transparent block onPress={() => {
+        console.log('Cancel Pressed')
+      }} style={styles.drawer_button}>
+        <CustomText uppercase={false} style={styles.drawer_button_text}>News</CustomText>
+      </Button>
+    )
+  }
+
 
   // LOG OUT DRAWER BUTTON
   logoutDrawerButton() {
@@ -113,7 +181,6 @@ class CustomDrawerContent extends Component {
         );
 
       }} style={styles.drawer_button}>
-        <MaterialCommunityIcons name="logout" color='#FFF' size={20} style={styles.drawer_button_icon} />
         <Text uppercase={false} style={styles.drawer_button_text}>Logout</Text>
       </Button>
     )

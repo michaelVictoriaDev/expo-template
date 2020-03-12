@@ -39,6 +39,9 @@ import SignUpCreateAccountScreen from './src/screens/Paygwa/SignUp/SignUpCreateA
 //PaynowIninitialLogin
 import PaynowScreen from './src/screens/Paygwa/PayNow/PayNowCustomerInformation';
 
+//Account Profile
+import AccountProfileScreen from './src/screens/Paygwa/AccountProfile';
+
 import { CustomDrawerContent } from './src/components';
 import { Root, Container } from "native-base";
 
@@ -59,7 +62,10 @@ const AuthStack = createStackNavigator(
 const MyAccountsStack = createStackNavigator(
   {
     MyAccounts: {
-      screen: MyAccounts,
+      screen: MyAccounts
+    },
+    AccountProfile:{
+      screen: AccountProfileScreen
     },
     PaymentInput: {
       screen: PaymentInputScreen
