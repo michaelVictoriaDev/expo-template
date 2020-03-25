@@ -42,6 +42,10 @@ import PaynowScreen from './src/screens/Paygwa/PayNow/PayNowCustomerInformation'
 //Account Profile
 import AccountProfileScreen from './src/screens/Paygwa/AccountProfile';
 
+//AccountSummary
+import AccountSummaryScreen from './src/screens/Paygwa/AccountSummary/AccountSummary';
+import AccountSummaryBillScreen from './src/screens/Paygwa/AccountSummary/AccountSummaryBill';
+
 import { CustomDrawerContent } from './src/components';
 import { Root, Container } from "native-base";
 
@@ -66,6 +70,12 @@ const MyAccountsStack = createStackNavigator(
     },
     AccountProfile:{
       screen: AccountProfileScreen
+    },
+    AccountSummary: {
+      screen: AccountSummaryScreen
+    },
+    AccountSummaryBill : {
+      screen: AccountSummaryBillScreen
     },
     PaymentInput: {
       screen: PaymentInputScreen

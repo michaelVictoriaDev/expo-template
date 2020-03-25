@@ -12267,7 +12267,7 @@ react-native-star-rating@^1.1.0:
     react-native-button "^2.3.0"
     react-native-vector-icons "^4.5.0"
 
-react-native-step-indicator@^0.0.11:
+react-native-step-indicator@0.0.11:
   version "0.0.11"
   resolved "https://registry.yarnpkg.com/react-native-step-indicator/-/react-native-step-indicator-0.0.11.tgz#18c53692f63c5e6812f80e8f6cc580cf4097e127"
   integrity sha512-9nDAwN8dyyRp/h9aXw7TXYQkOSGcesfMKU+P3DbrWieFI1wMGzLNTRfND48kyr+AcuCvuJmCIfb66RrSjCB0Og==
@@ -12298,7 +12298,7 @@ react-native-tab-view@^1.0.0:
   dependencies:
     prop-types "^15.6.1"
 
-react-native-user-avatar@^1.0.3:
+react-native-user-avatar@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/react-native-user-avatar/-/react-native-user-avatar-1.0.4.tgz#38be5dbaee6358b014c509a044008387287f00cb"
   integrity sha512-tP/oNsDSQy3e16arJC/neP4laG5t6enwwYZUnYnuSeUl/Z40kkjRRf+ZVo1LCTT3cC7zez8YLWCZcpRrdnAiKA==

@@ -282,7 +282,7 @@ class MyAccount extends Component {
           if (this.state.selectMode) {
             this.onPressOnAccount(i)
           } else {
-            console.log('Punta sa Account Summary')
+            this.props.navigation.navigate('AccountSummary')
           }
         }}
         onLongPress={() => this.setState({
