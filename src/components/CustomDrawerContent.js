@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { SafeAreaView, ScrollView, View, Image, StyleSheet, Alert, TouchableHighlight, Linking, PixelRatio, Platform } from 'react-native';
-import { Button, Text, Content, Footer } from 'native-base';
+import { Button, Text, Content, Footer, Icon } from 'native-base';
 import { MaterialCommunityIcons, FontAwesome, MaterialIcons, Entypo, Ionicons } from '@expo/vector-icons';
 // import { DrawerItems } from 'react-navigation';
 import { connect } from 'react-redux';
@@ -113,6 +113,7 @@ class CustomDrawerContent extends Component {
           <ScrollView>
             {/* <DrawerItems {...this.props} /> */}
             <Content contentContainerStyle={{ flex: 1, paddingTop: 20 }}> 
+              {this.myAccountsDrawerButton()}
               {this.surveyDrawerButton()}
               {this.newsDrawerButton()}
               {this.helpAndSupportDrawerButton()}
@@ -129,6 +130,17 @@ class CustomDrawerContent extends Component {
   }
 
 
+    // MyyAccounts DRAWER BUTTON
+    myAccountsDrawerButton() {
+      return (
+        <Button iconLeft transparent block onPress={() => {
+          NavigationService.navigate('MyAccounts')
+        }} style={styles.drawer_button}>
+            <Icon style={{ color: colors.BLACK, marginLeft: 30}} name='th-list' type='FontAwesome' />
+          <CustomText uppercase={false} style={styles.drawer_button_text}>My Accounts</CustomText>
+        </Button>
+      )
+    }
  
   // SURVEY DRAWER BUTTON
   surveyDrawerButton() {

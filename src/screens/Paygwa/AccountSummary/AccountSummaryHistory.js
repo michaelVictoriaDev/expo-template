@@ -25,7 +25,7 @@ import CustomHeader from "../../../components/MultiCustomHeader";
 import { Grid, Row, Col } from "react-native-easy-grid";
 import { TouchableHighlight } from "react-native-gesture-handler";
 
-class AccountSummaryBill extends Component {
+class AccountSummaryHistory extends Component {
   constructor(props) {
     super(props);
     // local state
@@ -62,7 +62,7 @@ class AccountSummaryBill extends Component {
         <CustomHeader
           fontSizeLeft={pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1)}
           leftButtonFunction={() => this.props.navigation.navigate('AccountSummary')}
-          title="View Bill"
+          title="Payment History"
           RightIcon={<Right />}
         />
         <OfflineNotice />
@@ -73,96 +73,7 @@ class AccountSummaryBill extends Component {
           </View>
 
           <Grid style={{ paddingHorizontal: 15 }}>
-            <Row style={{ backgroundColor: colors.PRIMARY_COLOR }}>
-              <Col
-                style={{
-                  borderRadius: 0,
-                  borderLeftWidth: 1,
-                  borderTopWidth: 1,
-                  borderBottomWidth: 1,
-                  borderColor: colors.DARK_GRAY,
-                  padding: 20,
-                  alignItems: "center",
-                justifyContent: "center"
-                }}
-              >
-                <CustomText style={{ color: colors.WHITE }}>
-                  Date of Bill
-                </CustomText>
-              </Col>
-              <Col
-                style={{
-                  borderRadius: 0,
-                  borderLeftWidth: 1,
-                  borderTopWidth: 1,
-                  borderBottomWidth: 1,
-                  borderColor: colors.DARK_GRAY,
-                  padding: 20,
-                  alignItems: "center",
-                justifyContent: "center"
-                }}
-              >
-                <CustomText style={{ color: colors.WHITE }}>Amount</CustomText>
-              </Col>
-              <Col
-                style={{
-                  borderRadius: 0,
-                  borderLeftWidth: 1,
-                  borderRightWidth: 1,
-                  borderTopWidth: 1,
-                  borderBottomWidth: 1,
-                  borderColor: colors.DARK_GRAY,
-                  padding: 20,
-                  alignItems: "center",
-                justifyContent: "center"
-                }}
-              ></Col>
-            </Row>
-            {_.map(this.state.data, (data, index) => {
-              return(<Row>
-                <Col
-                style={{
-                    borderRadius: 0,
-                    borderLeftWidth: 1,
-                    borderBottomWidth: 1,
-                    borderColor: colors.DARK_GRAY,
-                    padding: 20,
-                    alignItems: "center",
-                justifyContent: "center"
-                  }}>
-                      <CustomText >
-                  {data.dateOfBill}
-                </CustomText>
-                  </Col>
-                <Col
-                style={{
-                    borderRadius: 0,
-                    borderLeftWidth: 1,
-                    borderRightWidth: 1,
-                    borderBottomWidth: 1,
-                    borderColor: colors.DARK_GRAY,
-                    padding: 20,
-                    alignItems: "center",
-                justifyContent: "center"
-                  }}>
-                <CustomText >
-                  $ {data.amount}
-                </CustomText>
-                  </Col>
-                <Col
-                style={{
-                    borderRadius: 0,
-                    borderRightWidth: 1,
-                    borderBottomWidth: 1,
-                    borderColor: colors.DARK_GRAY,
-                    padding: 20,
-                    alignItems: "center",
-                justifyContent: "center"
-                  }}>
-                          <Text style={{ color: colors.PRIMARY_COLOR}} onPress={() => console.log('View')}>View</Text>
-                  </Col>
-              </Row>)
-            })}
+            <Text>123</Text>
           </Grid>
         </Content>
         <Footer style={{ backgroundColor: colors.PRIMARY_COLOR }}>
@@ -184,7 +95,6 @@ class AccountSummaryBill extends Component {
               <CustomText style={{ color: colors.WHITE }}>Bill</CustomText>
             </Button>
             <Button
-            onPress={() => this.props.navigation.navigate('AccountSummaryConsumption')}
               vertical
               style={{
                 borderRadius: 0,
@@ -201,7 +111,6 @@ class AccountSummaryBill extends Component {
               </CustomText>
             </Button>
             <Button
-            onPress={() => this.props.navigation.navigate('AccountSummaryHistory')}
               vertical
               style={{
                 borderRadius: 0,
@@ -225,4 +134,4 @@ class AccountSummaryBill extends Component {
 const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({});
-export default connect(mapStateToProps)(AccountSummaryBill);
+export default connect(mapStateToProps)(AccountSummaryHistory);

@@ -32,9 +32,9 @@ class AccountSummary extends Component {
     };
   }
 
-  async componentDidMount() {}
+  async componentDidMount() { }
 
-  componentWillUnmount() {}
+  componentWillUnmount() { }
 
   render() {
     return (
@@ -160,19 +160,19 @@ class AccountSummary extends Component {
             </Row>
           </List>
         </Content>
-        <Footer style={{backgroundColor: colors.PRIMARY_COLOR}}>
+        <Footer style={{ backgroundColor: colors.PRIMARY_COLOR }}>
           <FooterTab>
-            <Button vertical style={{ borderRadius: 0 , borderLeftWidth: 1, borderRightWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryBill')}>
-              <Icon style={{color: colors.WHITE}} name="file" type='MaterialCommunityIcons' />
-              <CustomText style={{color: colors.WHITE}}>Bill</CustomText>
+            <Button vertical style={{ borderRadius: 0, borderRightWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryBill')}>
+              <Icon style={{ color: colors.WHITE }} name="file" type='MaterialCommunityIcons' />
+              <CustomText style={{ color: colors.WHITE }}>Bill</CustomText>
             </Button>
-            <Button vertical style={{ borderRadius: 0 , borderLeftWidth: 1, borderRightWidth: 1, borderColor: colors.WHITE }}>
-              <Icon style={{color: colors.WHITE}} name="chart-bar" type='FontAwesome5' />
-              <CustomText style={{color: colors.WHITE}}>Consumption</CustomText>
+            <Button vertical style={{ borderRadius: 0, borderColor: colors.WHITE }}  onPress={() => this.props.navigation.navigate('AccountSummaryConsumption')} >
+              <Icon style={{ color: colors.WHITE }} name="chart-bar" type='FontAwesome5' />
+              <CustomText style={{ color: colors.WHITE }}>Consumption</CustomText>
             </Button>
-            <Button vertical style={{ borderRadius: 0 , borderLeftWidth: 1, borderRightWidth: 1, borderColor: colors.WHITE }}>
-              <Icon style={{color: colors.WHITE}} name="history" type='FontAwesome5'/>
-              <CustomText style={{color: colors.WHITE}}>History</CustomText>
+            <Button vertical style={{ borderRadius: 0, borderLeftWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryHistory')} >
+              <Icon style={{ color: colors.WHITE }} name="history" type='FontAwesome5' />
+              <CustomText style={{ color: colors.WHITE }}>History</CustomText>
             </Button>
           </FooterTab>
         </Footer>

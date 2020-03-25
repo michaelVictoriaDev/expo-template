@@ -5,6 +5,9 @@ import { Badge } from 'native-base';
 import { Row, Col, Grid } from 'react-native-easy-grid';
 import { Content } from 'native-base';
 import Moment from 'moment';
+import CustomText from '../components/CustomText'
+import CustomTextBold from '../components/CustomTextBold'
+import { colors } from '../utils/constants';
 
 class CustomizeAccordion extends Component {
 
@@ -18,82 +21,56 @@ class CustomizeAccordion extends Component {
 
     render() {
 
-        return (
+        return (    
 
 
             <View
-            key={this.props.index} style={{
+            key={this.props.key} style={{
                 borderBottomWidth: .6,
                 borderColor: '#3b4043'
             }}>
                 <TouchableOpacity style={styles.row} onPress={() => this.toggleExpand()}>
                     <Row >
-                        <Col size={75}>
+                        <Col size={70}>
 
-                            <Text numberOfLines={1} ellipsizeMode='tail' style={[styles.title, styles.font]}>{this.props.title}</Text>
-                            <Text>{Moment(this.props.timeAndDate, "YYYY-MM-DD hh:mm:ss").format("MM-DD-YYYY | hh:mm A")}</Text>
+                            <CustomText style={{ fontSize: 12 }} >Account Number</CustomText>
+                            <CustomText >{this.state.data.accountNumber}</CustomText>
 
                         </Col>
                         <Col size={25}>
                             <Row style={{ marginTop: 5 }}>
-                            
-                                <View 
-                                style={
-                                    this.props.status === 1 ? { height: 10, width: 10, backgroundColor: 'orange', borderRadius: 10/2, marginTop: 3, marginRight: 5 } :
-                                    this.props.status === 2 ? { height: 10, width: 10, backgroundColor: '#42B72A', borderRadius: 10/2, marginTop: 3, marginRight: 5 } :
-                                    this.props.status === 6 ? { height: 10, width: 10, backgroundColor: '#3f71d7', borderRadius: 10/2, marginTop: 3, marginRight: 5 } :
-                                    this.props.status === 7 ? { height: 10, width: 10, backgroundColor: '#ffff00', borderRadius: 10/2, marginTop: 3, marginRight: 5 } :
-                                    this.props.status === 10 ? { height: 10, width: 10, backgroundColor: '#FF0000', borderRadius: 10/2, marginTop: 3, marginRight: 5 } :
-                                    { height: 10, width: 10, backgroundColor: 'orange', borderRadius: 10/2, marginTop: 3, marginRight: 5 }
-                                }
-                                 />
-
-       
-                                <Text style={{ fontSize: 14 }}>{
-                                    this.props.status === 1 ? 'In Queue' :
-                                    this.props.status === 2 ? 'Delivered' :
-                                    this.props.status === 3 ? 'Processed' : 
-                                    this.props.status === 4 ? 'Deferred' :
-                                    this.props.status === 5 ? 'Click' :
-                                    this.props.status === 6 ? 'Opened' :
-                                    this.props.status === 7 ? 'Bounced' :
-                                    this.props.status === 8 ? 'Dropped' :
-                                    this.props.status === 9 ? 'Spam' :
-                                    this.props.status === 10 ? 'Unsubscribed' :
-                                    this.props.status === 11 ? 'Group Unsubscribed' :
-                                    'No Status'
-                                }</Text>
+                            <CustomText style={{ fontSize: 18 }}>$ {this.state.data.value}.00</CustomText>
                             </Row>
                         </Col>
 
                     </Row>
 
-                    <Icon name={this.state.expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color={'#a9a9a9'} />
+                    <Icon name={this.state.expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-right'} size={30} color={colors.BLACK} />
                 </TouchableOpacity>
                 <View style={styles.parentHr} />
                 {
                     this.state.expanded &&
                     <View style={styles.child}>
                         <Row>
-                            <Col size={75}>
-                                <View>
-                                    <Text style={{ color: '#a9a9a9' }}>Sent to</Text>
-                                    <Text>{this.props.sentTo}</Text>
-                                </View>
-                                <View>
-                                    <Text style={{ color: '#a9a9a9' }}>Subject</Text>
-                                    <Text>{this.props.subject}</Text>
-                                </View>
+                            <Col >
+                            <View>
+                                <CustomText>Receipt No.</CustomText>
+                                <CustomText>{this.state.data.receiptNo}</CustomText>
+                            </View>
+                              
                             </Col>
-                            <Col size={25}>
-                                <View>
-                                    <Text style={{ color: '#a9a9a9' }}>Opens</Text>
-                                    <Text>{this.props.open === null ? 0 : this.props.open}</Text>
-                                </View>
-                                <View>
-                                    <Text style={{ color: '#a9a9a9' }}>Clicks</Text>
-                                    <Text>{this.props.clicks === null ? 0 : this.props.clicks}</Text>
-                                </View>
+                           
+                            <Col >
+                            <View>
+                                <CustomText>Pay Date.</CustomText>
+                            <CustomText>{this.state.data.payDate}</CustomText>
+                            </View>
+                            </Col>
+                            <Col >
+                            <View>
+                                <CustomText>Paid By</CustomText>
+                            <CustomText>{this.state.data.padingBy}</CustomText>
+                            </View>
                             </Col>
                         </Row>
                     </View>
@@ -135,7 +112,7 @@ const styles = StyleSheet.create({
     child: {
         backgroundColor: '#FFFFFF',
         paddingTop: 0,
-        paddingBottom: 5,
+        paddingBottom: 25,
         paddingLeft: 25,
         paddingRight: 18,
         height: 'auto',

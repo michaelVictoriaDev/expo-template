@@ -45,6 +45,8 @@ import AccountProfileScreen from './src/screens/Paygwa/AccountProfile';
 //AccountSummary
 import AccountSummaryScreen from './src/screens/Paygwa/AccountSummary/AccountSummary';
 import AccountSummaryBillScreen from './src/screens/Paygwa/AccountSummary/AccountSummaryBill';
+import AccountSummaryConsumptionScreen from './src/screens/Paygwa/AccountSummary/AccountSummaryConsumption';
+import AccountSummaryHistoryScreen from './src/screens/Paygwa/AccountSummary/AccountSummaryHistory';
 
 import { CustomDrawerContent } from './src/components';
 import { Root, Container } from "native-base";
@@ -76,6 +78,12 @@ const MyAccountsStack = createStackNavigator(
     },
     AccountSummaryBill : {
       screen: AccountSummaryBillScreen
+    },
+    AccountSummaryConsumption : {
+      screen: AccountSummaryConsumptionScreen
+    },
+    AccountSummaryHistory : {
+      screen: AccountSummaryHistoryScreen
     },
     PaymentInput: {
       screen: PaymentInputScreen
