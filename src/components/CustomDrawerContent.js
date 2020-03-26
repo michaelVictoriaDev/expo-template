@@ -146,7 +146,7 @@ class CustomDrawerContent extends Component {
   surveyDrawerButton() {
     return (
       <Button transparent block onPress={() => {
-        console.log('Cancel Pressed')
+        NavigationService.navigate('Survey')
       }} style={styles.drawer_button}>
         <CustomText uppercase={false} style={styles.drawer_button_text}>Survey</CustomText>
       </Button>
@@ -156,7 +156,7 @@ class CustomDrawerContent extends Component {
   helpAndSupportDrawerButton() {
     return (
       <Button transparent block onPress={() => {
-        console.log('Cancel Pressed')
+        NavigationService.navigate('HelpAndSupport')
       }} style={styles.drawer_button}>
         <CustomText uppercase={false} style={styles.drawer_button_text}>Help & Support</CustomText>
       </Button>
@@ -166,7 +166,7 @@ class CustomDrawerContent extends Component {
   newsDrawerButton() {
     return (
       <Button transparent block onPress={() => {
-        console.log('Cancel Pressed')
+        NavigationService.navigate('News')
       }} style={styles.drawer_button}>
         <CustomText uppercase={false} style={styles.drawer_button_text}>News</CustomText>
       </Button>
