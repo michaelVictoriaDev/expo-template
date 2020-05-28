@@ -20,15 +20,6 @@ import _ from 'lodash'
 import { Row, Col } from 'react-native-easy-grid';
 
 class MyAccount extends Component {
-  willFocus = this.props.navigation.addListener(
-    'willFocus',
-    payload => {
-      this.setState({
-        isLoading: true,
-      })
-      this.getApiData();
-    }
-  );
   constructor(props) {
     
     super(props);
