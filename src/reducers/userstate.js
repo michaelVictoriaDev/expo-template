@@ -14,6 +14,7 @@ initialState = {
   globalAppState : AppState.currentState
 }
 
+debugger
 const userState = ( state = initialState , action ) => {
   switch ( action.type ) {
     case FETCH_LOGIN_BEGIN :

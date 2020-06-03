@@ -42,10 +42,18 @@ class MyAccount extends Component {
   }
 
   getApiData(){
+    // accountIds multiple accounts
+    // accountId single account
+    // debugger
+    if (_.isEmpty(this.props.accountIds)) {
+      var usethis = this.props.accountId
+    } else {
+      var usethis = this.props.accountIds
+    }
 
-    this.props.saveAccountId(this.props.accountIds[0][0])
+    this.props.saveAccountId(usethis[0][0])
       .then(() => {
-        this.props.savePremiseAddress(this.props.accountIds[0][1])
+        this.props.savePremiseAddress(usethis[0][1])
           .then(() => {
             let timer = setInterval(() => {
               console.log("loading!!!!!!")
@@ -70,6 +78,7 @@ class MyAccount extends Component {
   }
 
   sortAccountSummary = () => {
+    // debugger
     console.log("sort called")
     let sortedAccountId = [];
     let allResidAccts = [];
@@ -144,7 +153,14 @@ class MyAccount extends Component {
     console.log('lsAccountIds', this.props.accountIds)
     if (!(lsAccountId === '' || lsAccountId === null || lsAccountId === undefined)) {
       var accountId = [];
-      var arrAccountId = lsAccountId.split(",")
+      var arrAccountId = ''
+      try {
+        arrAccountId = lsAccountId.split(",")
+      }
+      catch (error){
+        arrAccountId = lsAccountId
+      }
+      
       accountId.push([arrAccountId[0], arrAccountId[1], arrAccountId[2]])
       sessionAccountId = accountId
     }
@@ -191,6 +207,7 @@ class MyAccount extends Component {
   }
 
   async executeRequests(sessionAccountId, accountId, personId) {
+    
     this.props.saveAccountId(accountId)
     try {
       let [result1, result2] = await Promise.all([this.props.fetchMultipleLatestBill(sessionAccountId), this.props.fetchMultipleAddOpptyRequest(accountId, personId)]);

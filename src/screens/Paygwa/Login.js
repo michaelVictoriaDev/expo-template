@@ -228,8 +228,9 @@ class Login extends Component {
                                 style={[styles.buttons, { backgroundColor: colors.LIGHT_GREEN, borderRadius: 6, borderWidth: 0.5, height: 50 }]}
                                 onPress={() =>
                                     // this.manualLogin(this.state.emailAdd,this.state.password)
-                                    this.manualLogin('gdoe', 'GDOE2018')
+                                    // this.manualLogin('gdoe', 'GDOE2018')
                                     // this.manualLogin('Relyant', 'Relyant01')
+                                    this.manualLogin('bevfrisas', '123')
                                 }>
                                 <CustomText style={{ color: colors.WHITE }}>Login</CustomText>
                             </Button>

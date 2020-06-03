@@ -305,6 +305,7 @@ export const fetchMultipleLatestBill = (accountId) => dispatch => {
         arrLatestBillRequests.push(fetchLatestBill(accountId[count][0]))
         // arrLatestPayment.push(fetchLatestPayment(accountId[count][0]))
     }
+
     return new Promise((resolve, reject) => {
         axios.all([arrLatestBillRequests,]) //arrLatestPayment
             .then((response) => {
@@ -377,6 +378,7 @@ export const fetchMultipleLatestBill = (accountId) => dispatch => {
                     accountSummary: accountSummary,
                     subTotal: 0
                 }
+                debugger
                 return orderData;
             })
             .then((orderData) => {
@@ -451,26 +453,26 @@ export const fetchMultipleAddOpptyRequest = (accountId, personId) => dispatch =>
                         payload: latestBill
                     })
                     const isHaveConsumptionChart = fetchMonthlyBillConsumptionResponse.data.result.status;
-                    if (isHaveConsumptionChart === 'True') {
-                        const data = fetchMonthlyBillConsumptionResponse.data.result.data;
-                        let consumptionDetails = {};
-                        let months = [];
-                        let amounts = [];
-                        let totalWaters = [];
-                        for (var count = 0; count < data.length; count++) {
+                    if(isHaveConsumptionChart === 'True'){
+                        const data              = fetchMonthlyBillConsumptionResponse.data.result.data;
+                        let consumptionDetails  = {};
+                        let months              = [];
+                        let amounts             = [];
+                        let totalWaters           = [];
+                        for(var count = 0; count < data.length; count++){
                             var startDate = (data[count][0].startReadDate).slice(5, 10);
-                            var endDate = (data[count][0].endReadDate).slice(5, 10);
-                            var amount = (data[count][1].billAmount);
-                            var totalWater = (Math.round(data[count][0].measuredQuantity));
-                            months.push([startDate, ' - ', endDate])
+                            var endDate   = (data[count][0].endReadDate).slice(5, 10);
+                            var amount    = (data[count][0].billSegmentCurrentAmount);
+                            var totalWater  = (Math.round(data[count][0].measuredQuantity));
+                            months.push([(startDate.split("-")[0] + "/" + startDate.split("-")[1]),' - ',(endDate.split("-")[0] + "/" + endDate.split("-")[1])])
                             amounts.push((amount > 0) ? amount : 0)
                             totalWaters.push((totalWater > 0) ? totalWater : 0)
                         }
-                        consumptionDetails.months = months;
-                        consumptionDetails.amounts = amounts;
+                        consumptionDetails.months    = months;
+                        consumptionDetails.amounts   = amounts;
                         consumptionDetails.totalWater = totalWaters;
                         dispatch({
-                            type: FETCH_CONSUMPTION_DETAILS,
+                            type:    FETCH_CONSUMPTION_DETAILS,
                             payload: consumptionDetails
                         })
                         const results = {
@@ -479,7 +481,7 @@ export const fetchMultipleAddOpptyRequest = (accountId, personId) => dispatch =>
                         }
                         resolve(results);
                     }
-                    else {
+                    else{
                         const results = {
                             isHaveConsumptionChart: isHaveConsumptionChart,
                             dataFetched: true
