@@ -155,8 +155,8 @@ const styles = StyleSheet.create({
     },
     gpwa_logo: {
         alignSelf: 'center',
-        height: Dimensions.get('screen').height <= 570 ? 120 : 150,
-        width: Dimensions.get('screen').height <= 570 ? 120 : 150,
+        height: Dimensions.get('screen').height <= 570 ? 50 : 80,
+        width: Dimensions.get('screen').height <= 570 ? 50 : 80,
         resizeMode: 'contain'
     },
     gpwa_label_container: {

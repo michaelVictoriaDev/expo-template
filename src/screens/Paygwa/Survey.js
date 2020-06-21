@@ -104,7 +104,7 @@ class Survey extends Component {
 
 
     render() {
-        debugger    
+        
         const surveyChoice = [{
             label: 'Excellent'
         }, {

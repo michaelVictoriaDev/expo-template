@@ -46,10 +46,14 @@ export function fetchLogin (dataObject) {
 			},
 			{//config
 
-				headers: { 'Content-Type': 'application/json' }
+				headers: {
+                    'Content-Type':'application/json',
+                    "origin": "https://gwadev.xtendly.com"
+                    }
 			}
 		)
 		.then (response => {
+			
 			 
 			const premiseData = response.data.result.premiseData;
 			if (Array.isArray(premiseData)) {

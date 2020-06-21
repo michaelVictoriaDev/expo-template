@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Container, Right, Footer, FooterTab, Icon, Text } from 'native-base';
 import {
- TouchableHighlight, FlatList, View, ActivityIndicator, TouchableOpacity
+  TouchableHighlight, FlatList, View, ActivityIndicator, TouchableOpacity
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
@@ -18,12 +18,13 @@ import OfflineNotice from '../../components/OfflineNotice';
 import CustomHeader from '../../components/MultiCustomHeader'
 import _ from 'lodash'
 import { Row, Col } from 'react-native-easy-grid';
+import CustomTextBold from '../../components/CustomTextBold';
 
 class MyAccount extends Component {
   constructor(props) {
-    
+
     super(props);
-    
+
     this.state = {
       selectedAccountsId: [],
       selectedAccounts: [],
@@ -41,7 +42,7 @@ class MyAccount extends Component {
 
   }
 
-  getApiData(){
+  getApiData() {
     // accountIds multiple accounts
     // accountId single account
     // debugger
@@ -50,6 +51,8 @@ class MyAccount extends Component {
     } else {
       var usethis = this.props.accountIds
     }
+
+
 
     this.props.saveAccountId(usethis[0][0])
       .then(() => {
@@ -66,7 +69,7 @@ class MyAccount extends Component {
                 console.log("stopped!!!!!!");
                 this.setState({
                   isLoading: false,
-                  isFetching: false 
+                  isFetching: false
                 })
 
                 clearInterval(timer);
@@ -78,89 +81,58 @@ class MyAccount extends Component {
   }
 
   sortAccountSummary = () => {
-    // debugger
-    console.log("sort called")
     let sortedAccountId = [];
     let allResidAccts = [];
     let allNonResidAccts = [];
     let sortedAccountSummary = [];
-
-    // _.map(this.props.dashboard.orderData.accountSummary, (data, index) => {
-   
-    //   sortedAccountId.push(data.accID)
-    // })
-
-    for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
-      sortedAccountId.push(this.props.dashboard.orderData.accountSummary[count].accID)
+    for(let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++){
+        sortedAccountId.push(this.props.dashboard.orderData.accountSummary[count].accID)
     }
-
     //get all resid accounts
-    // _.map(this.props.dashboard.orderData.accountSummary, (data, index) => {
-    //   data.className === "RESID" ? allResidAccts.push(data) : null
-    // })
-
-
-    for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
-      if (this.props.dashboard.orderData.accountSummary[count].className === "RESID") {
-        allResidAccts.push(this.props.dashboard.orderData.accountSummary[count]);
-      }
-    }
-
-
-    //get all non-resid accounts
-
-
-    // _.map(this.props.dashboard.orderData.accountSummary, (data, index) => {
-    //   this.props.dashboard.orderData.accountSummary[index].className != "RESID" ? allNonResidAccts.push(data) : null
-    // })
-    
-    for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
-      if (this.props.dashboard.orderData.accountSummary[count].className != "RESID") {
-        allNonResidAccts.push(this.props.dashboard.orderData.accountSummary[count]);
-      }
-    }
-
-
-
-    //insert all resid accounts
-
-    for (let count = 0; count < sortedAccountId.sort().length; count++) {
-      for (let count1 = 0; count1 < allResidAccts.length; count1++) {
-        if (sortedAccountId.sort()[count] === allResidAccts[count1].accID) {
-          sortedAccountSummary.push(allResidAccts[count1])
-          break;
+    for(let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++){
+        if(this.props.dashboard.orderData.accountSummary[count].className === "RESID"){
+            allResidAccts.push(this.props.dashboard.orderData.accountSummary[count]);
         }
-      }
+    }
+    //get all non-resid accounts
+    for(let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++){
+        if(this.props.dashboard.orderData.accountSummary[count].className != "RESID"){
+            allNonResidAccts.push(this.props.dashboard.orderData.accountSummary[count]);
+        }
+    }
+    //insert all resid accounts
+    for(let count = 0; count < sortedAccountId.sort().length; count++){
+        for(let count1 = 0; count1 < allResidAccts.length; count1++){
+            if(sortedAccountId.sort()[count] === allResidAccts[count1].accID){
+                sortedAccountSummary.push(allResidAccts[count1])
+                break;
+            }
+        } 
     }
     //insert all non-resid accounts
-    for (let count = 0; count < sortedAccountId.sort().length; count++) {
-      for (let count1 = 0; count1 < allNonResidAccts.length; count1++) {
-        if (sortedAccountId.sort()[count] === allNonResidAccts[count1].accID) {
-          sortedAccountSummary.push(allNonResidAccts[count1]);
-          break;
-        }
-      }
+    for(let count = 0; count < sortedAccountId.sort().length; count++){
+        for(let count1 = 0; count1 < allNonResidAccts.length; count1++){
+            if(sortedAccountId.sort()[count] === allNonResidAccts[count1].accID){
+                sortedAccountSummary.push(allNonResidAccts[count1]);
+                break;
+            }
+        } 
     }
     return sortedAccountSummary;
-  }
+}
 
-  getLocalData = () => {
+  getLocalData(){
+    // ls meaning =localStorage
     //session storage key search
     let sessionAccountId, sessionPersonId;
-    let lsAccountId = this.props.accountId
-    let lsAccountIds = this.props.accountIds
+    let lsAccountId = this.props.accountId // Single Account
+    let lsAccountIds = this.props.accountIds // Multiple Account
     console.log('lsAccountId', this.props.accountId)
     console.log('lsAccountIds', this.props.accountIds)
+  
     if (!(lsAccountId === '' || lsAccountId === null || lsAccountId === undefined)) {
       var accountId = [];
-      var arrAccountId = ''
-      try {
-        arrAccountId = lsAccountId.split(",")
-      }
-      catch (error){
-        arrAccountId = lsAccountId
-      }
-      
+      var arrAccountId = lsAccountId
       accountId.push([arrAccountId[0], arrAccountId[1], arrAccountId[2]])
       sessionAccountId = accountId
     }
@@ -189,6 +161,7 @@ class MyAccount extends Component {
       sessionAccountId = accountIds;
     }
     sessionPersonId = this.props.userPersonId
+    console.log('selectedAccountId', this.props.dashboard.selectedAccountId)
     this.setState({
       ...this.state,
       selectedAccountId: this.props.dashboard.selectedAccountId,
@@ -199,15 +172,17 @@ class MyAccount extends Component {
         accountId: sessionAccountId,
         personId: sessionPersonId
       }
-    }, () => {
-      const accountId = this.state.selectedAccountId
-      const personId = sessionPersonId
-      this.executeRequests(sessionAccountId, accountId, personId)
     })
+    
+    
+    console.log('***accountId',accountId)
+    console.log('***personId', sessionPersonId)
+    this.executeRequests(sessionAccountId, this.props.dashboard.selectedAccountId, sessionPersonId)
   }
 
   async executeRequests(sessionAccountId, accountId, personId) {
-    
+    console.log('CALLED', sessionAccountId)
+
     this.props.saveAccountId(accountId)
     try {
       let [result1, result2] = await Promise.all([this.props.fetchMultipleLatestBill(sessionAccountId), this.props.fetchMultipleAddOpptyRequest(accountId, personId)]);
@@ -256,17 +231,17 @@ class MyAccount extends Component {
     }
   }
   //ON PRESS ON LEAD
-  
+
   onPressOnAccount(i) {
 
-    let selected = this.state.selectedAccounts; 
-    let selectedAccountsId = this.state.selectedAccountsId 
+    let selected = this.state.selectedAccounts;
+    let selectedAccountsId = this.state.selectedAccountsId
 
     if (selectedAccountsId.indexOf(i.accID) == -1) {
       selectedAccountsId.push(i.accID);
       selected.push(i) // insert array of object
     } else {
-      let index = selectedAccountsId.indexOf(i.accID); 
+      let index = selectedAccountsId.indexOf(i.accID);
       // _.remove(selected, (e) => {
       //   return e !== i.accID
       // })
@@ -278,12 +253,12 @@ class MyAccount extends Component {
       selectedAccounts: selected,
       selectedAccountsId: selectedAccountsId,
     });
-   
+
   }
 
   //FUNCTION FOR COMPONENT OF EACH ITEM IN LEAD LISTING
   renderItemsInfiniteScroll(itemIndex, i) {
-    let sl = this.state.selectedAccountsId
+    let sl = this.state.selectedAccountsIdarrAccountId
     return (
       <TouchableOpacity underlayColor={colors.GRAYISHRED}
         onPress={() => {
@@ -296,11 +271,11 @@ class MyAccount extends Component {
         onLongPress={() => this.setState({
           selectMode: !this.state.selectMode
         })}>
-          <Row key={itemIndex} style={{ borderBottomWidth: .3, borderColor: '#3b4043', paddingTop: 10, paddingBottom: 10 }}>
-            <Col size={10} style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-              }}>
+        <Row key={itemIndex} style={{ borderBottomWidth: .3, borderColor: '#3b4043', paddingTop: 10, paddingBottom: 10 }}>
+          <Col size={10} style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
             {this.state.selectMode ?
               <MaterialIcons
                 name={_.includes(sl, i.accID) ? 'check-box' : 'check-box-outline-blank'}
@@ -310,18 +285,18 @@ class MyAccount extends Component {
               :
               null
             }
-            </Col>
-            <Col size={65}>
-              <CustomText>Account Number</CustomText>
-              <CustomText>{i.accID}</CustomText>
-              <Text style={{ fontFamily: 'Lato', color: colors.GRAYISHRED }} numberOfLines={1} ellipsizeMode='tail'>{i.serviceLocation}</Text>
-            </Col>
-            <Col size={45} style={{ alignItems: 'flex-end', paddingTop: 5 }} >
-              <CustomText style={{ color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED }}>{i.dueDate + ' '}<Icon onPress={() => alert('icon press')} style={{ backgroundColor: colors.WHITE, color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED, fontSize: pRatioToFontSize(+1) > 14 ? 14 : pRatioToFontSize(+1) }} name='info-circle' type='FontAwesome5' /></CustomText>
-              <CustomText numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 25, fontWeight: 'bold' }} >${i.arrears.details.PayoffBalance}</CustomText>
-            </Col>
-            <Col size={10}></Col>
-          </Row>
+          </Col>
+          <Col size={65}>
+            <CustomText>Account Number</CustomText>
+            <CustomText numberOfLines={2} ellipsizeMode='tail'>{i.accID}</CustomText>
+            <CustomText style={{ color: colors.GRAYISHRED }} numberOfLines={1} ellipsizeMode='tail'>{i.serviceLocation}</CustomText>
+          </Col>
+          <Col size={45} style={{ alignItems: 'flex-end', paddingTop: 5 }} >
+            <CustomText style={{ color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED }}>{i.dueDate + ' '}<Icon onPress={() => alert('icon press')} style={{ backgroundColor: colors.WHITE, color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED, fontSize: pRatioToFontSize(+1) > 14 ? 14 : pRatioToFontSize(+1) }} name='info-circle' type='FontAwesome5' /></CustomText>
+            <CustomText numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 25, fontWeight: 'bold' }} >${i.arrears.details.PayoffBalance}</CustomText>
+          </Col>
+          <Col size={10}></Col>
+        </Row>
       </TouchableOpacity>
     )
   }
@@ -334,7 +309,7 @@ class MyAccount extends Component {
         }}>
           <TouchableHighlight
             onPress={() => {
-        
+
               let selected = [];
               let selectedAccountsId = [];
               if (this.state.selectAll) {
@@ -427,27 +402,27 @@ class MyAccount extends Component {
           <Footer>
             <FooterTab style={{ backgroundColor: colors.LIGHT_GREEN }}>
               <Button full
-              onPress={()=> {
-                let subtotal = 0
-                const arrAccountSummary = this.state.selectedAccounts
+                onPress={() => {
+                  let subtotal = 0
+                  const arrAccountSummary = this.state.selectedAccounts
 
-                _.map(arrAccountSummary, (data, index) => {
-                  subtotal = subtotal + parseFloat(data.amountToBePaid === "" ? 0 : data.amountToBePaid)
-                })
-
-                this.props.navigation.navigate('PaymentInput',
-                  {
-                    selectedAccounts: this.state.selectedAccounts,
-                    selectedAccountsId: this.state.selectedAccountsId,
-                    subtotal: subtotal
+                  _.map(arrAccountSummary, (data, index) => {
+                    subtotal = subtotal + parseFloat(data.amountToBePaid === "" ? 0 : data.amountToBePaid)
                   })
-                this.setState({
-                  selectMode: false,
-                  selectedAccounts:[],
-                  selectedAccountsId: []
 
-                })
-              }}
+                  this.props.navigation.navigate('PaymentInput',
+                    {
+                      selectedAccounts: this.state.selectedAccounts,
+                      selectedAccountsId: this.state.selectedAccountsId,
+                      subtotal: subtotal
+                    })
+                  this.setState({
+                    selectMode: false,
+                    selectedAccounts: [],
+                    selectedAccountsId: []
+
+                  })
+                }}
               >
                 <CustomText style={{ color: colors.WHITE }}>Continue</CustomText>
 

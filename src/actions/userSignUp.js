@@ -28,7 +28,10 @@ export const forgotPassword = (postData) => dispatch => {
                     username: postData.username
                 },
                 {
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: {
+                    'Content-Type':'application/json',
+                    "origin": "https://gwadev.xtendly.com"
+                    }
                 })
             .then(response => {
                 resolve(response.data);
@@ -49,7 +52,10 @@ export const forgotUsername = (postData) => dispatch => {
                     division: 'GWA',
                 },
                 {
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: {
+                    'Content-Type':'application/json',
+                    "origin": "https://gwadev.xtendly.com"
+                    }
                 })
             .then(response => {
                 resolve(response.data);
@@ -68,7 +74,10 @@ export const getOtherDetails = (personId) => dispatch => {
                 PersonID: personId
             },
             {
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type':'application/json',
+                    "origin": "https://gwadev.xtendly.com"
+                    }
             })
         .then(response => {
             let basicDetails = {}, addressDetails = {}, contactNumbers = {}
@@ -148,7 +157,10 @@ export const signUpUser = (postData) => dispatch => {
                     sequenceWork: postData.workSeq,
                 },
                 {
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: {
+                    'Content-Type':'application/json',
+                    "origin": "https://gwadev.xtendly.com"
+                    }
                 })
             .then(response => {
                 resolve(response.data);
@@ -169,7 +181,10 @@ export const checkAccountNumber = (accountId) => dispatch => {
                     division: 'GWA',
                 },
                 {
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: {
+                    'Content-Type':'application/json',
+                    "origin": "https://gwadev.xtendly.com"
+                    }
                 }
             )
             .then(function (response) {
@@ -189,7 +204,10 @@ export const checkUsername = (username) => dispatch => {
                     username: username
                 },
                 {
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: {
+                    'Content-Type':'application/json',
+                    "origin": "https://gwadev.xtendly.com"
+                    }
                 }
             )
             .then(function (response) {
@@ -218,7 +236,10 @@ export const loginUser = (postData) => dispatch => {
                     wrongPasswordCountLimit: '5'
                 },
                 {
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: {
+                    'Content-Type':'application/json',
+                    "origin": "https://gwadev.xtendly.com"
+                    }
                 }
             )
             .then(function (response) {
@@ -257,7 +278,10 @@ export const getPremiseInfo = (accountId) => dispatch => {
                     accountId: accountId,
                 },
                 {
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: {
+                    'Content-Type':'application/json',
+                    "origin": "https://gwadev.xtendly.com"
+                    }
                 }
             )
             .then(function (response) {

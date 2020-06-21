@@ -47,7 +47,8 @@ const ItemContainer = styled.View`
 
 const styles = StyleSheet.create({
   drawer_button: {
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    marginTop: 15
   },
   drawer_button_icon: {
     marginLeft: 20
@@ -77,7 +78,7 @@ class CustomDrawerContent extends Component {
   }
 
   render() {
-    
+
     return (
       <ContainerView>
         <AvatarContainer>
@@ -112,12 +113,15 @@ class CustomDrawerContent extends Component {
         <ItemContainer>
           <ScrollView>
             {/* <DrawerItems {...this.props} /> */}
-            <Content contentContainerStyle={{ flex: 1, paddingTop: 20 }}> 
-              {this.myAccountsDrawerButton()}
+            <Content contentContainerStyle={{ flex: 1, paddingTop: 20 }}>
+
+              {this.summaryDrawerButton()}
+              {this.profileDrawerButton()}
+              {/* {this.myAccountsDrawerButton()} */}
+              <View style={{ borderBottomColor: 'black', borderBottomWidth: 1, marginHorizontal: 30, marginTop: 15 }} />
               {this.surveyDrawerButton()}
               {this.newsDrawerButton()}
               {this.helpAndSupportDrawerButton()}
-              <View style={{ paddingVertical: 20 }} />
               {/*LOG-OUT*/}
               {this.logoutDrawerButton()}
 
@@ -129,19 +133,40 @@ class CustomDrawerContent extends Component {
     )
   }
 
+  // ACCOUNT SUMMARY BUTTON
+  summaryDrawerButton() {
+    return (
+      <Button transparent block onPress={() => {
+        // NavigationService.navigate('Survey')
+      }} style={styles.drawer_button}>
+        <CustomText uppercase={false} style={styles.drawer_button_text}>Account Summary</CustomText>
+      </Button>
+    )
+  }
 
-    // MyyAccounts DRAWER BUTTON
-    myAccountsDrawerButton() {
-      return (
-        <Button iconLeft transparent block onPress={() => {
-          NavigationService.navigate('MyAccounts')
-        }} style={styles.drawer_button}>
-            <Icon style={{ color: colors.BLACK, marginLeft: 30}} name='th-list' type='FontAwesome' />
-          <CustomText uppercase={false} style={styles.drawer_button_text}>My Accounts</CustomText>
-        </Button>
-      )
-    }
- 
+  // ACCOUNT PROFILE BUTTON
+  profileDrawerButton() {
+    return (
+      <Button transparent block onPress={() => {
+        // NavigationService.navigate('Survey')
+      }} style={styles.drawer_button}>
+        <CustomText uppercase={false} style={styles.drawer_button_text}>Account Profile</CustomText>
+      </Button>
+    )
+  }
+
+  // MyyAccounts DRAWER BUTTON
+  myAccountsDrawerButton() {
+    return (
+      <Button iconLeft transparent block onPress={() => {
+        NavigationService.navigate('MyAccounts')
+      }} style={styles.drawer_button}>
+        <Icon style={{ color: colors.BLACK, marginLeft: 30 }} name='th-list' type='FontAwesome' />
+        <CustomText uppercase={false} style={styles.drawer_button_text}>My Accounts</CustomText>
+      </Button>
+    )
+  }
+
   // SURVEY DRAWER BUTTON
   surveyDrawerButton() {
     return (
@@ -184,7 +209,7 @@ class CustomDrawerContent extends Component {
           [
             {
               text: 'Cancel',
-              onPress: () =>  console.log('Cancel Pressed'),
+              onPress: () => console.log('Cancel Pressed'),
               style: 'cancel',
             },
             { text: 'Yes', onPress: () => NavigationService.navigate('Login') },
@@ -197,7 +222,7 @@ class CustomDrawerContent extends Component {
       </Button>
     )
   }
-  
+
 };
 
 const mapStateToProps = (state) => ({

@@ -19,7 +19,7 @@ import { colors } from './src/utils/constants';
 import { createStackNavigator, createSwitchNavigator, createDrawerNavigator, createAnimatedSwitchNavigator } from 'react-navigation';
 import NavigationService from './src/NavigationService';
 
-import InitialLoginScreen from './src/screens/Paygwa/InitialLogin';
+// import InitialLoginScreen from './src/screens/Paygwa/InitialLogin';
 import LoginScreen from './src/screens/Paygwa/Login';
 import MyAccounts from './src/screens/Paygwa/MyAccounts';
 
@@ -59,15 +59,15 @@ import { Root, Container } from "native-base";
 
 const AuthStack = createStackNavigator(
   {
-    InitialLogin : {
-      screen: InitialLoginScreen,
+    Login : {
+      screen: LoginScreen,
       navigationOptions : {
         header : null
       }
     }
   },
   {
-    initialRouteName: 'InitialLogin'
+    initialRouteName: 'Login'
   }
 )
 
@@ -147,12 +147,6 @@ const DrawerStack = createDrawerNavigator(
 
 const InitialStack = createStackNavigator(
   {
-    InitialLogin: {
-      screen: InitialLoginScreen,
-    },
-    Paynow: {
-      screen: PaynowScreen
-    },
     Login: {
       screen: LoginScreen
     },
@@ -161,7 +155,7 @@ const InitialStack = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'InitialLogin',
+    initialRouteName: 'Login',
     gesturesEnabled: false,
     navigationOptions: {
       header: null,
@@ -195,7 +189,10 @@ export default class App extends Component {
   async componentDidMount() {
     await Font.loadAsync({
       'Lato': require('./assets/fonts/Lato-Regular.ttf'),
-      'Lato_Bold': require('./assets/fonts/Lato-Bold.ttf')
+      'Lato_Bold': require('./assets/fonts/Lato-Bold.ttf'),
+      'Roboto': require('./assets/fonts/Roboto.ttf'),
+      'Roboto_medium': require('./assets/fonts/Roboto-Medium.ttf'),
+      ...Ionicons.font,
     });
     this.setState({
       isFontLoading : false

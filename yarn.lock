@@ -3010,6 +3010,11 @@
     lodash "^4.5.0"
     prop-types "^15.6.1"
 
+"@use-expo/font@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@use-expo/font/-/font-2.0.0.tgz#09b56d626e5b0c83cd0116f5bb69ad6d612d677f"
+  integrity sha512-oOJ2uaRyZNQg7PnQviz7nBcdrRL38zxScab4ktgtI4asa6G0dHW9wg307uJJmn0sHS04Yqtw+m0EOjDcGw3iWg==
+
 "@webassemblyjs/ast@1.7.11":
   version "1.7.11"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.7.11.tgz#b988582cafbb2b095e8b556526f30c90d057cace"
@@ -11009,10 +11014,10 @@ native-base-shoutem-theme@0.3.1:
     lodash "^4.17.14"
     prop-types "^15.5.10"
 
-native-base@2.13.8:
-  version "2.13.8"
-  resolved "https://registry.yarnpkg.com/native-base/-/native-base-2.13.8.tgz#817dfaf74ec63cd17f48991fab452fdc75103db9"
-  integrity sha512-47Wm7bjH5Dc99gBUeVvsURyADU97aiLMLPGX4ewPgR9kW47TD9slS/Y5vGMToBgz1bsku9anXgN2T1rpdQbpFA==
+native-base@2.13.6:
+  version "2.13.6"
+  resolved "https://registry.yarnpkg.com/native-base/-/native-base-2.13.6.tgz#610d89b2c517db52e609b62f0bec0c407a70fcba"
+  integrity sha512-u5JzVKW5kFsa/ZfMk6pvNPEfX2ZI+oSy6U91/MRLb4+j818d/S8XLBVGn3KymJmp7xZZUdvQsqxxwmjvPOYbtw==
   dependencies:
     blueimp-md5 "^2.5.0"
     clamp "^1.0.1"

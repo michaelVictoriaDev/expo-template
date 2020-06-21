@@ -20,7 +20,7 @@ class OfflineNotice extends PureComponent {
   };
 
   componentDidMount() {
-    // debugger
+    
 
     NetInfo.addEventListener(state  => {
     this.setState({
