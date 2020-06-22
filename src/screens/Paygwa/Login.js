@@ -45,6 +45,7 @@ class Login extends Component {
             loadingForgotYourUsernameGWA: false,
             loadingForgotYourPasswordGWA: false,
 
+
         }
         this.focusNextField = this.focusNextField.bind(this)
         this.componentId = {} //STORE DOM OF TEXT FIELDS (EMAIL AND PASSWORD)
@@ -88,36 +89,35 @@ class Login extends Component {
             .then((response) => {
                 console.log(response.data.result);
 
-                const questions = []
-                const answer = []
-                this.grep(response.data.result.description, (e) => {
-                    if (e.CharacteristicType == "CMSCQUES") {
-                        questions.push(e);
-                    }
-
-                })
-
-                this.grep(response.data.result.description, (e) => {
-                    if (e.CharacteristicType == "CMSCAN") {
-                        answer.push(e);
-                    }
-
-                })
-
-                console.log(questions[0].CharValueDescription)
-                console.log(answer[0].AdhocCharacteristicValue)
-                this.setState({
-                    loadingForgotYourUsernameGWA: false,
-                    securityQuestionUsernameGWA: questions[0].CharValueDescription,
-                    securityFinalAnswerUsernameGWA: answer[0].AdhocCharacteristicValue,
-                    isModalVisibleUsernameGWA: false,
-
-
-                })
-
                 const result = response.data.result.status
                 if (result === 'Success') {
                     console.log(response.data.result.description[0].PersonID)
+                    const questions = []
+                    const answer = []
+                    this.grep(response.data.result.description, (e) => {
+                        if (e.CharacteristicType == "CMSCQUES") {
+                            questions.push(e);
+                        }
+
+                    })
+
+                    this.grep(response.data.result.description, (e) => {
+                        if (e.CharacteristicType == "CMSCAN") {
+                            answer.push(e);
+                        }
+
+                    })
+
+                    console.log(questions[0].CharValueDescription)
+                    console.log(answer[0].AdhocCharacteristicValue)
+                    this.setState({
+                        loadingForgotYourUsernameGWA: false,
+                        securityQuestionUsernameGWA: questions[0].CharValueDescription,
+                        securityFinalAnswerUsernameGWA: answer[0].AdhocCharacteristicValue,
+                        isModalVisibleUsernameGWA: false,
+
+
+                    })
                     this.setState({
                         personIdForgotYourUsernameGWA: response.data.result.description[0].PersonID,
                         isModalVisibleQuestionUsernameGWA: true,
@@ -128,10 +128,15 @@ class Login extends Component {
 
                 } else {
                     this.setState({
-                        usernameWarningAccountNumberGWA: `Account number doesn't exist.`,
-                        usernameWarningEmailAddressGWA: ''
+                        usernameWarningAccountNumberGWA: response.data.result.description + '.',
+                        usernameWarningEmailAddressGWA: '',
+                        loadingForgotYourUsernameGWA: false
                     })
                 }
+
+
+
+
 
             })
             .catch((error) => {
@@ -183,6 +188,7 @@ class Login extends Component {
 
     // GWA FORGOT PASSWORD
     forgotYourPasswordGWA(accountId, username) {
+        debugger
         this.setState({
             loadingForgotYourPasswordGWA: true
         })
@@ -198,34 +204,33 @@ class Login extends Component {
             .then((response) => {
                 console.log(response.data.result);
 
-                const questions = []
-                const answer = []
-                this.grep(response.data.result.description, (e) => {
-                    if (e.CharacteristicType == "CMSCQUES") {
-                        questions.push(e);
-                    }
-
-                })
-
-                this.grep(response.data.result.description, (e) => {
-                    if (e.CharacteristicType == "CMSCAN") {
-                        answer.push(e);
-                    }
-
-                })
-
-                console.log('forgotYourPasswordGWA', questions[0].CharValueDescription)
-                console.log('forgotYourPasswordGWA', answer[0].AdhocCharacteristicValue)
-                this.setState({
-                    loadingForgotYourPasswordGWA: false,
-                    securityQuestionPasswordGWA: questions[0].CharValueDescription,
-                    securityFinalAnswerPasswordGWA: answer[0].AdhocCharacteristicValue,
-                    isModalVisiblePasswordGWA: false
-                })
-
-
                 const result = response.data.result.status
                 if (result === 'Success') {
+
+                    const questions = []
+                    const answer = []
+                    this.grep(response.data.result.description, (e) => {
+                        if (e.CharacteristicType == "CMSCQUES") {
+                            questions.push(e);
+                        }
+
+                    })
+
+                    this.grep(response.data.result.description, (e) => {
+                        if (e.CharacteristicType == "CMSCAN") {
+                            answer.push(e);
+                        }
+
+                    })
+
+                    console.log('forgotYourPasswordGWA', questions[0].CharValueDescription)
+                    console.log('forgotYourPasswordGWA', answer[0].AdhocCharacteristicValue)
+                    this.setState({
+                        loadingForgotYourPasswordGWA: false,
+                        securityQuestionPasswordGWA: questions[0].CharValueDescription,
+                        securityFinalAnswerPasswordGWA: answer[0].AdhocCharacteristicValue,
+                        isModalVisiblePasswordGWA: false
+                    })
                     console.log(response.data.result.description[0].PersonID)
                     console.log(response.data.result.description[0].PersonID)
                     this.setState({
@@ -235,23 +240,30 @@ class Login extends Component {
                         PasswordWarningEmailAddressGWA: ''
                     })
                     console.log('isModalVisibleQuestionUsernameGWA', this.state.isModalVisibleQuestionUsernameGWA)
-                    
+
                     // this.nextStepForgotYourPasswordGWA(response.data.result.description[0].PersonID)
 
                 } else {
 
                     this.setState({
-                        passwordWarningAccountNumberGWA: `Account number doesn't exist.`,
-                        passwordWarningEmailAddressGWA: ''
+                        passwordWarningAccountNumberGWA: response.data.result.description + '.',
+                        passwordWarningEmailAddressGWA: '',
+                        loadingForgotYourPasswordGWA: false
                     })
                 }
+
+
+
+
+
 
             })
             .catch((error) => {
                 console.log(error);
                 this.setState({
                     passwordWarningAccountNumberGWA: `Server Error`,
-                    passwordWarningEmailAddressGWA: ''
+                    passwordWarningEmailAddressGWA: '',
+                    loadingForgotYourPasswordGWA: false
                 })
             });
     }
@@ -444,18 +456,25 @@ class Login extends Component {
 
                         {this.state.isModalVisibleUsernameGWA ?
                             <Modal isVisible={this.state.isModalVisibleUsernameGWA} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
-                            avoidKeyboard={true}    
-                            onBackdropPress={() => this.setState({ isModalVisibleUsernameGWA: false })}
+                                avoidKeyboard={true}
+                                onBackdropPress={() => this.setState({ isModalVisibleUsernameGWA: false })}
                             >
                                 <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 20, paddingVertical: 20, borderRadius: 6 }}>
                                     <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                                        <CustomTextBold style={{ paddingVertical: 5, fontSize: 16 }}>Forgot Username</CustomTextBold>
+                                        <CustomTextBold style={{ color: '#808283', paddingVertical: 5, fontSize: 20 }}>Forgot Username</CustomTextBold>
                                     </View>
                                     {/* TEXT FIELD */}
-                                    <View style={{ padding: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.usernameWarningAccountNumberGWA}</CustomText></View>
+                                    {
+                                        _.isEmpty(this.state.usernameWarningAccountNumberGWA) ?
+                                            <View style={{ padding: 5 }} />
+                                            :
+                                            <View style={{ padding: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.usernameWarningAccountNumberGWA}</CustomText></View>
+
+                                    }
+
 
                                     <Item regular
-                                        style={styles.text_input}>
+                                        style={styles.text_inputModal}>
                                         <Input
                                             autoCapitalize='none'
                                             placeholder={'Account Number'}
@@ -472,9 +491,16 @@ class Login extends Component {
                                         />
 
                                     </Item>
-                                    <View style={{ padding: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.usernameWarningEmailAddressGWA}</CustomText></View>
+                                    {
+                                        _.isEmpty(this.state.usernameWarningEmailAddressGWA) ?
+                                            <View style={{ padding: 10 }} />
+                                            :
+                                            <View style={{ padding: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.usernameWarningEmailAddressGWA}</CustomText></View>
+
+                                    }
+
                                     <Item regular
-                                        style={styles.text_input, { paddingBottom: 5 }}>
+                                        style={styles.text_inputModal, { paddingBottom: 5 }}>
                                         <Input
                                             autoCapitalize='none'
                                             placeholder={'Email Address'}
@@ -548,17 +574,22 @@ class Login extends Component {
 
                         {this.state.isModalVisiblePasswordGWA ?
                             <Modal isVisible={this.state.isModalVisiblePasswordGWA} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
-                            avoidKeyboard={true}    
-                            onBackdropPress={() => this.setState({ isModalVisiblePasswordGWA: false })}
+                                avoidKeyboard={true}
+                                onBackdropPress={() => this.setState({ isModalVisiblePasswordGWA: false })}
                             >
                                 <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 20, paddingVertical: 20, borderRadius: 6 }}>
                                     <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                                        <CustomTextBold style={{ paddingVertical: 5, fontSize: 16 }}>Forgot Password</CustomTextBold>
+                                        <CustomTextBold style={{ color: '#808283', paddingVertical: 5, fontSize: 20 }}>Forgot Password</CustomTextBold>
                                     </View>
                                     {/* TEXT FIELD */}
-                                    <View style={{ padding: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.passwordWarningAccountNumberGWA}</CustomText></View>
+                                    {_.isEmpty(this.state.passwordWarningAccountNumberGWA) ?
+                                        <View style={{ padding: 5 }} />
+                                        :
+                                        <View style={{ padding: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.passwordWarningAccountNumberGWA}</CustomText></View>
+                                    }
+
                                     <Item regular
-                                        style={styles.text_input}>
+                                        style={styles.text_inputModal}>
                                         <Input
                                             autoCapitalize='none'
                                             placeholder={'Account Number'}
@@ -575,10 +606,14 @@ class Login extends Component {
                                         />
 
                                     </Item>
-                                    <View style={{ padding: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.passwordWarningUsernameGWA}</CustomText></View>
+                                    {_.isEmpty(this.state.passwordWarningUsernameGWA) ?
+                                        <View style={{ padding: 10 }} />
+                                        :
+                                        <View style={{ padding: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.passwordWarningUsernameGWA}</CustomText></View>
+                                    }
 
                                     <Item regular
-                                        style={styles.text_input, { paddingBottom: 5 }}>
+                                        style={styles.text_inputModal, { paddingBottom: 5 }}>
                                         <Input
                                             autoCapitalize='none'
                                             placeholder={'Username'}
@@ -640,16 +675,16 @@ class Login extends Component {
 
                         {this.state.isModalVisibleUsernameGPA
                             ? <Modal isVisible={this.state.isModalVisibleUsernameGPA} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
-                            avoidKeyboard={true}    
-                            onBackdropPress={() => this.setState({ isModalVisibleUsernameGPA: false })}
+                                avoidKeyboard={true}
+                                onBackdropPress={() => this.setState({ isModalVisibleUsernameGPA: false })}
                             >
                                 <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 20, paddingVertical: 20, borderRadius: 6 }}>
                                     <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                                        <CustomTextBold style={{ paddingVertical: 5, fontSize: 16 }}>Forgot Username</CustomTextBold>
+                                        <CustomTextBold style={{ color: '#808283', paddingVertical: 5, fontSize: 20 }}>Forgot Username</CustomTextBold>
                                     </View>
                                     {/* TEXT FIELD */}
                                     <Item regular
-                                        style={styles.text_input}>
+                                        style={styles.text_inputModal}>
                                         <Input
                                             autoCapitalize='none'
                                             placeholder={'Account Number'}
@@ -667,7 +702,7 @@ class Login extends Component {
                                     </Item>
 
                                     <Item regular
-                                        style={styles.text_input}>
+                                        style={styles.text_inputModal}>
                                         <Input
                                             autoCapitalize='none'
                                             placeholder={'Email Address'}
@@ -707,16 +742,16 @@ class Login extends Component {
                         {this.state.isModalVisiblePasswordGPA
                             ?
                             <Modal isVisible={this.state.isModalVisiblePasswordGPA} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
-                            avoidKeyboard={true}    
-                            onBackdropPress={() => this.setState({ isModalVisiblePasswordGPA: false })}
+                                avoidKeyboard={true}
+                                onBackdropPress={() => this.setState({ isModalVisiblePasswordGPA: false })}
                             >
                                 <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 20, paddingVertical: 20, borderRadius: 6 }}>
                                     <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                                        <CustomTextBold style={{ paddingVertical: 5, fontSize: 16 }}>Forgot Password</CustomTextBold>
+                                        <CustomTextBold style={{ color: '#808283', paddingVertical: 5, fontSize: 20 }}>Forgot Password</CustomTextBold>
                                     </View>
                                     {/* TEXT FIELD */}
                                     <Item regular
-                                        style={styles.text_input}>
+                                        style={styles.text_inputModal}>
                                         <Input
                                             autoCapitalize='none'
                                             placeholder={'Account Number'}
@@ -734,7 +769,7 @@ class Login extends Component {
                                     </Item>
 
                                     <Item regular
-                                        style={styles.text_input}>
+                                        style={styles.text_inputModal}>
                                         <Input
                                             autoCapitalize='none'
                                             placeholder={'Email Address'}
@@ -773,23 +808,23 @@ class Login extends Component {
                         {/* QUESTIONS */}
                         {this.state.isModalVisibleQuestionUsernameGWA ?
                             <Modal isVisible={this.state.isModalVisibleQuestionUsernameGWA} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
-                            avoidKeyboard={true}    
-                            onBackdropPress={() => this.setState({ isModalVisibleQuestionUsernameGWA: false })}
+                                avoidKeyboard={true}
+                                onBackdropPress={() => this.setState({ isModalVisibleQuestionUsernameGWA: false })}
                             >
                                 <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 20, paddingVertical: 20, borderRadius: 6 }}>
                                     <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                                        <CustomTextBold style={{ paddingVertical: 5, fontSize: 16 }}>Forgot Username</CustomTextBold>
+                                        <CustomTextBold style={{ color: '#808283', paddingVertical: 5, fontSize: 20 }}>Forgot Username</CustomTextBold>
                                     </View>
                                     {/* TEXT FIELD */}
-                                    <View style={{ padding: 5 }}><CustomTextBold style={{ fontSize: 16 }}>{this.state.securityQuestionUsernameGWA}?</CustomTextBold></View>
+                                    <View style={{ paddingTop: 10, paddingBottom: 5, paddingLeft: 5, paddingRight: 5 }}><CustomTextBold style={{ fontSize: 16 }}>{this.state.securityQuestionUsernameGWA}?</CustomTextBold></View>
                                     {_.isEmpty(this.state.usernameWarningQuestionEmailAddressGWA) ?
-                                        null
+                                        <View style={{ paddingTop: 10, paddingBottom: 5, paddingLeft: 5, paddingRight: 5 }} />
                                         :
-                                        <View style={{ padding: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.usernameWarningQuestionEmailAddressGWA}</CustomText></View>
+                                        <View style={{ paddingTop: 10, paddingBottom: 5, paddingLeft: 5, paddingRight: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.usernameWarningQuestionEmailAddressGWA}</CustomText></View>
                                     }
 
                                     <Item regular
-                                        style={styles.text_input, { paddingBottom: 5 }}>
+                                        style={styles.text_inputModal, { paddingBottom: 5 }}>
                                         <Input
                                             autoCapitalize='none'
                                             placeholder={'Security Answer'}
@@ -815,7 +850,7 @@ class Login extends Component {
                                                     loadingQuestionForgotYourUsernameGWA: true
                                                 })
 
-                                                
+
                                                 if (this.state.securityAnswerUsernameGWA === this.state.securityFinalAnswerUsernameGWA) {
                                                     // Clear the security Question
                                                     this.setState({
@@ -855,23 +890,23 @@ class Login extends Component {
 
                         {this.state.isModalVisibleQuestionPasswordGWA ?
                             <Modal isVisible={this.state.isModalVisibleQuestionPasswordGWA} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
-                            avoidKeyboard={true}    
-                            onBackdropPress={() => this.setState({ isModalVisibleQuestionPasswordGWA: false })}
+                                avoidKeyboard={true}
+                                onBackdropPress={() => this.setState({ isModalVisibleQuestionPasswordGWA: false })}
                             >
                                 <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 20, paddingVertical: 20, borderRadius: 6 }}>
                                     <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                                        <CustomTextBold style={{ paddingVertical: 5, fontSize: 16 }}>Forgot Password</CustomTextBold>
+                                        <CustomTextBold style={{ color: '#808283', paddingVertical: 5, fontSize: 20 }}>Forgot Password</CustomTextBold>
                                     </View>
                                     {/* TEXT FIELD */}
-                                    <View style={{ padding: 5 }}><CustomTextBold style={{ fontSize: 16 }}>{this.state.securityQuestionPasswordGWA}?</CustomTextBold></View>
+                                    <View style={{ paddingTop: 10, paddingBottom: 5, paddingLeft: 5, paddingRight: 5 }}><CustomTextBold style={{ fontSize: 16 }}>{this.state.securityQuestionPasswordGWA}?</CustomTextBold></View>
                                     {_.isEmpty(this.state.passwordWarningEmailAddressGWA) ?
-                                        null
+                                        <View style={{ paddingTop: 10, paddingBottom: 5, paddingLeft: 5, paddingRight: 5 }} />
                                         :
-                                        <View style={{ padding: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.passwordWarningQuestionEmailAddressGWA}</CustomText></View>
+                                        <View style={{ paddingTop: 10, paddingBottom: 5, paddingLeft: 5, paddingRight: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.passwordWarningQuestionEmailAddressGWA}</CustomText></View>
                                     }
 
                                     <Item regular
-                                        style={styles.text_input, { paddingBottom: 5 }}>
+                                        style={styles.text_inputModal, { paddingBottom: 5 }}>
                                         <Input
                                             autoCapitalize='none'
                                             placeholder={'Security Answer'}
@@ -957,7 +992,7 @@ class Login extends Component {
                         <Content style={{ paddingTop: 20, paddingHorizontal: 18, backgroundColor: 'white' }}>
                             <Tabs
                                 tabBarUnderlineStyle={{ backgroundColor: '#1787C9' }}
-                                style={{ backgroundColor: 'white', borderColor: '#DADADA', borderBottomWidth: 0.9, borderTopWidth: 0.9, borderLeftWidth: 0.9, borderRightWidth: 0.9, borderRadius: 6 }}
+                                style={{ backgroundColor: 'white', borderColor: '#DADADA', borderBottomWidth: 0.9, borderTopWidth: 0.9, borderLeftWidth: 0.9, borderRightWidth: 0.9, borderRadius: 5 }}
                                 onChangeTab={({ i }) => {
                                     console.log(i)
                                     this.setState({ currentTab: i })
@@ -981,7 +1016,7 @@ class Login extends Component {
                                             <CustomText style={{ color: colors.WHITE }}>Pay Now</CustomText>
                                         </Button>
                                         {/*LABEL*/}
-                                        <View style={styles.gpwa_label_container, { marginTop: 10, alignItems: 'center' }}>
+                                        <View style={styles.gpwa_label_container, { marginTop: 15, alignItems: 'center' }}>
                                             <CustomTextBold style={[styles.gpwa_label, { fontSize: 14 }]}>Log in to your Account</CustomTextBold>
                                         </View>
 
@@ -1034,7 +1069,7 @@ class Login extends Component {
                                         <Button block rounded transparent
                                             style={[styles.buttons, { backgroundColor: '#1687C7', borderRadius: 6, borderWidth: 0.5, height: 50 }]}
                                             onPress={() =>
-                                                this.manualLogin(this.state.emailAdd,this.state.password)
+                                                this.manualLogin(this.state.emailAdd, this.state.password)
                                                 // this.manualLogin('gdoe', 'GDOE2018')
                                                 // this.manualLogin('Relyant', 'Relyant01')
                                                 // this.manualLogin('blas959', 'sweetheart95')
@@ -1042,7 +1077,7 @@ class Login extends Component {
                                             <CustomText style={{ color: colors.WHITE }}>Login</CustomText>
                                         </Button>
 
-                                        <View style={styles.gpwa_label_container, { marginTop: 10, alignItems: 'center' }}>
+                                        <View style={styles.gpwa_label_container, { marginTop: 15, alignItems: 'center' }}>
                                             <CustomTextBold style={[styles.gpwa_label, { fontSize: pRatioToFontSize(0) }]}>Don't have an account?</CustomTextBold>
                                         </View>
 
@@ -1103,7 +1138,7 @@ class Login extends Component {
                                             <CustomText style={{ color: colors.WHITE }}>Quick Pay</CustomText>
                                         </Button>
                                         {/*LABEL*/}
-                                        <View style={styles.gpwa_label_container, { marginTop: 10, alignItems: 'center' }}>
+                                        <View style={styles.gpwa_label_container, { marginTop: 15, alignItems: 'center' }}>
                                             <CustomTextBold style={[styles.gpwa_label, { fontSize: 14 }]}>Log in to your Account</CustomTextBold>
                                         </View>
 
@@ -1165,7 +1200,7 @@ class Login extends Component {
                                             <CustomText style={{ color: colors.WHITE }}>Login</CustomText>
                                         </Button>
 
-                                        <View style={styles.gpwa_label_container, { marginTop: 10, alignItems: 'center' }}>
+                                        <View style={styles.gpwa_label_container, { marginTop: 15, alignItems: 'center' }}>
                                             <CustomTextBold style={[styles.gpwa_label, { fontSize: pRatioToFontSize(0) }]}>Don't have an account?</CustomTextBold>
                                         </View>
 
@@ -1264,13 +1299,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: 35,
     },
     buttons: {
-        marginTop: 10,
+        marginTop: 15,
     },
     text_input: {
         backgroundColor: colors.WHITE,
         borderRadius: 6,
         borderColor: 'lightgray',
-        marginTop: 10,
+        marginTop: 15,
+    },
+    text_inputModal: {
+        backgroundColor: colors.WHITE,
+        borderRadius: 6,
+        borderColor: 'lightgray',
+        marginTop: 15,
     },
     demo_text: {
         textAlign: 'center',

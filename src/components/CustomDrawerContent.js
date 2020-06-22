@@ -116,7 +116,7 @@ class CustomDrawerContent extends Component {
             <Content contentContainerStyle={{ flex: 1, paddingTop: 20 }}>
 
               {this.summaryDrawerButton()}
-              {this.profileDrawerButton()}
+              {/* {this.profileDrawerButton()} */}
               {/* {this.myAccountsDrawerButton()} */}
               <View style={{ borderBottomColor: 'black', borderBottomWidth: 1, marginHorizontal: 30, marginTop: 15 }} />
               {this.surveyDrawerButton()}

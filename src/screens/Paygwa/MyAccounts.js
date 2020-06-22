@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Container, Right, Footer, FooterTab, Icon, Text } from 'native-base';
 import {
-  TouchableHighlight, FlatList, View, ActivityIndicator, TouchableOpacity
+  TouchableHighlight, FlatList, View, ActivityIndicator, TouchableOpacity, StyleSheet
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
@@ -85,43 +85,43 @@ class MyAccount extends Component {
     let allResidAccts = [];
     let allNonResidAccts = [];
     let sortedAccountSummary = [];
-    for(let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++){
-        sortedAccountId.push(this.props.dashboard.orderData.accountSummary[count].accID)
+    for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
+      sortedAccountId.push(this.props.dashboard.orderData.accountSummary[count].accID)
     }
     //get all resid accounts
-    for(let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++){
-        if(this.props.dashboard.orderData.accountSummary[count].className === "RESID"){
-            allResidAccts.push(this.props.dashboard.orderData.accountSummary[count]);
-        }
+    for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
+      if (this.props.dashboard.orderData.accountSummary[count].className === "RESID") {
+        allResidAccts.push(this.props.dashboard.orderData.accountSummary[count]);
+      }
     }
     //get all non-resid accounts
-    for(let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++){
-        if(this.props.dashboard.orderData.accountSummary[count].className != "RESID"){
-            allNonResidAccts.push(this.props.dashboard.orderData.accountSummary[count]);
-        }
+    for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
+      if (this.props.dashboard.orderData.accountSummary[count].className != "RESID") {
+        allNonResidAccts.push(this.props.dashboard.orderData.accountSummary[count]);
+      }
     }
     //insert all resid accounts
-    for(let count = 0; count < sortedAccountId.sort().length; count++){
-        for(let count1 = 0; count1 < allResidAccts.length; count1++){
-            if(sortedAccountId.sort()[count] === allResidAccts[count1].accID){
-                sortedAccountSummary.push(allResidAccts[count1])
-                break;
-            }
-        } 
+    for (let count = 0; count < sortedAccountId.sort().length; count++) {
+      for (let count1 = 0; count1 < allResidAccts.length; count1++) {
+        if (sortedAccountId.sort()[count] === allResidAccts[count1].accID) {
+          sortedAccountSummary.push(allResidAccts[count1])
+          break;
+        }
+      }
     }
     //insert all non-resid accounts
-    for(let count = 0; count < sortedAccountId.sort().length; count++){
-        for(let count1 = 0; count1 < allNonResidAccts.length; count1++){
-            if(sortedAccountId.sort()[count] === allNonResidAccts[count1].accID){
-                sortedAccountSummary.push(allNonResidAccts[count1]);
-                break;
-            }
-        } 
+    for (let count = 0; count < sortedAccountId.sort().length; count++) {
+      for (let count1 = 0; count1 < allNonResidAccts.length; count1++) {
+        if (sortedAccountId.sort()[count] === allNonResidAccts[count1].accID) {
+          sortedAccountSummary.push(allNonResidAccts[count1]);
+          break;
+        }
+      }
     }
     return sortedAccountSummary;
-}
+  }
 
-  getLocalData(){
+  getLocalData() {
     // ls meaning =localStorage
     //session storage key search
     let sessionAccountId, sessionPersonId;
@@ -129,7 +129,7 @@ class MyAccount extends Component {
     let lsAccountIds = this.props.accountIds // Multiple Account
     console.log('lsAccountId', this.props.accountId)
     console.log('lsAccountIds', this.props.accountIds)
-  
+
     if (!(lsAccountId === '' || lsAccountId === null || lsAccountId === undefined)) {
       var accountId = [];
       var arrAccountId = lsAccountId
@@ -173,9 +173,9 @@ class MyAccount extends Component {
         personId: sessionPersonId
       }
     })
-    
-    
-    console.log('***accountId',accountId)
+
+
+    console.log('***accountId', accountId)
     console.log('***personId', sessionPersonId)
     this.executeRequests(sessionAccountId, this.props.dashboard.selectedAccountId, sessionPersonId)
   }
@@ -226,7 +226,7 @@ class MyAccount extends Component {
     catch (error) {
       this.props.showMessage(true, "Server Error. Try again later!")
       setInterval(() => {
-        window.location.reload()
+        this.getApiData()
       }, 1000);
     }
   }
@@ -236,12 +236,13 @@ class MyAccount extends Component {
 
     let selected = this.state.selectedAccounts;
     let selectedAccountsId = this.state.selectedAccountsId
+    
 
-    if (selectedAccountsId.indexOf(i.accID) == -1) {
-      selectedAccountsId.push(i.accID);
+    if (selectedAccountsId.indexOf(i.accID[0]) == -1) {
+      selectedAccountsId.push(i.accID[0]);
       selected.push(i) // insert array of object
     } else {
-      let index = selectedAccountsId.indexOf(i.accID);
+      let index = selectedAccountsId.indexOf(i.accID[0]);
       // _.remove(selected, (e) => {
       //   return e !== i.accID
       // })
@@ -258,56 +259,87 @@ class MyAccount extends Component {
 
   //FUNCTION FOR COMPONENT OF EACH ITEM IN LEAD LISTING
   renderItemsInfiniteScroll(itemIndex, i) {
-    let sl = this.state.selectedAccountsIdarrAccountId
+  
+  
+
+    let sl = this.state.selectedAccountsId
+    console.log('selectedAccountsId', sl)
     return (
       <TouchableOpacity underlayColor={colors.GRAYISHRED}
         onPress={() => {
           if (this.state.selectMode) {
             this.onPressOnAccount(i)
           } else {
-            this.props.navigation.navigate('AccountSummary')
+            
+            console.log('accountDetails', i)
+            this.props.navigation.navigate('AccountSummary', {
+              accountDetails : i
+            })
           }
         }}
         onLongPress={() => this.setState({
           selectMode: !this.state.selectMode
         })}>
-        <Row key={itemIndex} style={{ borderBottomWidth: .3, borderColor: '#3b4043', paddingTop: 10, paddingBottom: 10 }}>
-          <Col size={10} style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            {this.state.selectMode ?
-              <MaterialIcons
-                name={_.includes(sl, i.accID) ? 'check-box' : 'check-box-outline-blank'}
-                size={pRatioToFontSize(-0.1)}
-                color={colors.PRIMARY_COLOR}
-              />
+
+
+        <View style={styles.container}>
+          <View style={styles.item}>
+            <View >
+              {this.state.selectMode ?
+              
+                <MaterialIcons
+                
+                  name={
+                    // sl.indexOf(i.accID) != -1 
+                    _.includes(sl, i.accID[0]) 
+                    ? 'check-box' : 'check-box-outline-blank'
+                  }
+                  size={pRatioToFontSize(-0.1)}
+                  color={colors.PRIMARY_COLOR}
+                />
+                :
+                null
+              }
+            </View>
+          </View>
+
+          <View style={styles.itemTwo}>
+            <CustomText style={{ fontsize: 24, alignItems: 'center' }} numberOfLines={1} ellipsizeMode='tail'>{i.accID[0]}{' '}{i.accID[2] === 'COMM' ?
+              <Icon type={'FontAwesome5'} name='building' style={{ fontSize: 20}} />
               :
-              null
-            }
-          </Col>
-          <Col size={65}>
-            <CustomText>Account Number</CustomText>
-            <CustomText numberOfLines={2} ellipsizeMode='tail'>{i.accID}</CustomText>
+              <Icon type={'Entypo'} name='home' style={{ fontSize: 20, }} />
+
+            }</CustomText>
+            
             <CustomText style={{ color: colors.GRAYISHRED }} numberOfLines={1} ellipsizeMode='tail'>{i.serviceLocation}</CustomText>
-          </Col>
-          <Col size={45} style={{ alignItems: 'flex-end', paddingTop: 5 }} >
-            <CustomText style={{ color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED }}>{i.dueDate + ' '}<Icon onPress={() => alert('icon press')} style={{ backgroundColor: colors.WHITE, color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED, fontSize: pRatioToFontSize(+1) > 14 ? 14 : pRatioToFontSize(+1) }} name='info-circle' type='FontAwesome5' /></CustomText>
-            <CustomText numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 25, fontWeight: 'bold' }} >${i.arrears.details.PayoffBalance}</CustomText>
-          </Col>
-          <Col size={10}></Col>
-        </Row>
+          </View>
+            <View style={styles.itemBlocker}/>
+
+          <View style={styles.itemThree}>
+          
+            <CustomText  numberOfLines={1} ellipsizeMode='tail'
+               style={{ fontSize: 25, fontWeight: 'bold' }} >${i.arrears.details.PayoffBalance}</CustomText>
+            <CustomText style={{ color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED }}>{_.replace(i.dueDate, /\//g, '.')+ ' '}<Icon onPress={() => alert('icon press')} style={{ backgroundColor: colors.WHITE, color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED, fontSize: pRatioToFontSize(+1) > 14 ? 14 : pRatioToFontSize(+1) }} name='info-circle' type='FontAwesome5' /></CustomText>
+          </View>
+          {/* <View style={styles.itemFour}></View> */}
+
+        </View>
+
+
+
       </TouchableOpacity>
     )
   }
   selectModeFunction() {
+    debugger
     if (this.state.selectMode) {
       return (
         <View style={{
           paddingHorizontal: 7, paddingBottom: 10, flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10,
           borderBottomColor: '#e2e6ea', borderBottomWidth: 1, backgroundColor: '#e2e6ea'
         }}>
-          <TouchableHighlight
+          <TouchableOpacity
+          underlayColor={colors.GRAYISHRED}
             onPress={() => {
 
               let selected = [];
@@ -319,15 +351,15 @@ class MyAccount extends Component {
                 let fl = [];
                 fl = this.state.accountSummary;
                 for (var i = 0; i < fl.length; i++) {
-                  selectedAccountsId.push(fl[i].accID);
+                  selectedAccountsId.push(fl[i].accID[0]);
                   selected.push(fl[i]);
                 }
               }
-              console.log(selectedAccountsId)
-              console.log(selected)
+              console.log('selectedAccountsIdselectModeFunction',selectedAccountsId)
+              console.log('selectedselectModeFunction',selected)
               this.setState({
                 selectAll: !this.state.selectAll,
-                selectedAccountsId: selected,
+                selectedAccountsId: selectedAccountsId,
                 selectedAccounts: selected
               });
             }}
@@ -335,11 +367,11 @@ class MyAccount extends Component {
               justifyContent: 'center'
             }}
           >
-            <View style={{ flexDirection: 'row', }}>
+            <View style={{ flexDirection: 'row', paddingLeft: 5 }}>
               <MaterialIcons name={this.state.selectAll ? 'check-box' : 'check-box-outline-blank'} style={{ top: 2 }} size={pRatioToFontSize()} color={colors.PRIMARY_COLOR} />
-              <CustomText style={{ color: colors.BLACK, fontSize: pRatioToFontSize(), fontWeight: '500', paddingLeft: 5 }}>Select All</CustomText>
+              <CustomTextBold style={{ color: colors.BLACK, fontSize: 14, fontWeight: '500', paddingLeft: 5 }}>Select All</CustomTextBold>
             </View>
-          </TouchableHighlight>
+          </TouchableOpacity>
         </View>
       )
     }
@@ -354,7 +386,7 @@ class MyAccount extends Component {
       /* MAIN VIEW COMPONENT */
       <Container >
         <CustomHeader
-          leftIconName="menu"
+          leftIconName="navicon"
           leftButtonFunction={this.props.navigation.openDrawer}
           title="My Accounts"
           RightIcon={<Right style={{ paddingRight: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, flex: 1 }}>
@@ -424,7 +456,7 @@ class MyAccount extends Component {
                   })
                 }}
               >
-                <CustomText style={{ color: colors.WHITE }}>Continue</CustomText>
+                <CustomText style={{ color: colors.WHITE }}>Make Payment</CustomText>
 
               </Button>
             </FooterTab>
@@ -436,6 +468,41 @@ class MyAccount extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    borderBottomWidth: .3, borderColor: '#3b4043', paddingVertical: 20,
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start' // if you want to fill rows left to right,
+
+  },
+  item: {
+    paddingVertical: 20,
+    width: '10%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  itemBlocker: {
+    width: '5%'
+  },
+  itemTwo: {
+    width: '55%',
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start' // if you want to fill rows left to right,
+  },
+  itemThree: {
+    width: '30%',
+    alignItems: 'flex-start',
+    paddingTop: 5
+  },
+  itemFour: {
+    width: '10%'
+  }
+});
 
 const mapStateToProps = (state) => ({
   userPersonId: state.userState.userPersonId,
@@ -451,3 +518,4 @@ export default connect(mapStateToProps, {
   fetchMultipleLatestBill,
   saveOrderData
 })(MyAccount);
+

@@ -24,12 +24,19 @@ import OfflineNotice from "../../../components/OfflineNotice";
 import CustomHeader from "../../../components/MultiCustomHeader";
 import { Grid, Row, Col } from "react-native-easy-grid";
 import { TouchableHighlight } from "react-native-gesture-handler";
+import moment from 'moment'
+import { ActivityIndicator } from 'react-native'
+import { PAYGWA_URL, DASHBOARD_URL, PAYNOW_URL } from 'react-native-dotenv';
+import axios from 'react-native-axios'
 
 class AccountSummaryHistory extends Component {
   constructor(props) {
     super(props);
     // local state
     this.state = {
+      paymentData: [],
+      accountId: this.props.navigation.state.params.accountId,
+      isLoadingData: false,
       pixelDensity: 0,
       data: [
         {
@@ -52,10 +59,46 @@ class AccountSummaryHistory extends Component {
     };
   }
 
-  async componentDidMount() {}
+  componentDidMount() { 
+    this.getPaymentHistory()
+  }
 
-  componentWillUnmount() {}
+  componentWillUnmount() { }
 
+  getPaymentHistory() {
+    this.setState({
+      isLoadingData: true
+    })
+    debugger
+    axios
+      .post(
+        DASHBOARD_URL + '/api/v1/payment-history',
+        {
+          accountId: this.state.accountId,
+        },
+        {
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
+      .then((response) => {
+        console.log(response.data.result);
+        this.setState({
+          paymentData: response.data.result,
+          isLoadingData: false
+        })
+        // Toast.show({
+        //     text: `We've sent you a verification email.`,
+        //     duration: 2500,
+        //     type: 'success'
+        // })
+
+
+      })
+      .catch((error) => {
+        console.log(error);
+
+      });
+  }
   render() {
     return (
       <Container>
@@ -68,61 +111,207 @@ class AccountSummaryHistory extends Component {
         <OfflineNotice />
         <Content>
           <View style={{ paddingHorizontal: 25, paddingVertical: 25 }}>
-            <CustomTextBold>Your Bills For Account No. </CustomTextBold>
-            <CustomText>1231231313 </CustomText>
+            <CustomTextBold>Your Payment History For Account No. </CustomTextBold>
+            <CustomText>{this.state.accountId}</CustomText>
           </View>
+          {this.state.isLoadingData ?
+            <ActivityIndicator size="large" color={colors.PRIMARY_COLOR} />
+            :
+            <Grid style={{ paddingHorizontal: 15 }}>
+              <Row style={{ backgroundColor: colors.PRIMARY_COLOR }}>
+                <Col
+                  style={{
+                    borderRadius: 0,
+                    borderLeftWidth: 1,
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: colors.DARK_GRAY,
+                    padding: 20,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center" }}>
+                    Payment Date
+                </CustomText>
+                </Col>
+                <Col
+                  style={{
+                    borderRadius: 0,
+                    borderLeftWidth: 1,
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: colors.DARK_GRAY,
+                    padding: 20,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center" }}>Description</CustomText>
+                </Col>
+                <Col
+                  style={{
+                    borderRadius: 0,
+                    borderLeftWidth: 1,
+                    borderRightWidth: 1,
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: colors.DARK_GRAY,
+                    padding: 20,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                ><CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center" }}>Amount</CustomText></Col>
+              </Row>
+              {_.isEmpty(this.state.paymentData)  ?
+             <Row>
+                <Col
+                  style={{
+                    borderRadius: 0,
+                    borderLeftWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: colors.DARK_GRAY,
+                    padding: 20,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}>
+                  <CustomText >
+                    
+                  </CustomText>
+                </Col>
+                <Col
+                  style={{
+                    borderRadius: 0,
+                    borderLeftWidth: 1,
+                    borderRightWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: colors.DARK_GRAY,
+                    padding: 20,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}>
+                  <CustomText >
+                    
+              </CustomText>
+                </Col>
+                <Col
+                  style={{
+                    borderRadius: 0,
+                    borderRightWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: colors.DARK_GRAY,
+                    padding: 20,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}>
+                  <CustomText >
+                    
+                  </CustomText>
+                </Col>
+              </Row>
+            
+              :
+              _.map(this.state.paymentData, (data, index) => {
 
-          <Grid style={{ paddingHorizontal: 15 }}>
-            <Text>123</Text>
-          </Grid>
+
+                // checking decimal places if 0  == 0 and 12.12 == to 2 decimal places
+
+                var number = data.TotalAmount;
+         
+                var countDecimals = function (value) { 
+                  if ((value % 1) != 0) 
+                      return value.toString().split(".")[1].length;  
+                  return 0;
+              };
+              
+              var result = countDecimals(number)
+                var currentAmount
+
+                if (result === 2) {
+                  currentAmount =
+                    <CustomText >
+                      $ {data.TotalAmount}
+                    </CustomText>
+                } else if (result === 1) {
+                  currentAmount =
+                  <CustomText >
+                    $ {data.TotalAmount}0
+                  </CustomText>
+                } else {
+                  currentAmount =
+                  <CustomText >
+                    $ {data.TotalAmount}.00
+                  </CustomText>
+                }
+
+              return (<Row>
+                <Col
+                  style={{
+                    borderRadius: 0,
+                    borderLeftWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: colors.DARK_GRAY,
+                    padding: 20,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}>
+                  <CustomText >
+                    {data.ArrearsDate}
+                  </CustomText>
+                </Col>
+                <Col
+                  style={{
+                    borderRadius: 0,
+                    borderLeftWidth: 1,
+                    borderRightWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: colors.DARK_GRAY,
+                    padding: 20,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}>
+                  <CustomText >
+                    Payment
+              </CustomText>
+                </Col>
+                <Col
+                  style={{
+                    borderRadius: 0,
+                    borderRightWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: colors.DARK_GRAY,
+                    padding: 20,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}>
+                  {currentAmount}
+                </Col>
+              </Row>)
+            })
+              }
+            </Grid>
+          }
+
+
         </Content>
         <Footer style={{ backgroundColor: colors.PRIMARY_COLOR }}>
           <FooterTab>
-            <Button
-              onPress={() => this.props.navigation.navigate('AccountSummaryBill')}
-              vertical
-              style={{
-                borderRadius: 0,
-                borderRightWidth: 1,
-                borderColor: colors.WHITE
-              }}
-            >
-              <Icon
-                style={{ color: colors.WHITE }}
-                name="file"
-                type="MaterialCommunityIcons"
-              />
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR, borderRadius: 0, borderRightWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryBill', {
+              accountId: this.state.accountId
+            })}>
+              <Icon style={{ color: colors.WHITE }} name="file" type='MaterialCommunityIcons' />
               <CustomText style={{ color: colors.WHITE }}>Bill</CustomText>
             </Button>
-            <Button
-              vertical
-              style={{
-                borderRadius: 0,
-                borderColor: colors.WHITE
-              }}
-            >
-              <Icon
-                style={{ color: colors.WHITE }}
-                name="chart-bar"
-                type="FontAwesome5"
-              />
-              <CustomText style={{ color: colors.WHITE }}>
-                Consumption
-              </CustomText>
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR, borderRadius: 0, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryConsumption', {
+              accountId: this.state.accountId
+            })} >
+              <Icon style={{ color: colors.WHITE }} name="chart-bar" type='FontAwesome5' />
+              <CustomText style={{ color: colors.WHITE }}>Consumption</CustomText>
             </Button>
-            <Button
-              vertical
-              style={{
-                borderRadius: 0,
-                borderLeftWidth: 1,
-                borderColor: colors.WHITE
-              }}
-            >
-              <Icon
-                style={{ color: colors.WHITE }}
-                name="history"
-                type="FontAwesome5"
-              />
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR, borderRadius: 0, borderLeftWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryHistory', {
+              accountId: this.state.accountId
+            })} >
+              <Icon style={{ color: colors.WHITE }} name="history" type='FontAwesome5' />
               <CustomText style={{ color: colors.WHITE }}>History</CustomText>
             </Button>
           </FooterTab>

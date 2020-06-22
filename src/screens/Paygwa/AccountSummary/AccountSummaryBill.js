@@ -13,8 +13,10 @@ import {
   Button,
   Icon,
   Footer,
-  FooterTab
+  FooterTab,
+  Toast
 } from "native-base";
+import { ActivityIndicator } from 'react-native'
 import { connect } from "react-redux";
 import { colors, pRatioToFontSize } from "../../../utils/constants";
 import _ from "lodash";
@@ -24,12 +26,17 @@ import OfflineNotice from "../../../components/OfflineNotice";
 import CustomHeader from "../../../components/MultiCustomHeader";
 import { Grid, Row, Col } from "react-native-easy-grid";
 import { TouchableHighlight } from "react-native-gesture-handler";
+import { PAYGWA_URL, DASHBOARD_URL, PAYNOW_URL } from 'react-native-dotenv';
+import axios from 'react-native-axios'
+import moment from 'moment'
 
 class AccountSummaryBill extends Component {
   constructor(props) {
     super(props);
     // local state
     this.state = {
+      accountId: this.props.navigation.state.params.accountId,
+      isLoadingData: false,
       pixelDensity: 0,
       data: [
         {
@@ -52,9 +59,48 @@ class AccountSummaryBill extends Component {
     };
   }
 
-  async componentDidMount() {}
+  componentDidMount() {
+    this.getDataBill()
 
-  componentWillUnmount() {}
+  }
+
+  componentWillUnmount() { }
+
+
+  getDataBill() {
+    this.setState({
+      isLoadingData: true
+    })
+    debugger
+    axios
+      .post(
+        DASHBOARD_URL + '/api/v1/my-bills-list',
+        {
+          accountId: this.state.accountId,
+        },
+        {
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
+      .then((response) => {
+        console.log(response.data.result);
+        this.setState({
+          billsData: response.data.result,
+          isLoadingData: false
+        })
+        // Toast.show({
+        //     text: `We've sent you a verification email.`,
+        //     duration: 2500,
+        //     type: 'success'
+        // })
+
+
+      })
+      .catch((error) => {
+        console.log(error);
+
+      });
+  }
 
   render() {
     return (
@@ -69,151 +115,204 @@ class AccountSummaryBill extends Component {
         <Content>
           <View style={{ paddingHorizontal: 25, paddingVertical: 25 }}>
             <CustomTextBold>Your Bills For Account No. </CustomTextBold>
-            <CustomText>1231231313 </CustomText>
+            <CustomText>{this.state.accountId}</CustomText>
           </View>
+          {this.state.isLoadingData ?
+            <ActivityIndicator size="large" color={colors.PRIMARY_COLOR} />
+            :
 
-          <Grid style={{ paddingHorizontal: 15 }}>
-            <Row style={{ backgroundColor: colors.PRIMARY_COLOR }}>
-              <Col
-                style={{
-                  borderRadius: 0,
-                  borderLeftWidth: 1,
-                  borderTopWidth: 1,
-                  borderBottomWidth: 1,
-                  borderColor: colors.DARK_GRAY,
-                  padding: 20,
-                  alignItems: "center",
-                justifyContent: "center"
-                }}
-              >
-                <CustomText style={{ color: colors.WHITE }}>
-                  Date of Bill
-                </CustomText>
-              </Col>
-              <Col
-                style={{
-                  borderRadius: 0,
-                  borderLeftWidth: 1,
-                  borderTopWidth: 1,
-                  borderBottomWidth: 1,
-                  borderColor: colors.DARK_GRAY,
-                  padding: 20,
-                  alignItems: "center",
-                justifyContent: "center"
-                }}
-              >
-                <CustomText style={{ color: colors.WHITE }}>Amount</CustomText>
-              </Col>
-              <Col
-                style={{
-                  borderRadius: 0,
-                  borderLeftWidth: 1,
-                  borderRightWidth: 1,
-                  borderTopWidth: 1,
-                  borderBottomWidth: 1,
-                  borderColor: colors.DARK_GRAY,
-                  padding: 20,
-                  alignItems: "center",
-                justifyContent: "center"
-                }}
-              ></Col>
-            </Row>
-            {_.map(this.state.data, (data, index) => {
-              return(<Row>
+            <Grid style={{ paddingHorizontal: 15, paddingBottom: 30 }}>
+              <Row style={{ backgroundColor: colors.PRIMARY_COLOR }}>
                 <Col
-                style={{
+                  style={{
                     borderRadius: 0,
                     borderLeftWidth: 1,
+                    borderTopWidth: 1,
                     borderBottomWidth: 1,
                     borderColor: colors.DARK_GRAY,
                     padding: 20,
                     alignItems: "center",
-                justifyContent: "center"
-                  }}>
+                    justifyContent: "center"
+                  }}
+                >
+                  <CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center" }}>
+                    Date of Bill
+                </CustomText>
+                </Col>
+                <Col
+                  style={{
+                    borderRadius: 0,
+                    borderLeftWidth: 1,
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: colors.DARK_GRAY,
+                    padding: 20,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center" }}>Amount</CustomText>
+                </Col>
+                <Col
+                  style={{
+                    borderRadius: 0,
+                    borderLeftWidth: 1,
+                    borderRightWidth: 1,
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: colors.DARK_GRAY,
+                    padding: 20,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                ></Col>
+              </Row>
+              {_.isEmpty(this.state.billsData) ?
+                <Row>
+                  <Col
+                    style={{
+                      borderRadius: 0,
+                      borderLeftWidth: 1,
+                      borderBottomWidth: 1,
+                      borderColor: colors.DARK_GRAY,
+                      padding: 20,
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
+                    <CustomText >
+
+                    </CustomText>
+                  </Col>
+                  <Col
+                    style={{
+                      borderRadius: 0,
+                      borderLeftWidth: 1,
+                      borderRightWidth: 1,
+                      borderBottomWidth: 1,
+                      borderColor: colors.DARK_GRAY,
+                      padding: 20,
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
+                    <CustomText >
+
+                    </CustomText>
+                  </Col>
+                  <Col
+                    style={{
+                      borderRadius: 0,
+                      borderRightWidth: 1,
+                      borderBottomWidth: 1,
+                      borderColor: colors.DARK_GRAY,
+                      padding: 20,
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
+                    <Text style={{ color: colors.PRIMARY_COLOR }} onPress={() => console.log('View')}>View</Text>
+                  </Col>
+                </Row>
+                :
+                _.map(this.state.billsData, (data, index) => {
+
+                  // checking decimal places if 0  == 0 and 12.12 == to 2 decimal places
+
+                  var number = data.CurrentAmount;
+           
+                  var countDecimals = function (value) { 
+                    if ((value % 1) != 0) 
+                        return value.toString().split(".")[1].length;  
+                    return 0;
+                };
+                
+                var result = countDecimals(number)
+                  var currentAmount
+
+                  if (result === 2) {
+                    currentAmount =
                       <CustomText >
-                  {data.dateOfBill}
-                </CustomText>
-                  </Col>
-                <Col
-                style={{
-                    borderRadius: 0,
-                    borderLeftWidth: 1,
-                    borderRightWidth: 1,
-                    borderBottomWidth: 1,
-                    borderColor: colors.DARK_GRAY,
-                    padding: 20,
-                    alignItems: "center",
-                justifyContent: "center"
-                  }}>
-                <CustomText >
-                  $ {data.amount}
-                </CustomText>
-                  </Col>
-                <Col
-                style={{
-                    borderRadius: 0,
-                    borderRightWidth: 1,
-                    borderBottomWidth: 1,
-                    borderColor: colors.DARK_GRAY,
-                    padding: 20,
-                    alignItems: "center",
-                justifyContent: "center"
-                  }}>
-                          <Text style={{ color: colors.PRIMARY_COLOR}} onPress={() => console.log('View')}>View</Text>
-                  </Col>
-              </Row>)
-            })}
-          </Grid>
+                        $ {data.CurrentAmount}
+                      </CustomText>
+                  } else if (result === 1) {
+                    currentAmount =
+                    <CustomText >
+                      $ {data.CurrentAmount}0
+                    </CustomText>
+                  } else {
+                    currentAmount =
+                    <CustomText >
+                      $ {data.CurrentAmount}.00
+                    </CustomText>
+                  }
+                  
+                  return (<Row>
+                      <Col
+                        style={{
+                          borderRadius: 0,
+                          borderLeftWidth: 1,
+                          borderBottomWidth: 1,
+                          borderColor: colors.DARK_GRAY,
+                          padding: 20,
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}>
+                        <CustomText >
+                          {
+                            moment(data.ArrearsDate,'YYYY-MM-DD').format('MM.DD.YY')
+                          }
+                          
+                        </CustomText>
+                      </Col>
+                      <Col
+                        style={{
+                          borderRadius: 0,
+                          borderLeftWidth: 1,
+                          borderRightWidth: 1,
+                          borderBottomWidth: 1,
+                          borderColor: colors.DARK_GRAY,
+                          padding: 20,
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}>
+                          {currentAmount}
+                      </Col>
+                      <Col
+                        style={{
+                          borderRadius: 0,
+                          borderRightWidth: 1,
+                          borderBottomWidth: 1,
+                          borderColor: colors.DARK_GRAY,
+                          padding: 20,
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}>
+                        <Text style={{ color: colors.PRIMARY_COLOR }} onPress={() => console.log('View')}>View</Text>
+                      </Col>
+                    </Row>)
+                })
+
+              }
+            </Grid>
+          }
+
         </Content>
         <Footer style={{ backgroundColor: colors.PRIMARY_COLOR }}>
           <FooterTab>
-            <Button
-              onPress={() => this.props.navigation.navigate('AccountSummaryBill')}
-              vertical
-              style={{
-                borderRadius: 0,
-                borderRightWidth: 1,
-                borderColor: colors.WHITE
-              }}
-            >
-              <Icon
-                style={{ color: colors.WHITE }}
-                name="file"
-                type="MaterialCommunityIcons"
-              />
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR, borderRadius: 0, borderRightWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryBill', {
+              accountId: this.state.accountId
+            })}>
+              <Icon style={{ color: colors.WHITE }} name="file" type='MaterialCommunityIcons' />
               <CustomText style={{ color: colors.WHITE }}>Bill</CustomText>
             </Button>
-            <Button
-            onPress={() => this.props.navigation.navigate('AccountSummaryConsumption')}
-              vertical
-              style={{
-                borderRadius: 0,
-                borderColor: colors.WHITE
-              }}
-            >
-              <Icon
-                style={{ color: colors.WHITE }}
-                name="chart-bar"
-                type="FontAwesome5"
-              />
-              <CustomText style={{ color: colors.WHITE }}>
-                Consumption
-              </CustomText>
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR, borderRadius: 0, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryConsumption', {
+              accountId: this.state.accountId
+            })} >
+              <Icon style={{ color: colors.WHITE }} name="chart-bar" type='FontAwesome5' />
+              <CustomText style={{ color: colors.WHITE }}>Consumption</CustomText>
             </Button>
-            <Button
-            onPress={() => this.props.navigation.navigate('AccountSummaryHistory')}
-              vertical
-              style={{
-                borderRadius: 0,
-                borderLeftWidth: 1,
-                borderColor: colors.WHITE
-              }}
-            >
-              <Icon
-                style={{ color: colors.WHITE }}
-                name="history"
-                type="FontAwesome5"
-              />
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR, borderRadius: 0, borderLeftWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryHistory', {
+              accountId: this.state.accountId
+            })} >
+              <Icon style={{ color: colors.WHITE }} name="history" type='FontAwesome5' />
               <CustomText style={{ color: colors.WHITE }}>History</CustomText>
             </Button>
           </FooterTab>

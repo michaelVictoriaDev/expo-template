@@ -28,52 +28,40 @@ class AccountSummary extends Component {
     super(props);
     // local state
     this.state = {
-      pixelDensity: 0
+      pixelDensity: 0,
+      accountDetails : this.props.navigation.state.params.accountDetails
     };
   }
 
-  async componentDidMount() { }
+  componentDidMount() { }
 
   componentWillUnmount() { }
 
   render() {
+    debugger
     return (
       <Container>
         <CustomHeader
           fontSizeLeft={pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1)}
-          leftIconName="menu"
-          leftButtonFunction={this.props.navigation.openDrawer}
+          leftButtonFunction={this.props.navigation.goBack}
           title="Account Summary"
           RightIcon={<Right />}
         />
         <OfflineNotice />
         <Content>
           <List>
-            <ListItem
-              itemDivider
-              style={{
-                paddingLeft: 25,
-                paddingRight: 25,
-                paddingTop: 18,
-                paddingBottom: 18,
-                borderColor: "#c9c9c9",
-                borderBottomWidth: 1
-              }}
-            >
-              <CustomText>Account Information</CustomText>
-            </ListItem>
             <View
               style={{
-                paddingHorizontal: 60,
+                paddingHorizontal: 80,
                 borderColor: "#c9c9c9",
                 borderBottomWidth: 1,
-                paddingVertical: 50,
+                paddingVertical: 25,
                 alignItems: "center",
                 justifyContent: "center"
               }}
             >
-              <CustomTextBold style={{ fontSize: 30 }}>$100.00</CustomTextBold>
-              <CustomTextBold style={{ paddingBottom: 10 }}>
+              <CustomTextBold style={{ fontSize: 35 }}>${this.state.accountDetails.arrears.details.PayoffBalance}</CustomTextBold>
+              <CustomTextBold style={{ paddingBottom: 10, color: '#8A8A8A' }}>
                 Amount Due
               </CustomTextBold>
 
@@ -94,7 +82,7 @@ class AccountSummary extends Component {
                 <CustomText>Account ID</CustomText>
               </Col>
               <Col size={5}>
-                <CustomTextBold>121231231231</CustomTextBold>
+                <CustomTextBold>{this.state.accountDetails.arrears.details.AccountID}</CustomTextBold>
               </Col>
             </Row>
             <Row
@@ -109,7 +97,7 @@ class AccountSummary extends Component {
                 <CustomText>Account Name</CustomText>
               </Col>
               <Col size={5}>
-                <CustomTextBold>Aaron Bennet </CustomTextBold>
+                <CustomTextBold>{this.state.accountDetails.arrears.details.Name}</CustomTextBold>
               </Col>
             </Row>
 
@@ -125,22 +113,7 @@ class AccountSummary extends Component {
                 <CustomText>Service location</CustomText>
               </Col>
               <Col size={5}>
-                <CustomTextBold>PO BOX 315768 TAMUNING GUAM</CustomTextBold>
-              </Col>
-            </Row>
-            <Row
-              style={{
-                paddingHorizontal: 25,
-                borderColor: "#c9c9c9",
-                borderBottomWidth: 1,
-                paddingVertical: 13
-              }}
-            >
-              <Col size={5}>
-                <CustomText>Bill Date</CustomText>
-              </Col>
-              <Col size={5}>
-                <CustomTextBold>10.01.19</CustomTextBold>
+                <CustomTextBold>{this.state.accountDetails.serviceLocation}</CustomTextBold>
               </Col>
             </Row>
             <Row
@@ -155,22 +128,28 @@ class AccountSummary extends Component {
                 <CustomText>Due Date</CustomText>
               </Col>
               <Col size={5}>
-                <CustomTextBold>10.01.19</CustomTextBold>
+                <CustomTextBold>{_.replace(this.state.accountDetails.dueDate, /\//g, '.')}</CustomTextBold>
               </Col>
             </Row>
           </List>
         </Content>
         <Footer style={{ backgroundColor: colors.PRIMARY_COLOR }}>
           <FooterTab>
-            <Button vertical style={{ borderRadius: 0, borderRightWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryBill')}>
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR , borderRadius: 0, borderRightWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryBill', {
+              accountId: this.state.accountDetails.arrears.details.AccountID
+            })}>
               <Icon style={{ color: colors.WHITE }} name="file" type='MaterialCommunityIcons' />
               <CustomText style={{ color: colors.WHITE }}>Bill</CustomText>
             </Button>
-            <Button vertical style={{ borderRadius: 0, borderColor: colors.WHITE }}  onPress={() => this.props.navigation.navigate('AccountSummaryConsumption')} >
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR , borderRadius: 0, borderColor: colors.WHITE }}  onPress={() => this.props.navigation.navigate('AccountSummaryConsumption', {
+              accountId: this.state.accountDetails.arrears.details.AccountID
+            })} >
               <Icon style={{ color: colors.WHITE }} name="chart-bar" type='FontAwesome5' />
               <CustomText style={{ color: colors.WHITE }}>Consumption</CustomText>
             </Button>
-            <Button vertical style={{ borderRadius: 0, borderLeftWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryHistory')} >
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR , borderRadius: 0, borderLeftWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryHistory', {
+              accountId: this.state.accountDetails.arrears.details.AccountID
+            })} >
               <Icon style={{ color: colors.WHITE }} name="history" type='FontAwesome5' />
               <CustomText style={{ color: colors.WHITE }}>History</CustomText>
             </Button>

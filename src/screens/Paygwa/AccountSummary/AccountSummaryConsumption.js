@@ -31,6 +31,7 @@ import { ScrollView } from 'react-native';
 class AccountSummaryConsumption extends Component {
   constructor(props) {
     super(props);
+    accountId: this.props.navigation.state.params.accountId,
     // local state
     this.state = {
       pixelDensity: 0,
@@ -114,53 +115,22 @@ class AccountSummaryConsumption extends Component {
         </Content>
         <Footer style={{ backgroundColor: colors.PRIMARY_COLOR }}>
           <FooterTab>
-            <Button
-              onPress={() => this.props.navigation.navigate('AccountSummaryBill')}
-              vertical
-              style={{
-                borderRadius: 0,
-                borderRightWidth: 1,
-                borderColor: colors.WHITE
-              }}
-            >
-              <Icon
-                style={{ color: colors.WHITE }}
-                name="file"
-                type="MaterialCommunityIcons"
-              />
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR , borderRadius: 0, borderRightWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryBill', {
+              accountId: this.state.accountId
+            })}>
+              <Icon style={{ color: colors.WHITE }} name="file" type='MaterialCommunityIcons' />
               <CustomText style={{ color: colors.WHITE }}>Bill</CustomText>
             </Button>
-            <Button
-            onPress={() => this.props.navigation.navigate('AccountSummaryConsumption')}
-              vertical
-              style={{
-                borderRadius: 0,
-                borderColor: colors.WHITE
-              }}
-            >
-              <Icon
-                style={{ color: colors.WHITE }}
-                name="chart-bar"
-                type="FontAwesome5"
-              />
-              <CustomText style={{ color: colors.WHITE }}>
-                Consumption
-              </CustomText>
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR , borderRadius: 0, borderColor: colors.WHITE }}  onPress={() => this.props.navigation.navigate('AccountSummaryConsumption', {
+              accountId: this.state.accountId
+            })} >
+              <Icon style={{ color: colors.WHITE }} name="chart-bar" type='FontAwesome5' />
+              <CustomText style={{ color: colors.WHITE }}>Consumption</CustomText>
             </Button>
-            <Button
-            onPress={() => this.props.navigation.navigate('AccountSummaryHistory')}
-              vertical
-              style={{
-                borderRadius: 0,
-                borderLeftWidth: 1,
-                borderColor: colors.WHITE
-              }}
-            >
-              <Icon
-                style={{ color: colors.WHITE }}
-                name="history"
-                type="FontAwesome5"
-              />
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR , borderRadius: 0, borderLeftWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryHistory', {
+              accountId: this.state.accountId
+            })} >
+              <Icon style={{ color: colors.WHITE }} name="history" type='FontAwesome5' />
               <CustomText style={{ color: colors.WHITE }}>History</CustomText>
             </Button>
           </FooterTab>
