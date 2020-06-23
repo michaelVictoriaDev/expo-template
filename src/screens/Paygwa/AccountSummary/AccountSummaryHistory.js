@@ -59,7 +59,7 @@ class AccountSummaryHistory extends Component {
     };
   }
 
-  componentDidMount() { 
+  componentDidMount() {
     this.getPaymentHistory()
   }
 
@@ -115,9 +115,11 @@ class AccountSummaryHistory extends Component {
             <CustomText>{this.state.accountId}</CustomText>
           </View>
           {this.state.isLoadingData ?
-            <ActivityIndicator size="large" color={colors.PRIMARY_COLOR} />
+            <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+              <ActivityIndicator size="large" color={colors.PRIMARY_COLOR} />
+            </View>
             :
-            <Grid style={{ paddingHorizontal: 15 }}>
+            <Grid style={{ paddingHorizontal: 15, paddingBottom: 30 }}>
               <Row style={{ backgroundColor: colors.PRIMARY_COLOR }}>
                 <Col
                   style={{
@@ -163,131 +165,131 @@ class AccountSummaryHistory extends Component {
                   }}
                 ><CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center" }}>Amount</CustomText></Col>
               </Row>
-              {_.isEmpty(this.state.paymentData)  ?
-             <Row>
-                <Col
-                  style={{
-                    borderRadius: 0,
-                    borderLeftWidth: 1,
-                    borderBottomWidth: 1,
-                    borderColor: colors.DARK_GRAY,
-                    padding: 20,
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}>
-                  <CustomText >
-                    
-                  </CustomText>
-                </Col>
-                <Col
-                  style={{
-                    borderRadius: 0,
-                    borderLeftWidth: 1,
-                    borderRightWidth: 1,
-                    borderBottomWidth: 1,
-                    borderColor: colors.DARK_GRAY,
-                    padding: 20,
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}>
-                  <CustomText >
-                    
-              </CustomText>
-                </Col>
-                <Col
-                  style={{
-                    borderRadius: 0,
-                    borderRightWidth: 1,
-                    borderBottomWidth: 1,
-                    borderColor: colors.DARK_GRAY,
-                    padding: 20,
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}>
-                  <CustomText >
-                    
-                  </CustomText>
-                </Col>
-              </Row>
-            
-              :
-              _.map(this.state.paymentData, (data, index) => {
-
-
-                // checking decimal places if 0  == 0 and 12.12 == to 2 decimal places
-
-                var number = data.TotalAmount;
-         
-                var countDecimals = function (value) { 
-                  if ((value % 1) != 0) 
-                      return value.toString().split(".")[1].length;  
-                  return 0;
-              };
-              
-              var result = countDecimals(number)
-                var currentAmount
-
-                if (result === 2) {
-                  currentAmount =
+              {_.isEmpty(this.state.paymentData) ?
+                <Row>
+                  <Col
+                    style={{
+                      borderRadius: 0,
+                      borderLeftWidth: 1,
+                      borderBottomWidth: 1,
+                      borderColor: colors.DARK_GRAY,
+                      padding: 20,
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
                     <CustomText >
-                      $ {data.TotalAmount}
-                    </CustomText>
-                } else if (result === 1) {
-                  currentAmount =
-                  <CustomText >
-                    $ {data.TotalAmount}0
-                  </CustomText>
-                } else {
-                  currentAmount =
-                  <CustomText >
-                    $ {data.TotalAmount}.00
-                  </CustomText>
-                }
 
-              return (<Row>
-                <Col
-                  style={{
-                    borderRadius: 0,
-                    borderLeftWidth: 1,
-                    borderBottomWidth: 1,
-                    borderColor: colors.DARK_GRAY,
-                    padding: 20,
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}>
-                  <CustomText >
-                    {data.ArrearsDate}
+                    </CustomText>
+                  </Col>
+                  <Col
+                    style={{
+                      borderRadius: 0,
+                      borderLeftWidth: 1,
+                      borderRightWidth: 1,
+                      borderBottomWidth: 1,
+                      borderColor: colors.DARK_GRAY,
+                      padding: 20,
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
+                    <CustomText >
+
+                    </CustomText>
+                  </Col>
+                  <Col
+                    style={{
+                      borderRadius: 0,
+                      borderRightWidth: 1,
+                      borderBottomWidth: 1,
+                      borderColor: colors.DARK_GRAY,
+                      padding: 20,
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
+                    <CustomText >
+
+                    </CustomText>
+                  </Col>
+                </Row>
+
+                :
+                _.map(this.state.paymentData, (data, index) => {
+
+
+                  // checking decimal places if 0  == 0 and 12.12 == to 2 decimal places
+
+                  var number = data.TotalAmount;
+
+                  var countDecimals = function (value) {
+                    if ((value % 1) != 0)
+                      return value.toString().split(".")[1].length;
+                    return 0;
+                  };
+
+                  var result = countDecimals(number)
+                  var currentAmount
+
+                  if (result === 2) {
+                    currentAmount =
+                      <CustomText >
+                        $ {data.TotalAmount}
+                      </CustomText>
+                  } else if (result === 1) {
+                    currentAmount =
+                      <CustomText >
+                        $ {data.TotalAmount}0
                   </CustomText>
-                </Col>
-                <Col
-                  style={{
-                    borderRadius: 0,
-                    borderLeftWidth: 1,
-                    borderRightWidth: 1,
-                    borderBottomWidth: 1,
-                    borderColor: colors.DARK_GRAY,
-                    padding: 20,
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}>
-                  <CustomText >
-                    Payment
+                  } else {
+                    currentAmount =
+                      <CustomText >
+                        $ {data.TotalAmount}.00
+                  </CustomText>
+                  }
+
+                  return (<Row>
+                    <Col
+                      style={{
+                        borderRadius: 0,
+                        borderLeftWidth: 1,
+                        borderBottomWidth: 1,
+                        borderColor: colors.DARK_GRAY,
+                        padding: 20,
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}>
+                      <CustomText >
+                        {data.ArrearsDate}
+                      </CustomText>
+                    </Col>
+                    <Col
+                      style={{
+                        borderRadius: 0,
+                        borderLeftWidth: 1,
+                        borderRightWidth: 1,
+                        borderBottomWidth: 1,
+                        borderColor: colors.DARK_GRAY,
+                        padding: 20,
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}>
+                      <CustomText >
+                        Payment
               </CustomText>
-                </Col>
-                <Col
-                  style={{
-                    borderRadius: 0,
-                    borderRightWidth: 1,
-                    borderBottomWidth: 1,
-                    borderColor: colors.DARK_GRAY,
-                    padding: 20,
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}>
-                  {currentAmount}
-                </Col>
-              </Row>)
-            })
+                    </Col>
+                    <Col
+                      style={{
+                        borderRadius: 0,
+                        borderRightWidth: 1,
+                        borderBottomWidth: 1,
+                        borderColor: colors.DARK_GRAY,
+                        padding: 20,
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}>
+                      {currentAmount}
+                    </Col>
+                  </Row>)
+                })
               }
             </Grid>
           }

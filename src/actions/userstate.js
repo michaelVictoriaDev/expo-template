@@ -88,7 +88,7 @@ export function fetchLogin (dataObject) {
 
 					// end function
 					Toast.show({
-						text: `Log in successfully..Please wait.`,
+						text: `Log in successfully.. Please wait.`,
 						duration: 3000,
 						type: 'success'
 					})

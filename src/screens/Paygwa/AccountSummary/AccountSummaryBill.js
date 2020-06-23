@@ -118,7 +118,9 @@ class AccountSummaryBill extends Component {
             <CustomText>{this.state.accountId}</CustomText>
           </View>
           {this.state.isLoadingData ?
-            <ActivityIndicator size="large" color={colors.PRIMARY_COLOR} />
+            <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+              <ActivityIndicator size="large" color={colors.PRIMARY_COLOR} />
+            </View>
             :
 
             <Grid style={{ paddingHorizontal: 15, paddingBottom: 30 }}>
@@ -217,14 +219,14 @@ class AccountSummaryBill extends Component {
                   // checking decimal places if 0  == 0 and 12.12 == to 2 decimal places
 
                   var number = data.CurrentAmount;
-           
-                  var countDecimals = function (value) { 
-                    if ((value % 1) != 0) 
-                        return value.toString().split(".")[1].length;  
+
+                  var countDecimals = function (value) {
+                    if ((value % 1) != 0)
+                      return value.toString().split(".")[1].length;
                     return 0;
-                };
-                
-                var result = countDecimals(number)
+                  };
+
+                  var result = countDecimals(number)
                   var currentAmount
 
                   if (result === 2) {
@@ -234,60 +236,60 @@ class AccountSummaryBill extends Component {
                       </CustomText>
                   } else if (result === 1) {
                     currentAmount =
-                    <CustomText >
-                      $ {data.CurrentAmount}0
+                      <CustomText >
+                        $ {data.CurrentAmount}0
                     </CustomText>
                   } else {
                     currentAmount =
-                    <CustomText >
-                      $ {data.CurrentAmount}.00
+                      <CustomText >
+                        $ {data.CurrentAmount}.00
                     </CustomText>
                   }
-                  
+
                   return (<Row>
-                      <Col
-                        style={{
-                          borderRadius: 0,
-                          borderLeftWidth: 1,
-                          borderBottomWidth: 1,
-                          borderColor: colors.DARK_GRAY,
-                          padding: 20,
-                          alignItems: "center",
-                          justifyContent: "center"
-                        }}>
-                        <CustomText >
-                          {
-                            moment(data.ArrearsDate,'YYYY-MM-DD').format('MM.DD.YY')
-                          }
-                          
-                        </CustomText>
-                      </Col>
-                      <Col
-                        style={{
-                          borderRadius: 0,
-                          borderLeftWidth: 1,
-                          borderRightWidth: 1,
-                          borderBottomWidth: 1,
-                          borderColor: colors.DARK_GRAY,
-                          padding: 20,
-                          alignItems: "center",
-                          justifyContent: "center"
-                        }}>
-                          {currentAmount}
-                      </Col>
-                      <Col
-                        style={{
-                          borderRadius: 0,
-                          borderRightWidth: 1,
-                          borderBottomWidth: 1,
-                          borderColor: colors.DARK_GRAY,
-                          padding: 20,
-                          alignItems: "center",
-                          justifyContent: "center"
-                        }}>
-                        <Text style={{ color: colors.PRIMARY_COLOR }} onPress={() => console.log('View')}>View</Text>
-                      </Col>
-                    </Row>)
+                    <Col
+                      style={{
+                        borderRadius: 0,
+                        borderLeftWidth: 1,
+                        borderBottomWidth: 1,
+                        borderColor: colors.DARK_GRAY,
+                        padding: 20,
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}>
+                      <CustomText >
+                        {
+                          moment(data.ArrearsDate, 'YYYY-MM-DD').format('MM.DD.YY')
+                        }
+
+                      </CustomText>
+                    </Col>
+                    <Col
+                      style={{
+                        borderRadius: 0,
+                        borderLeftWidth: 1,
+                        borderRightWidth: 1,
+                        borderBottomWidth: 1,
+                        borderColor: colors.DARK_GRAY,
+                        padding: 20,
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}>
+                      {currentAmount}
+                    </Col>
+                    <Col
+                      style={{
+                        borderRadius: 0,
+                        borderRightWidth: 1,
+                        borderBottomWidth: 1,
+                        borderColor: colors.DARK_GRAY,
+                        padding: 20,
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}>
+                      <Text style={{ color: colors.PRIMARY_COLOR }} onPress={() => console.log('View')}>View</Text>
+                    </Col>
+                  </Row>)
                 })
 
               }
