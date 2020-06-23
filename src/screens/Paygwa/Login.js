@@ -1069,10 +1069,10 @@ class Login extends Component {
                                         <Button block rounded transparent
                                             style={[styles.buttons, { backgroundColor: '#1687C7', borderRadius: 6, borderWidth: 0.5, height: 50 }]}
                                             onPress={() =>
-                                                // this.manualLogin(this.state.emailAdd, this.state.password)
+                                                this.manualLogin(this.state.emailAdd, this.state.password)
                                                 // this.manualLogin('gdoe', 'GDOE2018')
                                                 // this.manualLogin('Relyant', 'Relyant01')
-                                                this.manualLogin('blas959', 'sweetheart95')
+                                                // this.manualLogin('blas959', 'sweetheart95')
                                             }>
                                             <CustomText style={{ color: colors.WHITE }}>Login</CustomText>
                                         </Button>
@@ -1270,6 +1270,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: 50,
         justifyContent: 'center',
+        paddingBottom : 50
         // backgroundColor: colors.PRIMARY_COLOR
     },
     gpwa_logo: {
