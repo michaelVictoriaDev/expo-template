@@ -35,6 +35,7 @@ import PaymentServerFailedScreen from './src/screens/Paygwa/Payment/PaymentResul
 
 //SignUp Create Account
 import SignUpCreateAccountScreen from './src/screens/Paygwa/SignUp/SignUpCreateAccount';
+import SuccessScreen from './src/screens/Paygwa/SignUp/SuccessScreen';
 
 //PaynowIninitialLogin
 import PaynowScreen from './src/screens/Paygwa/PayNow/PayNowCustomerInformation';
@@ -153,6 +154,9 @@ const InitialStack = createStackNavigator(
     SignUpCreateAccount: {
       screen: SignUpCreateAccountScreen
     },
+    SuccessScreen : {
+      screen : SuccessScreen
+    }
   },
   {
     initialRouteName: 'Login',

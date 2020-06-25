@@ -13145,6 +13145,11 @@ react-native-icon-badge@^1.1.3:
   resolved "https://registry.yarnpkg.com/react-native-icon-badge/-/react-native-icon-badge-1.1.3.tgz#43de0c923afe4968dfcff127ec5c57057b16f787"
   integrity sha1-Q94Mkjr+SWjfz/En7FxXBXsW94c=
 
+react-native-image-modal@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/react-native-image-modal/-/react-native-image-modal-1.0.8.tgz#e114051c0f853759c221f1a73976deb05d10e9b2"
+  integrity sha512-yRzFTJTxMqiWadWqnqOezGIpP1h8GsfiBf5TM+JSI8Fowc/7bXdPBDpC3KlsDAeI9sQUKIVZE5tiOei+Fz+tew==
+
 react-native-image-progress@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-native-image-progress/-/react-native-image-progress-1.1.1.tgz#95bbe0875c7ebd54286df69cb37b598b94c54eb0"

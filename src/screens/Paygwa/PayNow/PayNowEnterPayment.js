@@ -20,8 +20,8 @@ import { Row, Col, Grid } from 'react-native-easy-grid';
 
 const labels = ["Customer Information", "Validation", "Enter Payment"];
 const customStyles = {
-    stepIndicatorSize: 35,
-    currentStepIndicatorSize: 40,
+    stepIndicatorSize: 60,
+    currentStepIndicatorSize: 60,
     separatorStrokeWidth: 2,
     currentStepStrokeWidth: 3,
     stepStrokeCurrentColor: colors.PRIMARY_COLOR,
