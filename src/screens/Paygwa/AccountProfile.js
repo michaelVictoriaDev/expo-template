@@ -51,9 +51,9 @@ class AccountProfile extends Component {
 
     }
 
-    componentWillUnmount() {
-        this.props.navigation.state.params.getApiData()
-    }
+    // componentWillUnmount() {
+    //     this.props.navigation.state.params.getApiData()
+    // }
 
     updateData = userAccountDetails => {
         this.setState({

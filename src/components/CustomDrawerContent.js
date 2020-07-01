@@ -13,6 +13,14 @@ import UserAvatar from 'react-native-user-avatar';
 import CustomText from '../components/CustomText';
 import CustomTextBold from '../components/CustomTextBold';
 
+import {
+  saveAccountId,
+  savePremiseAddress,
+  fetchMultipleAddOpptyRequest,
+  fetchMultipleLatestBill,
+  saveOrderData
+} from '../actions/userMyAccounts';
+
 const ContainerView = styled.View`
   flex: 1;
   backgroundColor: #FFFFFF;
@@ -77,13 +85,22 @@ class CustomDrawerContent extends Component {
 
   }
 
-  render() {
 
+  componentDidMount() {
+
+
+  }
+
+
+  render() {
+    var fullName = _.get(this.props.dashboard.userAccountDetails, 'fullName', 'Not Applicable NONO')
+    var finalFullName = fullName.split(' ').slice(0, -1).join(' '); // returns 
+    
     return (
       <ContainerView>
         <AvatarContainer>
           <UserAvatar
-            name={'Neil Urbano'}
+            name={finalFullName}
             // scr={this.props.userObject.social_img}
             color={colors.PRIMARY_COLOR}
             size={'70'}
@@ -106,7 +123,8 @@ class CustomDrawerContent extends Component {
               ellipsizeMode='tail'
               numberOfLines={1}
             >
-              Neil Urbano</Text>
+             {_.get(this.props.dashboard.userAccountDetails, 'fullName', 'NA')}</Text> 
+              {/* {this.props.dashboard.userAccountDetails.fullName}</Text> */}
 
           </View>
         </AvatarContainer>
@@ -116,7 +134,7 @@ class CustomDrawerContent extends Component {
             <Content contentContainerStyle={{ flex: 1, paddingTop: 20 }}>
 
               {this.summaryDrawerButton()}
-              {/* {this.profileDrawerButton()} */}
+              {this.profileDrawerButton()}
               {/* {this.myAccountsDrawerButton()} */}
               <View style={{ borderBottomColor: 'black', borderBottomWidth: 1, marginHorizontal: 30, marginTop: 15 }} />
               {this.surveyDrawerButton()}
@@ -148,7 +166,9 @@ class CustomDrawerContent extends Component {
   profileDrawerButton() {
     return (
       <Button transparent block onPress={() => {
-        // NavigationService.navigate('Survey')
+        this.props.navigation.navigate('AccountProfile', {
+          getApiData: () => this.getApiData()
+        })
       }} style={styles.drawer_button}>
         <CustomText uppercase={false} style={styles.drawer_button_text}>Account Profile</CustomText>
       </Button>
@@ -192,7 +212,7 @@ class CustomDrawerContent extends Component {
     return (
       <Button transparent block onPress={() => {
         // NavigationService.navigate('News')
-         Linking.openURL('http://guamwaterworks.org/')
+        Linking.openURL('http://guamwaterworks.org/')
       }} style={styles.drawer_button}>
         <CustomText uppercase={false} style={styles.drawer_button_text}>News</CustomText>
       </Button>
@@ -227,12 +247,20 @@ class CustomDrawerContent extends Component {
 };
 
 const mapStateToProps = (state) => ({
-  // userDetails: state.userState.userDetails,
-  // notificationObject: state.notificationStore.notificationObject,
+  userPersonId: state.userState.userPersonId,
+  accountIds: state.userState.accountIds,
+  accountId: state.userState.accountId,
+  dashboard: state.dashboard
 })
 
 const mapDispatchToProps = (dispatch) => ({
   // listenToNotifTimeStamp: (userId) => dispatch(listenToNotifTimeStamp(userId))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(CustomDrawerContent);
+export default connect(mapStateToProps, {
+  saveAccountId,
+  savePremiseAddress,
+  fetchMultipleAddOpptyRequest,
+  fetchMultipleLatestBill,
+  saveOrderData
+})(CustomDrawerContent);

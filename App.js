@@ -43,6 +43,7 @@ import PaynowScreen from './src/screens/Paygwa/PayNow/PayNowCustomerInformation'
 //Account Profile
 import AccountProfileScreen from './src/screens/Paygwa/AccountProfile';
 import EditAccountProfileScreen from './src/screens/Paygwa/EditAccountProfile';
+import ChangePasswordScreen from './src/screens/Paygwa/ChangePassword';
 
 //AccountSummary
 import AccountSummaryScreen from './src/screens/Paygwa/AccountSummary/AccountSummary';
@@ -92,6 +93,9 @@ const MyAccountsStack = createStackNavigator(
     },
     EditAccountProfile: {
       screen: EditAccountProfileScreen
+    },
+    ChangePassword : {
+      screen : ChangePasswordScreen
     },
     AccountSummary: {
       screen: AccountSummaryScreen

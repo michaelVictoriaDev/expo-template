@@ -754,7 +754,8 @@ export const updateUserPassword = (postData) => dispatch => {
                 {
                     personId: postData.personId,
                     oldPassword: postData.oldPassword,
-                    password: postData.password
+                    password: postData.password,
+                    division: 'GWA'
                 },
                 {
                     headers: {

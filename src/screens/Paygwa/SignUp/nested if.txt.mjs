@@ -57,8 +57,8 @@ class SignUpLoginDetails extends Component {
             userBasicInfo: this.props.userBasicInfo,
             billAddressSource: this.props.billAddressSource,
             personId: this.props.personId,
-            userDetails: {
-                EmailID: this.props.userDetails.EmailID,
+                : {
+                EmailID: this.props.    .EmailID,
                 home: this.props.users.userContactNumbers.homePhone,
                 mobile: this.props.users.userContactNumbers.mobilePhone,
                 work: this.props.users.userContactNumbers.workPhone,
@@ -72,8 +72,8 @@ class SignUpLoginDetails extends Component {
 
     componentWillMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-        console.log('userDetails', {
-            EmailID: this.props.userDetails.EmailID,
+        console.log('   ', {
+            EmailID: this.props.    .EmailID,
             home: this.props.users.userContactNumbers.homePhone,
             mobile: this.props.users.userContactNumbers.mobilePhone,
             work: this.props.users.userContactNumbers.workPhone
@@ -85,8 +85,8 @@ class SignUpLoginDetails extends Component {
     }
 
     // onSubmit() {
-    //     const userDetails = this.state.userDetails
-    //     if (userDetails.password)
+    //     const     = this.state.  
+    //     if ( .password)
 
     // }
 
@@ -152,110 +152,95 @@ class SignUpLoginDetails extends Component {
 
         console.log('click')
 
-        console.log('userName', _.isEmpty(this.state.userDetails.userName))
-        console.log('password', _.isEmpty(this.state.userDetails.password))
+        console.log('userName', _.isEmpty(this.state.   .userName))
+        console.log('password', _.isEmpty(this.state.   .password))
         console.log('passwordConfirm', _.isEmpty(this.state.userDetails.passwordConfirm))
         console.log('EmailID', _.isEmpty(this.state.userDetails.EmailID))
         console.log('securityAnswer', _.isEmpty(this.state.userDetails.securityAnswer))
 
-        if (_.isEmpty(this.state.userDetails.userName) && _.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm) && _.isEmpty(this.state.userDetails.EmailID) && _.isEmpty(this.state.userDetails.securityAnswer)) {
-            console.log('1',_.isEmpty(this.state.userDetails.userName) && _.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm) && _.isEmpty(this.state.userDetails.EmailID) && _.isEmpty(this.state.userDetails.securityAnswer))
+        if (_.isEmpty(this.state.userDetails.userName) || _.isEmpty(this.state.userDetails.password) || _.isEmpty(this.state.userDetails.passwordConfirm) || _.isEmpty(this.state.userDetails.EmailID) || _.isEmpty(this.state.userDetails.securityAnswer)) {
             alert('Please check all the required fields.');
-            this.setState({
-                ...this.state,
-                userNameResult: `Please choose your Username!`,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorPassword: `Please enter your Password!`,
-                    errorPasswordConfirm: `Please confirm your Password!`,
-                    errorEmailFormat: 'Please enter a valid Email Address!',
-                    errorSecurityQuestion: 'Please enter your Security Answer!'
-                }
-            })
-        } else if (_.isEmpty(this.state.userDetails.userName) && _.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm) && _.isEmpty(this.state.userDetails.securityAnswer)) {
-            alert('Please check all the required fields.');
-            console.log('2',_.isEmpty(this.state.userDetails.userName) && _.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm) && _.isEmpty(this.state.userDetails.securityAnswer))
-            this.setState({
-                ...this.state,
-                userNameResult: `Please choose your Username!`,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorPassword: `Please enter your Password!`,
-                    errorPasswordConfirm: `Please confirm your Password!`,
-                    errorSecurityQuestion: 'Please enter your Security Answer!'
-                }
-            })
-        } else if (_.isEmpty(this.state.userDetails.userName) && _.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm)) {
-            console.log('3',_.isEmpty(this.state.userDetails.userName) && _.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm))
-            alert('Please check all the required fields.');
-            this.setState({
-                ...this.state,
-                userNameResult: `Please choose your Username!`,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorPassword: `Please enter your Password!`,
-                    errorPasswordConfirm: `Please confirm your Password!`
-                }
-            })
-        } else if (_.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm)) {
-            console.log('4',_.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm))
-            alert('Please check all the required fields.');
-            this.setState({
-                ...this.state,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorPassword: `Please enter your Password!`,
-                    errorPasswordConfirm: `Please confirm your Password!`
-                }
-            })
-        } else if (_.isEmpty(this.state.userDetails.userName)) {
-            console.log('userName')
-            alert('Please check all the required fields.');
-            this.setState({
-                ...this.state,
-                userNameResult: `Please choose your Username!`
-            })
-        } else if (_.isEmpty(this.state.userDetails.password)) {
-            alert('Please check all the required fields.');
-            console.log('password')
-            this.setState({
-                ...this.state,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorPassword: `Please enter your Password!`
-                }
-            })
+            debugger
 
-        } else if (_.isEmpty(this.state.userDetails.passwordConfirm)) {
-            alert('Please check all the required fields.');
-            console.log('passwordConfirm')
-            this.setState({
-                ...this.state,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorPasswordConfirm: `Please confirm your Password!`
+
+
+            for (var i = 0; i < this.state.userDetails.length; i++) {
+                if (this.state.userDetails[i] === '') {
+                    console.log( "for loop ", this.state.userDetails[i])
+
                 }
-            })
-        } else if (_.isEmpty(this.state.userDetails.EmailID)) {
-            alert('Please check all the required fields.');
-            console.log('EmailID')
-            this.setState({
-                ...this.state,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorEmailFormat: 'Please enter a valid Email Address!'
-                }
-            })
-        } else if (_.isEmpty(this.state.userDetails.securityAnswer)) {
-            alert('Please check all the required fields.');
-            console.log('securityAnswer')
-            this.setState({
-                ...this.state,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorSecurityQuestion: 'Please enter your Security Answer!'
-                }
-            })
+                
+
+
+              }
+
+            // first scenario
+            if (this.state.userDetails.userName == '') {
+                this.setState({
+                    ...this.state,
+                    userNameResult: `Please choose your Username!`,
+                })
+            }
+
+            // second scenario 
+            if (this.state.userDetails.password == '') {
+                this.setState({
+                    ...this.state,
+                    userDetails: {
+                        ...this.state.userDetails,
+                        errorPassword: `Please enter your Password!`,
+                    }
+                })
+            }
+
+            // third senario 
+            if (this.state.userDetails.password == '') {
+                this.setState({
+                    ...this.state,
+                    userDetails: {
+                        ...this.state.userDetails,
+                        errorPassword: `Please enter your Password!`,
+                    }
+                })
+            }
+
+            // fourth scenario 
+            if (this.state.userDetails.passwordConfirm == '') {
+                this.setState({
+                    ...this.state,
+                    userDetails: {
+                        ...this.state.userDetails,
+                        errorPasswordConfirm: `Please confirm your Password!`,
+
+                    }
+                })
+            }
+
+            // fifth scenario 
+            if (this.state.userDetails.EmailID == '') {
+                this.setState({
+                    ...this.state,
+                    userDetails: {
+                        ...this.state.userDetails,
+                        errorEmailFormat: 'Please enter a valid Email Address!',
+
+                    }
+                })
+            }
+
+            // sixth scenario 
+            if (this.state.userDetails.securityAnswer == '') {
+                this.setState({
+                    ...this.state,
+                    userDetails: {
+                        ...this.state.userDetails,
+                        errorSecurityQuestion: 'Please enter your Security Answer!'
+
+                    }
+                })
+            }
+
+            debugger
         } else {
             console.log('else')
 
@@ -272,10 +257,8 @@ class SignUpLoginDetails extends Component {
             })
             if (this.state.selectedQuestion === 0) {
                 alert('Please select a security question');
-    
             } else {
                 console.log('else')
-    
                 debugger
                 const postData = {
                     personId: this.state.personId,
@@ -295,15 +278,9 @@ class SignUpLoginDetails extends Component {
                     workSeq: (this.state.userDetails.work === this.props.users.userContactNumbers.workPhone) ? '' : this.props.users.userContactNumbers.workPhoneSeq,
                 }
                 console.log('postData', postData)
-                this.finalSubmit(postData)
+                // this.finalSubmit(postData)
             }
         }
-
-        
-
-
-
-
     }
 
 

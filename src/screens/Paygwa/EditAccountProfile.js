@@ -562,7 +562,7 @@ class EditAccountProfile extends Component {
                         </List>
                         <View style={{ paddingVertical: 35, paddingHorizontal: 80 }} >
                             <Button style={{ borderRadius: 6 }} success block onPress={() =>
-                                console.log("Cancel Pressed")
+                                this.props.navigation.navigate('ChangePassword')
                             } >
                                 <CustomText uppercase={false} style={{ color: colors.WHITE, fontSize: 16 }}  >Change Password</CustomText>
                             </Button>
