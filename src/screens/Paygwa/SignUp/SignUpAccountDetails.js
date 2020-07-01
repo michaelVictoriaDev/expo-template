@@ -304,8 +304,6 @@ class SignUpAccountDetails extends Component {
                                     />
                                 </View>
                                 <View style={{ backgroundColor: '#FFFF', paddingTop: 30, paddingHorizontal: 60 }}>
-
-
                                     {modalShow}
                                     <CustomText style={{ textAlign: 'center', color: colors.RED }}>{this.state.error}</CustomText>
                                     <CustomText style={{ paddingVertical: 10 }}>Customer Name *</CustomText>

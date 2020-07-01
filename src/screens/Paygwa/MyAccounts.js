@@ -46,6 +46,7 @@ class MyAccount extends Component {
     // accountIds multiple accounts
     // accountId single account
     // debugger
+    this.setState({ isLoading: true})
     if (_.isEmpty(this.props.accountIds)) {
       var usethis = this.props.accountId
     } else {
@@ -188,7 +189,7 @@ class MyAccount extends Component {
       let [result1, result2] = await Promise.all([this.props.fetchMultipleLatestBill(sessionAccountId), this.props.fetchMultipleAddOpptyRequest(accountId, personId)]);
       if (result1 && result2.dataFetched) {
         const userAccountDetails = this.props.dashboard.userAccountDetails;
-        console.log(userAccountDetails)
+        console.log(userAccountDetails, 'userAccountDetails')
         let sortedServiceLocation = []
         let sortedAccountSummary = []
         for (let count = 0; count < this.props.dashboard.orderData.accountSummary.length; count++) {
@@ -331,7 +332,7 @@ class MyAccount extends Component {
     )
   }
   selectModeFunction() {
-    debugger
+    
     if (this.state.selectMode) {
       return (
         <View style={{
@@ -391,8 +392,11 @@ class MyAccount extends Component {
           title="My Accounts"
           RightIcon={<Right style={{ paddingRight: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, flex: 1 }}>
             <Button
+            disabled={this.state.isLoading}
               transparent style={{ paddingLeft: 0, elevation: 0 }} onPress={() =>
-                this.props.navigation.navigate('AccountProfile')} >
+                this.props.navigation.navigate('AccountProfile', {
+                  getApiData : () => this.getApiData()
+                })} >
               <Icon style={{ backgroundColor: colors.PRIMARY_COLOR, color: colors.WHITE, fontSize: pRatioToFontSize(+1) > 20 ? 20 : pRatioToFontSize(+1) }} name='user-alt' type='FontAwesome5' />
 
             </Button>

@@ -191,7 +191,8 @@ class CustomDrawerContent extends Component {
   newsDrawerButton() {
     return (
       <Button transparent block onPress={() => {
-        NavigationService.navigate('News')
+        // NavigationService.navigate('News')
+         Linking.openURL('http://guamwaterworks.org/')
       }} style={styles.drawer_button}>
         <CustomText uppercase={false} style={styles.drawer_button_text}>News</CustomText>
       </Button>
