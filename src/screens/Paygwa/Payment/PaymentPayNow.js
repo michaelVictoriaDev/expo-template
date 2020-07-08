@@ -55,21 +55,10 @@ class PaymentPayNow extends Component {
         })
         console.log('userFullName', this.props.dashboard.userAccountDetails.fullName === undefined ? "" : this.props.dashboard.userAccountDetails.fullName)
         console.log('username', this.props.userName)
+
+        console.log(this.state.cardDetails.selectedYear)
     }
 
-
-    onValueChangeMonth(value: string) {
-        this.setState({
-            selectedMonth: value
-        });
-    }
-
-
-    onValueChangeYear(value: string) {
-        this.setState({
-            selectedYear: value
-        });
-    }
     showCardType = () => {
         if (this.state.cardDetails.cardNumber.charAt(0) === "4") {
             return (<View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/visa-logo.png')} /></View>)
@@ -256,9 +245,9 @@ class PaymentPayNow extends Component {
                                                     }
                                                 })}
                                         >
-                                            {_.map(years, (yearData, index) => {
+                                            {_.map(years, (years, index) => {
                                                 return (
-                                                    <Picker.Item label={yearData.year} value={yearData.value} />
+                                                    <Picker.Item label={years.year} value={years.value} />
                                                 )
                                             })
                                             }

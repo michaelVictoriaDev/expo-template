@@ -29,7 +29,7 @@ class AccountSummary extends Component {
     // local state
     this.state = {
       pixelDensity: 0,
-      accountDetails : this.props.navigation.state.params.accountDetails
+      accountDetails: this.props.navigation.state.params.accountDetails
     };
   }
 
@@ -44,7 +44,7 @@ class AccountSummary extends Component {
         <CustomHeader
           fontSizeLeft={pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1)}
           leftButtonFunction={this.props.navigation.goBack}
-          title="Account Summary"
+          title="Account Information"
           RightIcon={<Right />}
         />
         <OfflineNotice />
@@ -55,20 +55,22 @@ class AccountSummary extends Component {
                 paddingHorizontal: 80,
                 borderColor: "#c9c9c9",
                 borderBottomWidth: 1,
-                paddingVertical: 25,
+                paddingVertical: 30,
                 alignItems: "center",
                 justifyContent: "center"
               }}
             >
-              <CustomTextBold style={{ fontSize: 35 }}>${this.state.accountDetails.arrears.details.PayoffBalance}</CustomTextBold>
-              <CustomTextBold style={{ paddingBottom: 10, color: '#8A8A8A' }}>
+              <CustomTextBold style={{ fontSize: 40 }}>${this.state.accountDetails.arrears.details.PayoffBalance}</CustomTextBold>
+              <CustomTextBold style={{ paddingBottom: 10, color: '#8A8A8A', fontSize: 15 }}>
                 Amount Due
               </CustomTextBold>
-
-              <Button block success>
+              <View style={{ paddingTop: 8 }} />
+              <Button block success style={{ borderRadius: 6 }}>  
                 <Text>Pay Now</Text>
               </Button>
+              <View style={{padding: 5}}/>
             </View>
+            
 
             <Row
               style={{
@@ -128,26 +130,26 @@ class AccountSummary extends Component {
                 <CustomText>Due Date</CustomText>
               </Col>
               <Col size={5}>
-                <CustomTextBold>{_.replace(this.state.accountDetails.dueDate, /\//g, '.')}</CustomTextBold>
+                <CustomTextBold>{_.replace(this.state.accountDetails.dueDate, /\//g, '.')}</CustomTextBold>
               </Col>
             </Row>
           </List>
         </Content>
         <Footer style={{ backgroundColor: colors.PRIMARY_COLOR }}>
           <FooterTab>
-            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR , borderRadius: 0, borderRightWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryBill', {
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR, borderRadius: 0, borderRightWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryBill', {
               accountId: this.state.accountDetails.arrears.details.AccountID
             })}>
               <Icon style={{ color: colors.WHITE }} name="file" type='MaterialCommunityIcons' />
               <CustomText style={{ color: colors.WHITE }}>Bill</CustomText>
             </Button>
-            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR , borderRadius: 0, borderColor: colors.WHITE }}  onPress={() => this.props.navigation.navigate('AccountSummaryConsumption', {
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR, borderRadius: 0, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryConsumption', {
               accountId: this.state.accountDetails.arrears.details.AccountID
             })} >
               <Icon style={{ color: colors.WHITE }} name="chart-bar" type='FontAwesome5' />
               <CustomText style={{ color: colors.WHITE }}>Consumption</CustomText>
             </Button>
-            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR , borderRadius: 0, borderLeftWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryHistory', {
+            <Button transparent vertical style={{ backgroundColor: colors.PRIMARY_COLOR, borderRadius: 0, borderLeftWidth: 1, borderColor: colors.WHITE }} onPress={() => this.props.navigation.navigate('AccountSummaryHistory', {
               accountId: this.state.accountDetails.arrears.details.AccountID
             })} >
               <Icon style={{ color: colors.WHITE }} name="history" type='FontAwesome5' />

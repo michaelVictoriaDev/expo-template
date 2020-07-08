@@ -14,19 +14,21 @@ import {
   Icon,
   Footer,
   FooterTab,
-  Toast
+  Toast,
+
 } from "native-base";
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, Linking } from 'react-native'
 import { connect } from "react-redux";
 import { colors, pRatioToFontSize } from "../../../utils/constants";
 import _ from "lodash";
 import CustomText from "../../../components/CustomText";
 import CustomTextBold from "../../../components/CustomTextBold";
+import CustomTextMedium from "../../../components/CustomTextMedium";
 import OfflineNotice from "../../../components/OfflineNotice";
 import CustomHeader from "../../../components/MultiCustomHeader";
 import { Grid, Row, Col } from "react-native-easy-grid";
 import { TouchableHighlight } from "react-native-gesture-handler";
-import { PAYGWA_URL, DASHBOARD_URL, PAYNOW_URL } from 'react-native-dotenv';
+import { PAYGWA_URL, DASHBOARD_URL, PAYNOW_URL, GWA } from 'react-native-dotenv';
 import axios from 'react-native-axios'
 import moment from 'moment'
 
@@ -115,7 +117,7 @@ class AccountSummaryBill extends Component {
         <Content>
           <View style={{ paddingHorizontal: 25, paddingVertical: 25 }}>
             <CustomTextBold>Your Bills For Account No. </CustomTextBold>
-            <CustomText>{this.state.accountId}</CustomText>
+            <CustomText style={{ fontSize: 16 }}>{this.state.accountId}</CustomText>
           </View>
           {this.state.isLoadingData ?
             <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
@@ -137,7 +139,7 @@ class AccountSummaryBill extends Component {
                     justifyContent: "center"
                   }}
                 >
-                  <CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center" }}>
+                  <CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center", fontSize: 16 }}>
                     Date of Bill
                 </CustomText>
                 </Col>
@@ -153,7 +155,7 @@ class AccountSummaryBill extends Component {
                     justifyContent: "center"
                   }}
                 >
-                  <CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center" }}>Amount</CustomText>
+                  <CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center", fontSize: 16 }}>Amount</CustomText>
                 </Col>
                 <Col
                   style={{
@@ -210,11 +212,13 @@ class AccountSummaryBill extends Component {
                       alignItems: "center",
                       justifyContent: "center"
                     }}>
-                    <Text style={{ color: colors.PRIMARY_COLOR }} onPress={() => console.log('View')}>View</Text>
+                      
+                    <CustomTextMedium style={{ color: colors.PRIMARY_COLOR, fontSize: 16 }} onPress={() => console.log('https://gwadev.xtendly.com/view-bill/{bill-id}')}>View</CustomTextMedium>
                   </Col>
                 </Row>
                 :
                 _.map(this.state.billsData, (data, index) => {
+                  console.log('billsData', data)
 
                   // checking decimal places if 0  == 0 and 12.12 == to 2 decimal places
 
@@ -231,17 +235,17 @@ class AccountSummaryBill extends Component {
 
                   if (result === 2) {
                     currentAmount =
-                      <CustomText >
+                      <CustomText style={{ fontSize: 16 }} >
                         $ {data.CurrentAmount}
                       </CustomText>
                   } else if (result === 1) {
                     currentAmount =
-                      <CustomText >
+                      <CustomText style={{ fontSize: 16 }} >
                         $ {data.CurrentAmount}0
                     </CustomText>
                   } else {
                     currentAmount =
-                      <CustomText >
+                      <CustomText style={{ fontSize: 16 }} >
                         $ {data.CurrentAmount}.00
                     </CustomText>
                   }
@@ -257,7 +261,7 @@ class AccountSummaryBill extends Component {
                         alignItems: "center",
                         justifyContent: "center"
                       }}>
-                      <CustomText >
+                      <CustomText style={{ fontSize: 16 }} >
                         {
                           moment(data.ArrearsDate, 'YYYY-MM-DD').format('MM.DD.YY')
                         }
@@ -287,7 +291,8 @@ class AccountSummaryBill extends Component {
                         alignItems: "center",
                         justifyContent: "center"
                       }}>
-                      <Text style={{ color: colors.PRIMARY_COLOR }} onPress={() => console.log('View')}>View</Text>
+                      <Text style={{ color: colors.PRIMARY_COLOR }} onPress={() => Linking.openURL(GWA+ `/view-bill/${data.Parent} `)}>View</Text>
+                      
                     </Col>
                   </Row>)
                 })

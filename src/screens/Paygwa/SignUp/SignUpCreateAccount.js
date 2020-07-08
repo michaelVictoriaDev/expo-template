@@ -61,8 +61,8 @@ class SignUpCreateAccount extends Component {
             isSuccess: false,
             showSample: false,
             isLoading: false,
-            accountId: '3430200000',
-            // accountId: '',
+            // accountId: '3430200000',
+            accountId: '',
             isValid: false,
             errors: false,
             currentPosition: 0,
@@ -306,7 +306,7 @@ class SignUpCreateAccount extends Component {
                                 labels={labels}
                             />
                         </View>
-                        <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 60, paddingTop: 30 }} >
+                        <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 60, paddingTop: 20 }} >
 
 
 
@@ -360,16 +360,16 @@ class SignUpCreateAccount extends Component {
                             </Item>
 
                             <TouchableOpacity underlayColor={colors.GRAYISHRED} onPress={() => this.setState({ isModalShow: true })}>
-                                <CustomText style={{ color: '#1788c7', textAlign: 'center', textDecorationLine: 'underline' }}>Where can I find my account number?</CustomText>
+                                <CustomText style={{ color: '#1788c7', textAlign: 'center', textDecorationLine: 'underline', fontSize: 12 }}>Where can I find my account number?</CustomText>
                             </TouchableOpacity>
 
                             <View style={{ paddingTop: 30, paddingBottom: 20 }}>
                                 <Button style={{ borderRadius: 5 }} block success onPress={this.onSubmit.bind(this)} disabled={this.state.isLoading}>
-                                    <Text uppercase={false} >{this.state.isLoading ? 'Verifying' : 'Continue'}</Text>
+                                    <CustomText style={{ fontSize: 16, color: colors.WHITE }} uppercase={false} >{this.state.isLoading ? 'Verifying' : 'Continue'}</CustomText>
                                 </Button>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                <CustomText>Already Registered? </CustomText>
+                                <CustomText style={{ fontSize: 16 }}>Already Registered? </CustomText>
                                 <TouchableOpacity
                                     onPress={() => {
                                         Alert.alert(
@@ -394,7 +394,7 @@ class SignUpCreateAccount extends Component {
                                 </TouchableOpacity>
 
                             </View>
-                            <CustomText style={{ textAlign: 'center', color: '#df0018', paddingVertical: 30 }}>Fields marked as * are mandatory</CustomText>
+                            <CustomText style={{ textAlign: 'center', color: '#df0018', paddingVertical: 25, fontSize: 12 }}>Fields marked as * are mandatory</CustomText>
                         </View>
                     </Content>
                 </Container>

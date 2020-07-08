@@ -239,11 +239,11 @@ class SignUpAccountDetails extends Component {
             animationInTiming={1000} animationOutTiming={1000} backdropTransitionInTiming={1000} backdropTransitionOutTiming={1000}
             onRequestClose={() => this.setState({ showModal: false })}
         >
-            <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 20, paddingVertical: 20 }}>
+            <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 40, paddingVertical: 20, borderRadius: 6 }}>
                 <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                    <CustomTextBold style={{ paddingVertical: 5 }}>Confirm Your Address</CustomTextBold>
-                    <CustomTextBold style={{ paddingVertical: 5 }}>{finalAddressDetails}</CustomTextBold>
-                    <CustomText style={{ paddingVertical: 5, fontStyle: 'italic' }}>{modalMessage}</CustomText>
+                    <CustomTextBold style={{ paddingVertical: 5, fontSize: 18 }}>Confirm Your Address</CustomTextBold>
+                    <CustomTextBold style={{ paddingVertical: 5, fontSize: 18, textAlignVertical: "center", textAlign: "center" }}>{finalAddressDetails}</CustomTextBold>
+                    <CustomText style={{ paddingVertical: 5, fontStyle: 'italic', textAlignVertical: "center", textAlign: "center" }}>{modalMessage}</CustomText>
                 </View>
                 <View style={{ paddingVertical: 10 }}>
                     <Button style={{ borderRadius: 6 }} block success onPress={() => {
@@ -253,12 +253,12 @@ class SignUpAccountDetails extends Component {
                         })
                     }
                     }>
-                        <Text>Yes, Proceed</Text>
+                        <CustomText uppercase={false} style={{ color: colors.WHITE, fontSize: 16 }}> Yes, Proceed</CustomText>
                     </Button>
                 </View>
                 <View style={{ paddingVertical: 10 }} >
-                    <Button style={{ borderRadius: 6 }} block light onPress={() => this.setState({ showModal: false })}  >
-                        <Text style={{ color: colors.BLACK }}>Cancel</Text>
+                    <Button style={{ borderRadius: 6 }} block light transparent onPress={() => this.setState({ showModal: false })}  >
+                        <CustomText uppercase={false} style={{ color: colors.BLACK, fontSize: 16 }}>Cancel</CustomText>
                     </Button>
                 </View>
             </View>
@@ -350,7 +350,7 @@ class SignUpAccountDetails extends Component {
                                         />
 
                                     </Item>
-                                    <View style={{ paddingVertical: 15 }}>
+                                    <View style={{ paddingTop: 15 }}>
                                         <Button style={{ borderRadius: 6 }} block success
                                             disabled={this.state.isLoading}
                                             onPress={() => {
@@ -363,10 +363,10 @@ class SignUpAccountDetails extends Component {
 
 
                                             } >
-                                            <Text uppercase={false} >{this.state.isLoading ? 'Verifying' : 'Continue'}</Text>
+                                            <CustomText style={{ fontSize: 16, color: colors.WHITE }} uppercase={false} >{this.state.isLoading ? 'Verifying' : 'Continue'}</CustomText>
                                         </Button>
                                     </View>
-                                    <View style={{ paddingVertical: 15 }}>
+                                    <View style={{ paddingVertical: 10 }}>
                                         <Button style={{ borderRadius: 6 }} transparent block onPress={() => {
                                             Alert.alert(
                                                 "Are you sure you want to go back to the login page?",
@@ -382,10 +382,10 @@ class SignUpAccountDetails extends Component {
                                                 { cancelable: false }
                                             )
                                         }} >
-                                            <Text uppercase={false} style={{ color: colors.GRAYISHRED }} >Cancel</Text>
+                                            <CustomText style={{ fontSize: 16, color: colors.WHITE }} uppercase={false} style={{ color: colors.GRAYISHRED }} >Cancel</CustomText>
                                         </Button>
                                     </View>
-                                    <CustomText style={{ textAlign: 'center', color: '#df0018', paddingVertical: 15 }}>Fields marked as * are mandatory</CustomText>
+                                    <CustomText style={{ textAlign: 'center', color: '#df0018', paddingBottom: 15, fontSize: 10 }}>Fields marked as * are mandatory</CustomText>
                                 </View>
                             </KeyboardAvoidingView>
                         </Content>

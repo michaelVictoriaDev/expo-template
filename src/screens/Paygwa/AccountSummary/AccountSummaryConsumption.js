@@ -220,186 +220,181 @@ class AccountSummaryConsumption extends Component {
         />
         <OfflineNotice />
         <Content>
-          <View style={{ paddingHorizontal: 25, paddingVertical: 25 }}>
+          <View style={{ paddingHorizontal: 25, paddingTop: 25 }}>
             <CustomTextBold>Your Monthly Consumption Chart </CustomTextBold>
             <CustomText></CustomText>
+          </View>
+          <View>
 
             {
               this.state.isLoadingData ?
-              <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                <ActivityIndicator size="large" color={colors.PRIMARY_COLOR} />
-              </View>
-
-              :
-              _.isEmpty(this.state.consumptionDetails.billAmountDataChart) ?
-                <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                  <CustomText>No Data</CustomText>
+                <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1, paddingHorizontal: 25 }}>
+                  <ActivityIndicator size="large" color={colors.PRIMARY_COLOR} />
                 </View>
+
                 :
+                _.isEmpty(this.state.consumptionDetails.billAmountDataChart) ?
+                  <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1, paddingHorizontal: 25 }}>
+                    <CustomText>No Data</CustomText>
+                  </View>
+                  :
 
-                <React.Fragment>
-                  <CustomText style={{ color: '#8A8A8A', textAlignVertical: "center", textAlign: "center" }}>
-                    Average Usage of {this.state.consumptionDetails.months.length} Months
+                  <React.Fragment>
+                    <View style={{ paddingHorizontal: 25, paddingBottom: 25 }}>
+                      <CustomText style={{ color: '#8A8A8A', textAlignVertical: "center", textAlign: "center", fontSize: 12 }}>
+                        Average Usage of {this.state.consumptionDetails.months.length} Months
                   </CustomText>
-                  {this.state.selected === 0 ?
-                    <CustomText style={{ fontSize: 35, textAlignVertical: "center", textAlign: "center" }}>{this.state.numberOfGallons} Gallons</CustomText>
-                    :
-                    <CustomText style={{ fontSize: 35, textAlignVertical: "center", textAlign: "center" }}>$ {this.state.numberOfAmounts}.00</CustomText>
+                      {this.state.selected === 0 ?
+                        <CustomText style={{ fontSize: 30, textAlignVertical: "center", textAlign: "center" }}>{this.state.numberOfGallons} Gallons</CustomText>
+                        :
+                        <CustomText style={{ fontSize: 30, textAlignVertical: "center", textAlign: "center" }}>$ {this.state.numberOfAmounts}.00</CustomText>
 
-                  }
+                      }
 
-                  <Form style={{ paddingVertical: 10 }}>
-                    <Item regular picker style={{ borderRadius: 6 }}>
-                      <Picker
-                        mode="dropdown"
-                        iosIcon={<Icon name="arrow-down" />}
-                        style={{ width: undefined }}
-                        placeholderIconColor="#007aff"
-                        selectedValue={this.state.selected}
-                        onValueChange={(value) =>
-                          this.setState({
-                            selected: value
-                          })}
-                      >
-                        <Picker.Item label="Monthly Water Consumption" value={0} />
-                        <Picker.Item label="Monthly Bill Amount" value={1} />
-                      </Picker>
-                    </Item>
-                  </Form>
-                  {this.state.selected === 0 ?
-                    <ScrollView
-                      // style={{ paddingBottom: 40 }}
+                      <Form style={{ paddingVertical: 10 }}>
+                        <Item regular picker style={{ borderRadius: 6 }}>
+                          <Picker
+                            mode="dropdown"
+                            iosIcon={<Icon name="arrow-down" />}
+                            style={{ width: undefined }}
+                            placeholderIconColor="#007aff"
+                            selectedValue={this.state.selected}
+                            onValueChange={(value) =>
+                              this.setState({
+                                selected: value
+                              })}
+                          >
+                            <Picker.Item label="Monthly Water Consumption" value={0} />
+                            <Picker.Item label="Monthly Bill Amount" value={1} />
+                          </Picker>
+                        </Item>
+                      </Form>
+                    </View>
+                    <View style={{
+                      borderColor: "#c9c9c9",
+                      borderBottomWidth: 1
+                    }} />
+                    <View style={{ paddingHorizontal: 25 }}>
+                      {this.state.selected === 0 ?
+                        <ScrollView
+                          persistentScrollbar
+                          showsHorizontalScrollIndicator
+                          // contentContainerStyle={{ flex: 1 }}
+                          horizontal={true}>
+                          <VictoryChart
+                            width={1000}
+                            // responsive={false}
+                            theme={Theme}
+                            // domainPadding will add space to each side of VictoryBar to
+                            // prevent it from overlapping the axis
 
-                      persistentScrollbar
-                      showsHorizontalScrollIndicator
-                      // contentContainerStyle={{ flex: 1 }}
-                      horizontal={true}>
-                      <VictoryChart
-                        width={1000}
-                        // responsive={false}
-                        theme={Theme}
-                        // domainPadding will add space to each side of VictoryBar to
-                        // prevent it from overlapping the axis
 
-                        //  containerComponent={  
-                        //     <VictoryZoomContainer
-                        //     allowPan={false}
-                        //       allowZoom={false} />
-                        //      }
+                            labelComponent={<VictoryTooltip renderInPortal={false} />}
+                            domainPadding={{ x: 15 }}>
+                            <VictoryAxis
+                              responsive={false}
+                              style={{
+                                ticks: {
+                                  // padding: 12,
+                                },
+                                tickLabels: {
+                                  fontSize: 13,
+                                },
+                              }}
+                              // tickValues specifies both the number of ticks and where
+                              // they are placed on the axis
+                              tickValues={this.state.consumptionDetails.amounts}
+                              tickFormat={this.state.consumptionDetails.months}
+                            />
+                            <VictoryAxis
+                              dependentAxis
+                            // tickFormat specifies how ticks should be displayed
+                            // tickFormat={x => `${x / 14000}`}
+                            />
+                            <VictoryBar
+                              labelComponent={
+                                <VictoryTooltip
+                                  flyoutStyle={{ stroke: "tomato", strokeWidth: 2 }}
+                                />}
+                              data={this.state.consumptionDetails.totalWaterDataChart}
+                              x="x"
+                              y="y"
+                              style={{
+                                data: { fill: '#3F71D7', width: 30 },
+                                parent: { border: '1px solid #ccc' },
+                              }}
+                            />
+                          </VictoryChart>
+                        </ScrollView>
+                        :
+                        <ScrollView
+                          // style={{ paddingBottom: 40 }}
 
-                        labelComponent={<VictoryTooltip renderInPortal={false} />}
-                        domainPadding={{ x: 15 }}>
-                        <VictoryAxis
-                          responsive={false}
-                          style={{
-                            ticks: {
-                              // padding: 12,
-                            },
-                            tickLabels: {
-                              fontSize: 13,
-                            },
-                          }}
-                          // tickLabelComponent={
-                          //   <VictoryLabel
-                          //     padding={13}
-                          //     angle={-60}
-                          //     verticalAnchor="end"
-                          //     textAnchor="middle"
-                          //   />
-                          // }  
-                          // tickValues specifies both the number of ticks and where
-                          // they are placed on the axis
-                          tickValues={this.state.consumptionDetails.amounts}
-                          tickFormat={this.state.consumptionDetails.months}
-                        />
-                        <VictoryAxis
-                          dependentAxis
-                        // tickFormat specifies how ticks should be displayed
-                        // tickFormat={x => `${x / 14000}`}
-                        />
-                        <VictoryBar
-                          labelComponent={
-                            <VictoryTooltip
-                              flyoutStyle={{ stroke: "tomato", strokeWidth: 2 }}
-                            />}
-                          data={this.state.consumptionDetails.totalWaterDataChart}
-                          x="x"
-                          y="y"
-                          style={{
-                            data: { fill: '#3F71D7', width: 30 },
-                            parent: { border: '1px solid #ccc' },
-                          }}
-                        />
-                      </VictoryChart>
-                    </ScrollView>
-                    :
-                    <ScrollView
-                      // style={{ paddingBottom: 40 }}
+                          persistentScrollbar
+                          showsHorizontalScrollIndicator
+                          // contentContainerStyle={{ flex: 1 }}
+                          horizontal={true}>
+                          <VictoryChart
+                            width={1000}
+                            // responsive={false}
+                            theme={Theme}
+                            // domainPadding will add space to each side of VictoryBar to
+                            // prevent it from overlapping the axis
 
-                      persistentScrollbar
-                      showsHorizontalScrollIndicator
-                      // contentContainerStyle={{ flex: 1 }}
-                      horizontal={true}>
-                      <VictoryChart
-                        width={1000}
-                        // responsive={false}
-                        theme={Theme}
-                        // domainPadding will add space to each side of VictoryBar to
-                        // prevent it from overlapping the axis
+                            //  containerComponent={  
+                            //     <VictoryZoomContainer
+                            //     allowPan={false}
+                            //       allowZoom={false} />
+                            //      }
 
-                        //  containerComponent={  
-                        //     <VictoryZoomContainer
-                        //     allowPan={false}
-                        //       allowZoom={false} />
-                        //      }
-
-                        labelComponent={<VictoryTooltip renderInPortal={false} />}
-                        domainPadding={{ x: 15 }}>
-                        <VictoryAxis
-                          responsive={false}
-                          style={{
-                            ticks: {
-                              // padding: 12,
-                            },
-                            tickLabels: {
-                              fontSize: 13,
-                            },
-                          }}
-                          // tickLabelComponent={
-                          //   <VictoryLabel
-                          //     padding={13}
-                          //     angle={-60}
-                          //     verticalAnchor="end"
-                          //     textAnchor="middle"
-                          //   />
-                          // }  
-                          // tickValues specifies both the number of ticks and where
-                          // they are placed on the axis
-                          tickValues={this.state.consumptionDetails.amounts}
-                          tickFormat={this.state.consumptionDetails.months}
-                        />
-                        <VictoryAxis
-                          dependentAxis
-                          // tickFormat specifies how ticks should be displayed
-                          tickFormat={(x) => `$${x}`}
-                        />
-                        <VictoryBar
-                          labelComponent={
-                            <VictoryTooltip
-                              flyoutStyle={{ stroke: "tomato", strokeWidth: 2 }}
-                            />}
-                          data={this.state.consumptionDetails.billAmountDataChart}
-                          x="x"
-                          y="y"
-                          style={{
-                            data: { fill: '#3F71D7', width: 30 },
-                            parent: { border: '1px solid #ccc' },
-                          }}
-                        />
-                      </VictoryChart>
-                    </ScrollView>
-                  }
-                </React.Fragment>
+                            labelComponent={<VictoryTooltip renderInPortal={false} />}
+                            domainPadding={{ x: 15 }}>
+                            <VictoryAxis
+                              responsive={false}
+                              style={{
+                                ticks: {
+                                  // padding: 12,
+                                },
+                                tickLabels: {
+                                  fontSize: 13,
+                                },
+                              }}
+                              // tickLabelComponent={
+                              //   <VictoryLabel
+                              //     padding={13}
+                              //     angle={-60}
+                              //     verticalAnchor="end"
+                              //     textAnchor="middle"
+                              //   />
+                              // }  
+                              // tickValues specifies both the number of ticks and where
+                              // they are placed on the axis
+                              tickValues={this.state.consumptionDetails.amounts}
+                              tickFormat={this.state.consumptionDetails.months}
+                            />
+                            <VictoryAxis
+                              dependentAxis
+                              // tickFormat specifies how ticks should be displayed
+                              tickFormat={(x) => `$${x}`}
+                            />
+                            <VictoryBar
+                              labelComponent={
+                                <VictoryTooltip
+                                  flyoutStyle={{ stroke: "tomato", strokeWidth: 2 }}
+                                />}
+                              data={this.state.consumptionDetails.billAmountDataChart}
+                              x="x"
+                              y="y"
+                              style={{
+                                data: { fill: '#3F71D7', width: 30 },
+                                parent: { border: '1px solid #ccc' },
+                              }}
+                            />
+                          </VictoryChart>
+                        </ScrollView>
+                      }
+                    </View>
+                  </React.Fragment>
             }
           </View>
           <View style={{ padding: 50 }} />

@@ -30,28 +30,27 @@ class PaymentSuccess extends Component {
         }
     }
     componentDidMount() {
-        console.log(this.props.navigation.state.params.paymentResult)
     }
 
-    
+
     getFieldValue = (str, result) => {
         return this.props.searchString(str, result)
     }
 
-    // captureRef(this._shareViewContainer, {
-    //     snapshotContentContainer: true,
-    //   }).then(
-    //     uri => {
-    //       console.log('Snapshot uri', uri);
-    //       // https://github.com/expo/expo/issues/6920#issuecomment-580966657
-    //       Sharing.shareAsync('file://' + uri);
-    //     },
-    //     error => console.error('Oops, snapshot failed', error)
-    //   );
+    // openShareDialogAsync = () => {
+    //     captureRef(this._shareViewContainer, {
+    //         snapshotContentContainer: true,
+    //     }).then(
+    //         uri => {
+    //             console.log('Snapshot uri', uri);
+    //             // https://github.com/expo/expo/issues/6920#issuecomment-580966657
+    //             Sharing.shareAsync('file://' + uri);
+    //         },
+    //         error => console.error('Oops, snapshot failed', error)
+    //     );
+    // }
 
-    onCapture = uri => {
-        console.log("do something with ", uri);
-      }
+
     //RENDER MAIN COMPONENT
     render() {
         const result = this.state.paymentResult
@@ -70,7 +69,9 @@ class PaymentSuccess extends Component {
                     RightIcon={<Right />}
                 />
                 <OfflineNotice />
-                <Content>
+                <Content >
+
+
                     <View style={{
                         paddingTop: 25,
                         alignItems: 'center',
@@ -167,7 +168,7 @@ class PaymentSuccess extends Component {
                         <Button block rounded transparent
                             style={{ marginTop: 25, backgroundColor: '#4caf50', borderRadius: 6, borderWidth: 0.5, height: 50 }}
                             onPress={() => {
-                                this.props.navigation.navigate('MyAccounts')
+                                // this.props.navigation.navigate('MyAccounts')
                                 // this.props.navigation.pop(2)
                             }
                             }>
@@ -175,15 +176,13 @@ class PaymentSuccess extends Component {
                         </Button>
 
 
-                        <Button style={{ borderRadius: 6 }} transparent block onPress={() => {
-                            // this.props.navigation.navigate('MyAccounts')
-                        }} >
+                        <Button style={{ borderRadius: 6 }} transparent block onPress={this.openShareDialogAsync} >
                             <CustomText uppercase={false} style={{ color: colors.GRAYISHRED, fontSize: 12, textDecorationLine: 'underline' }} >Download PDF Copy</CustomText>
                         </Button>
                     </View>
 
-                </Content>
-            </Container>
+                </Content >
+            </Container >
         )
     }
 }

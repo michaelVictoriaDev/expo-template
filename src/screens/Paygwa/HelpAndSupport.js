@@ -161,7 +161,7 @@ class HelpAndSupport extends Component {
                     >
                         <View style={{ paddingHorizontal: 25, paddingVertical: 25 }}>
 
-                            <CustomTextBold style={{ fontSize: 18, paddingBottom: 24 }}>Customer Feedback</CustomTextBold>
+                            <CustomTextBold style={{ fontSize: 18, paddingBottom: 14 }}>Customer Feedback</CustomTextBold>
 
                             <CustomText style={{ paddingVertical: 5 }}>Customer Name</CustomText>
                             <Item regular

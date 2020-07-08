@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Container, Right, Content, Item, ListItem, Separator, Text, Left, Body, View, Button, Icon, Form, Picker, Footer, FooterTab, Toast } from 'native-base';
-import { KeyboardAvoidingView, TextInput, Keyboard } from 'react-native'
+import { KeyboardAvoidingView, TextInput, Keyboard, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
 import { colors, pRatioToFontSize } from '../../utils/constants';
 import _ from 'lodash';
@@ -21,6 +21,7 @@ class Survey extends Component {
         super(props);
         // local state
         this.state = {
+            isLoading: false,
             pixelDensity: 0,
             text: '',
             surveyList: [],
@@ -122,6 +123,9 @@ class Survey extends Component {
         }
     }
     getListSurvey() {
+        this.setState({
+            isLoading: true
+        })
         axios
             .get(DASHBOARD_URL + '/api/v1/get-list-survey',
                 {
@@ -131,12 +135,16 @@ class Survey extends Component {
             .then(response => {
 
                 this.setState({
-                    surveyList: response.data.result.surveyList
+                    surveyList: response.data.result.surveyList,
+                    isLoading: false
                 })
 
             })
             .catch(error => {
                 console.log('getListSurvey', error)
+                this.setState({
+                    isLoading: false
+                })
                 Toast.show({
                     text: `Server Error`,
                     duration: 2500,
@@ -164,6 +172,7 @@ class Survey extends Component {
 
     render() {
 
+
         return (
             <Container >
                 <CustomHeader
@@ -175,150 +184,38 @@ class Survey extends Component {
                 />
                 <OfflineNotice />
                 <Content>
-
                     <View style={{ paddingHorizontal: 25, paddingVertical: 25 }}>
-
                         <CustomTextBold style={{ fontSize: 18, paddingBottom: 24 }}>Survey</CustomTextBold>
                         <CustomTextBold style={{ fontSize: 18, paddingBottom: 14 }}>Hafa Adai! We hope you’re finding our online service uesful.</CustomTextBold>
                         <CustomText style={{ paddingBottom: 14 }} >In our effort to better serve YOU, we ask you to take part in a quick survey which will take approximately 3 minutes to complete. Your responses are treated with the strictest confidence and will be used within GWA to improve the quality of our service delivery.</CustomText>
-                        <View style={{
-                            borderColor: "#c9c9c9",
-                            borderBottomWidth: 1
-                        }} />
+                    </View>
 
-                        {_.map(this.state.surveyList, (item, index) => {
-                            // console.log('log', _.get(this.state.surveyAnswers, `survey${index}`, "0"))
-                            return (
-                                <React.Fragment>
-
-                                    {index === 3 ?
-                                        <React.Fragment>
-                                            <CustomText style={{ paddingVertical: 14 }}>{item.prompt}</CustomText>
-                                            <Form style={{ paddingBottom: 14 }} full>
-                                                <Item picker style={{
-                                                    borderColor: "#c9c9c9",
-                                                    borderBottomWidth: 1,
-                                                    borderTopWidth: 1,
-                                                    borderLeftWidth: 1,
-                                                    borderRightWidth: 1,
-                                                    borderRadius: 5
-
-                                                }}>
-                                                    <Picker
-
-                                                        mode="dropdown"
-
-                                                        placeholder="Please Select"
-                                                        placeholderStyle={{ color: '#bfc6ea' }}
-
-                                                        selectedValue={_.get(this.state.surveyAnswers, `survey${index}`, "0")}
-
-                                                        onValueChange={this.onChange(`survey${index}`)}
+                    <View style={{
+                        borderColor: "#c9c9c9",
+                        borderBottomWidth: 1
+                    }} />
+                    <View style={{ paddingHorizontal: 25 }}>
 
 
-                                                    >
-                                                        <Picker.Item label={'Please Select'} value={'Please Select'} />
+                        {this.state.isLoading ?
 
-                                                        {_.map(this.state.surveyList[index].possibleAnswers, (item1, index1) => {
-                                                            return (
+                            < View style={{
+                                justifyContent: 'center',
+                                padding : 20,
+                                alignItems: 'center', justifyContent: 'center', flex: 1
+                            }}>
+                                <ActivityIndicator size="large" color={colors.PRIMARY_COLOR} />
 
-                                                                <Picker.Item key={index1} label={item1.description} value={item1.value} />
-                                                            )
-                                                        })}
-
-
-                                                    </Picker>
-                                                </Item>
-
-                                            </Form>
-                                            <CustomText style={{ paddingBottom: 14 }}>In the last 90 days have you had contact with other GWA Personnel not mentioned above? Please indicate what GWA unit/section you were in contact with and rate your experience.</CustomText>
+                            </View>
+                            :
 
 
+                            _.map(this.state.surveyList, (item, index) => {
+                                // console.log('log', _.get(this.state.surveyAnswers, `survey${index}`, "0"))
+                                return (
+                                    <React.Fragment>
 
-                                            <Form style={{ paddingBottom: 14 }} full>
-                                                <Item picker style={{
-                                                    borderColor: "#c9c9c9",
-                                                    borderBottomWidth: 1,
-                                                    borderTopWidth: 1,
-                                                    borderLeftWidth: 1,
-                                                    borderRightWidth: 1,
-                                                    borderRadius: 5,
-
-
-                                                }}>
-
-
-                                                    <TextInput
-                                                        onBlur={e => Keyboard.dismiss()}
-                                                        placeholder='Enter Text'
-                                                        style={{
-                                                            width: '100%',
-                                                            padding: 10,
-                                                            minHeight: 50,
-                                                        }}
-                                                        multiline
-                                                        
-                                                        value={this.state.surveyAnswers.surveyText}
-                                                        onChangeText={(text) => this.setState({
-                                                            ...this.state,
-                                                            surveyAnswers: {
-                                                                ...this.state.surveyAnswers,
-                                                                surveyText: text
-                                                            }
-                                                        })
-                                                        }
-                                                    />
-                                                </Item>
-                                            </Form>
-                                        </React.Fragment>
-                                        :
-                                        index > 3 ?
-                                            <React.Fragment>
-                                                <CustomText style={{ paddingVertical: 14 }}>{item.prompt}</CustomText>
-                                                <Form style={{ paddingBottom: 14 }} full>
-                                                    <Item picker
-                                                        error
-                                                        style={{
-                                                            borderColor: "#c9c9c9",
-                                                            borderBottomWidth: 1,
-                                                            borderTopWidth: 1,
-                                                            borderLeftWidth: 1,
-                                                            borderRightWidth: 1,
-                                                            borderRadius: 5
-
-                                                        }}>
-                                                        <Picker
-
-                                                            mode="dropdown"
-                                                            placeholder="Please Select"
-                                                            placeholderStyle={{ color: '#bfc6ea' }}
-
-                                                            selectedValue={_.get(this.state.surveyAnswers, `survey${index}`, "0")}
-                                                            onValueChange={this.onChange(`survey${index}`)}
-
-                                                        >
-                                                            <Picker.Item label={'Please Select'} value={'Please Select'} />
-
-                                                            {_.map(this.state.surveyList[index].possibleAnswers, (item1, index1) => {
-                                                                return (
-
-                                                                    <Picker.Item key={index1} label={item1.description} value={item1.value} />
-                                                                )
-                                                            })}
-
-
-                                                        </Picker>
-                                                    </Item>
-                                                    {/* {_.isEmpty(_.get(this.state.surveyAnswersResult, `survey${index}`, '')) ?
-                                                        null
-                                                        :
-                                                        <CustomText style={{ paddingVertical: 5, color: colors.RED }}>{_.get(this.state.surveyAnswersResult, `survey${index}`, 'Please select or enter a value for this question')}</CustomText>
-                                                    } */}
-
-                                                    <CustomText style={{ paddingVertical: 5, color: colors.RED }}>Required</CustomText>
-                                                </Form>
-                                            </React.Fragment>
-                                            :
+                                        {index === 3 ?
                                             <React.Fragment>
                                                 <CustomText style={{ paddingVertical: 14 }}>{item.prompt}</CustomText>
                                                 <Form style={{ paddingBottom: 14 }} full>
@@ -334,10 +231,14 @@ class Survey extends Component {
                                                         <Picker
 
                                                             mode="dropdown"
+
                                                             placeholder="Please Select"
                                                             placeholderStyle={{ color: '#bfc6ea' }}
+
                                                             selectedValue={_.get(this.state.surveyAnswers, `survey${index}`, "0")}
+
                                                             onValueChange={this.onChange(`survey${index}`)}
+
 
                                                         >
                                                             <Picker.Item label={'Please Select'} value={'Please Select'} />
@@ -352,21 +253,146 @@ class Survey extends Component {
 
                                                         </Picker>
                                                     </Item>
-                                                    {/* <CustomText style={{ paddingVertical: 14 }}>Required</CustomText> */}
 
                                                 </Form>
+                                                <CustomText style={{ paddingBottom: 14 }}>In the last 90 days have you had contact with other GWA Personnel not mentioned above? Please indicate what GWA unit/section you were in contact with and rate your experience.</CustomText>
+
+
+
+                                                <Form style={{ paddingBottom: 14 }} full>
+                                                    <Item picker style={{
+                                                        borderColor: "#c9c9c9",
+                                                        borderBottomWidth: 1,
+                                                        borderTopWidth: 1,
+                                                        borderLeftWidth: 1,
+                                                        borderRightWidth: 1,
+                                                        borderRadius: 5,
+
+
+                                                    }}>
+
+
+                                                        <TextInput
+                                                            onBlur={e => Keyboard.dismiss()}
+                                                            placeholder='Enter Text'
+                                                            style={{
+                                                                width: '100%',
+                                                                padding: 10,
+                                                                minHeight: 50,
+                                                            }}
+                                                            multiline
+
+                                                            value={this.state.surveyAnswers.surveyText}
+                                                            onChangeText={(text) => this.setState({
+                                                                ...this.state,
+                                                                surveyAnswers: {
+                                                                    ...this.state.surveyAnswers,
+                                                                    surveyText: text
+                                                                }
+                                                            })
+                                                            }
+                                                        />
+                                                    </Item>
+                                                </Form>
                                             </React.Fragment>
-                                    }
-                                </React.Fragment>
-                            )
-                        })
+                                            :
+                                            index > 3 ?
+                                                <React.Fragment>
+                                                    <CustomText style={{ paddingVertical: 14 }}>{item.prompt}</CustomText>
+                                                    <Form style={{ paddingBottom: 14 }} full>
+                                                        <Item picker
+                                                            error
+                                                            style={{
+                                                                borderColor: "#c9c9c9",
+                                                                borderBottomWidth: 1,
+                                                                borderTopWidth: 1,
+                                                                borderLeftWidth: 1,
+                                                                borderRightWidth: 1,
+                                                                borderRadius: 5
+
+                                                            }}>
+                                                            <Picker
+
+                                                                mode="dropdown"
+                                                                placeholder="Please Select"
+                                                                placeholderStyle={{ color: '#bfc6ea' }}
+
+                                                                selectedValue={_.get(this.state.surveyAnswers, `survey${index}`, "0")}
+                                                                onValueChange={this.onChange(`survey${index}`)}
+
+                                                            >
+                                                                <Picker.Item label={'Please Select'} value={'Please Select'} />
+
+                                                                {_.map(this.state.surveyList[index].possibleAnswers, (item1, index1) => {
+                                                                    return (
+
+                                                                        <Picker.Item key={index1} label={item1.description} value={item1.value} />
+                                                                    )
+                                                                })}
+
+
+                                                            </Picker>
+                                                        </Item>
+                                                        {/* {_.isEmpty(_.get(this.state.surveyAnswersResult, `survey${index}`, '')) ?
+                                                        null
+                                                        :
+                                                        <CustomText style={{ paddingVertical: 5, color: colors.RED }}>{_.get(this.state.surveyAnswersResult, `survey${index}`, 'Please select or enter a value for this question')}</CustomText>
+                                                    } */}
+
+                                                        <CustomText style={{ paddingVertical: 5, color: colors.RED }}>Required</CustomText>
+                                                    </Form>
+                                                </React.Fragment>
+                                                :
+                                                <React.Fragment>
+                                                    <CustomText style={{ paddingVertical: 14 }}>{item.prompt}</CustomText>
+                                                    <Form style={{ paddingBottom: 14 }} full>
+                                                        <Item picker style={{
+                                                            borderColor: "#c9c9c9",
+                                                            borderBottomWidth: 1,
+                                                            borderTopWidth: 1,
+                                                            borderLeftWidth: 1,
+                                                            borderRightWidth: 1,
+                                                            borderRadius: 5
+
+                                                        }}>
+                                                            <Picker
+
+                                                                mode="dropdown"
+                                                                placeholder="Please Select"
+                                                                placeholderStyle={{ color: '#bfc6ea' }}
+                                                                selectedValue={_.get(this.state.surveyAnswers, `survey${index}`, "0")}
+                                                                onValueChange={this.onChange(`survey${index}`)}
+
+                                                            >
+                                                                <Picker.Item label={'Please Select'} value={'Please Select'} />
+
+                                                                {_.map(this.state.surveyList[index].possibleAnswers, (item1, index1) => {
+                                                                    return (
+
+                                                                        <Picker.Item key={index1} label={item1.description} value={item1.value} />
+                                                                    )
+                                                                })}
+
+
+                                                            </Picker>
+                                                        </Item>
+                                                        {/* <CustomText style={{ paddingVertical: 14 }}>Required</CustomText> */}
+
+                                                    </Form>
+                                                </React.Fragment>
+                                        }
+                                    </React.Fragment>
+                                )
+                            })
 
                         }
 
+                    </View>
+
+                    <View style={{ padding: 25 }}>
 
 
                         <CustomTextBold style={{ fontSize: 18, paddingBottom: 24, fontStyle: 'italic' }}>Thank you for taking the time out to complete this survey.</CustomTextBold>
-
                     </View>
 
                 </Content>
@@ -375,7 +401,7 @@ class Survey extends Component {
                         <Button full
                             onPress={() => this.submitSurvey()}
                         >
-                            <CustomText style={{ color: colors.WHITE }}>Submit </CustomText>
+                            <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>Submit </CustomText>
                         </Button>
                     </FooterTab>
                 </Footer>

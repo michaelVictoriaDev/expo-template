@@ -299,11 +299,6 @@ class SignUpLoginDetails extends Component {
             }
         }
 
-        
-
-
-
-
     }
 
 
@@ -882,8 +877,8 @@ class SignUpLoginDetails extends Component {
                                     <CheckBox checked={this.state.CheckBox} onPress={(e) => this.setState({
                                         CheckBox: !this.state.CheckBox
                                     })} />
-                                    <Body style={{ paddingLeft: 5 }}>
-                                        <CustomText>I agree to the <CustomText onPress={() => Linking.openURL('https://gwadev.xtendly.com/terms-and-conditions')} style={{ color: '#007bff' }}>Terms and Conditions</CustomText> *</CustomText>
+                                    <Body style={{ paddingLeft: 7 }}>
+                                        <CustomText>I agree to the <CustomText onPress={() => Linking.openURL('https://gwadev.xtendly.com/terms-and-conditions')} style={{ color: '#007bff', fontSize: 12 }}>Terms and Conditions</CustomText> *</CustomText>
 
                                     </Body>
                                 </ListItem>

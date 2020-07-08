@@ -112,7 +112,7 @@ class AccountSummaryHistory extends Component {
         <Content>
           <View style={{ paddingHorizontal: 25, paddingVertical: 25 }}>
             <CustomTextBold>Your Payment History For Account No. </CustomTextBold>
-            <CustomText>{this.state.accountId}</CustomText>
+            <CustomText style={{ fontSize: 16 }}>{this.state.accountId}</CustomText>
           </View>
           {this.state.isLoadingData ?
             <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
@@ -133,7 +133,7 @@ class AccountSummaryHistory extends Component {
                     justifyContent: "center"
                   }}
                 >
-                  <CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center" }}>
+                  <CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center", fontSize: 16 }}>
                     Payment Date
                 </CustomText>
                 </Col>
@@ -149,7 +149,7 @@ class AccountSummaryHistory extends Component {
                     justifyContent: "center"
                   }}
                 >
-                  <CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center" }}>Description</CustomText>
+                  <CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center", fontSize: 16 }}>Description</CustomText>
                 </Col>
                 <Col
                   style={{
@@ -163,7 +163,7 @@ class AccountSummaryHistory extends Component {
                     alignItems: "center",
                     justifyContent: "center"
                   }}
-                ><CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center" }}>Amount</CustomText></Col>
+                ><CustomText style={{ color: colors.WHITE, textAlignVertical: "center", textAlign: "center", fontSize: 16 }}>Amount</CustomText></Col>
               </Row>
               {_.isEmpty(this.state.paymentData) ?
                 <Row>
@@ -231,17 +231,17 @@ class AccountSummaryHistory extends Component {
 
                   if (result === 2) {
                     currentAmount =
-                      <CustomText >
+                      <CustomText style={{ fontSize: 16 }} >
                         $ {data.TotalAmount}
                       </CustomText>
                   } else if (result === 1) {
                     currentAmount =
-                      <CustomText >
+                      <CustomText style={{ fontSize: 16 }} >
                         $ {data.TotalAmount}0
                   </CustomText>
                   } else {
                     currentAmount =
-                      <CustomText >
+                      <CustomText style={{ fontSize: 16 }} >
                         $ {data.TotalAmount}.00
                   </CustomText>
                   }
@@ -257,7 +257,7 @@ class AccountSummaryHistory extends Component {
                         alignItems: "center",
                         justifyContent: "center"
                       }}>
-                      <CustomText >
+                      <CustomText style={{ fontSize: 16 }} >
                         {data.ArrearsDate}
                       </CustomText>
                     </Col>
@@ -272,9 +272,9 @@ class AccountSummaryHistory extends Component {
                         alignItems: "center",
                         justifyContent: "center"
                       }}>
-                      <CustomText >
+                      <CustomText style={{ fontSize: 16 }} >
                         Payment
-              </CustomText>
+                      </CustomText>
                     </Col>
                     <Col
                       style={{

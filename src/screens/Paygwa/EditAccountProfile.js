@@ -334,11 +334,11 @@ class EditAccountProfile extends Component {
                                 this.onSave()
                             }} >
 
-                            <Icon style={{ backgroundColor: colors.PRIMARY_COLOR, color: colors.WHITE, fontSize: pRatioToFontSize(+1) > 20 ? 20 : pRatioToFontSize(+1) }} >
+                            <Icon style={{ backgroundColor: colors.PRIMARY_COLOR, color: colors.WHITE, fontSize: 18 }} >
                                 {this.state.isProcessing ?
-                                    <CustomText style={{ color: colors.WHITE, fontSize: pRatioToFontSize(+1) > 20 ? 20 : pRatioToFontSize(+1) }}>Loading ...</CustomText>
+                                    <CustomText style={{ color: colors.WHITE, fontSize: 18 }}>Loading ...</CustomText>
                                     :
-                                    <CustomText style={{ color: colors.WHITE, fontSize: pRatioToFontSize(+1) > 20 ? 20 : pRatioToFontSize(+1) }}>Save</CustomText>
+                                    <CustomText style={{ color: colors.WHITE, fontSize: 18 }}>Save</CustomText>
                                 }
 
 

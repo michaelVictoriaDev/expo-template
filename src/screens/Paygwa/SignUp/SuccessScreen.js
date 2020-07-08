@@ -62,20 +62,20 @@ class SuccessScreen extends Component {
                 <Content style={{ backgroundColor: '#FFFF', paddingTop: 30, paddingHorizontal: 60 }}>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Icon
-                            style={{ color: colors.LIGHT_GREEN, fontSize: 80, paddingTop: 40 }}
+                            style={{ color: colors.LIGHT_GREEN, fontSize: 60, paddingTop: 40 }}
                             name={'check-circle'} type='FontAwesome'
                         />
 
-                        <CustomTextBold style={{ paddingVertical: 20, textAlign: 'center', fontSize: 24 }}>
+                        <CustomTextBold style={{ paddingVertical: 20, textAlign: 'center', fontSize: 18 }}>
                             Thank you for registering your PayGWA Account
                         </CustomTextBold>
 
-                        <CustomText style={{ paddingVertical: 20, textAlign: 'center', fontSize: 16 }}>
+                        <CustomText style={{ paddingVertical: 20, textAlign: 'center', fontSize: 14 }}>
                             You will receive an email confirming your registration.
                         </CustomText>
 
 
-                        <CustomText style={{ paddingVertical: 20, textAlign: 'center', fontSize: 16 }}>
+                        <CustomText style={{ paddingVertical: 20, textAlign: 'center', fontSize: 14 }}>
                             Remember to check your junk or spam folder as the email may have been caught by your spam filter.
                         </CustomText>
                         <View style={{ paddingTop: 15 }} />
@@ -86,7 +86,7 @@ class SuccessScreen extends Component {
 
 
                             }>
-                            <Text uppercase={false} > Login Here</Text>
+                            <CustomText style={{ color: colors.WHITE, fontSize: 16 }} uppercase={false} > Login Here</CustomText>
                         </Button>
                     </View>
 

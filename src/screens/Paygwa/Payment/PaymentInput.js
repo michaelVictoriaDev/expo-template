@@ -148,10 +148,10 @@ class PaymentInput extends Component {
               <CustomTextBold style={{ paddingBottom: 20, fontSize: 14 }} >Account Number</CustomTextBold>
               {_.map(this.state.selectedAccounts, (data, index) => {
                 var accID = data.accID[index]
-                console.log('amountToBePaid',data.amountToBePaid)
+                console.log('amountToBePaid', data.amountToBePaid)
                 return (
                   <Row style={{ paddingBottom: 20 }}>
-                    <Col size={45} style={{ paddingTop: 5  }}>
+                    <Col size={45} style={{ paddingTop: 5 }}>
                       <CustomText style={{ fontSize: 16 }} >{accID}</CustomText>
                       <CustomTextBold style={{ fontSize: 16 }}>${data.arrears.details.PayoffBalance}</CustomTextBold>
                     </Col>
@@ -174,6 +174,7 @@ class PaymentInput extends Component {
                           renderText={value => (
                             <React.Fragment>
                               <Input
+                                returnKeyType='done'
                                 textAlign={'center'}
                                 autoCapitalize='none'
                                 placeholderTextColor='lightgray'
@@ -203,11 +204,11 @@ class PaymentInput extends Component {
             </View>
             <View style={{ paddingHorizontal: 25, justifyContent: 'center', alignItems: 'center' }}>
               <Row style={{ paddingBottom: 25 }}>
-                <Col size={50} style={{ }}>
-                  <CustomTextBold style={{ fontSize: 18 , paddingTop: 10}}>Total Amount</CustomTextBold>
+                <Col size={50} style={{}}>
+                  <CustomTextBold style={{ fontSize: 18, paddingTop: 10 }}>Total Amount</CustomTextBold>
                 </Col>
                 <Col size={50} style={{ justifyContent: 'center' }}>
-                  <CustomTextBold style={{ fontSize: 24, paddingLeft: 30 }}>$ {new Intl.NumberFormat("es-US", { minimumFractionDigits: 2 } ).format( this.state.subtotal )}</CustomTextBold>
+                  <CustomTextBold style={{ fontSize: 24, paddingLeft: 30 }}>$ {new Intl.NumberFormat("es-US", { minimumFractionDigits: 2 }).format(this.state.subtotal)}</CustomTextBold>
                   {/* <CustomTextBold style={{ fontSize: 24, paddingLeft: 30 }}>{new Intl.NumberFormat('en-US').format(parseFloat(this.state.subtotal).toFixed(2))}</CustomTextBold> */}
                 </Col>
               </Row>

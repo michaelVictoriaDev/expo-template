@@ -201,6 +201,7 @@ export default class App extends Component {
   async componentDidMount() {
     await Font.loadAsync({
       'Lato': require('./assets/fonts/Lato-Regular.ttf'),
+      'Lato_Medium': require('./assets/fonts/Lato-Medium.ttf'),
       'Lato_Bold': require('./assets/fonts/Lato-Bold.ttf'),
       'Roboto': require('./assets/fonts/Roboto.ttf'),
       'Roboto_medium': require('./assets/fonts/Roboto-Medium.ttf'),

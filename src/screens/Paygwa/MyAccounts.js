@@ -19,6 +19,7 @@ import CustomHeader from '../../components/MultiCustomHeader'
 import _ from 'lodash'
 import { Row, Col } from 'react-native-easy-grid';
 import CustomTextBold from '../../components/CustomTextBold';
+import CustomTextMedium from '../../components/CustomTextMedium';
 
 class MyAccount extends Component {
   constructor(props) {
@@ -317,22 +318,22 @@ renderItemsInfiniteScroll(itemIndex, i) {
         </View>
 
         <View style={styles.itemTwo}>
-          <CustomText style={{ fontsize: 24, alignItems: 'center' }} numberOfLines={1} ellipsizeMode='tail'>{i.accID[0]}{' '}{i.accID[2] === 'COMM' ?
+          <CustomText style={{ fontsize: 16, alignItems: 'center' }} numberOfLines={1} ellipsizeMode='tail'>{i.accID[0]}{' '}{i.accID[2] === 'COMM' ?
             <Icon type={'FontAwesome5'} name='building' style={{ fontSize: 20 }} />
             :
             <Icon type={'Entypo'} name='home' style={{ fontSize: 20, }} />
 
           }</CustomText>
 
-          <CustomText style={{ color: colors.GRAYISHRED }} numberOfLines={1} ellipsizeMode='tail'>{i.serviceLocation}</CustomText>
+          <CustomText style={{ color: colors.GRAYISHRED, fontSize: 11, }} numberOfLines={1} ellipsizeMode='tail'>{i.serviceLocation}</CustomText>
         </View>
         <View style={styles.itemBlocker} />
 
         <View style={styles.itemThree}>
 
-          <CustomText numberOfLines={1} ellipsizeMode='tail'
-            style={{ fontSize: 25, fontWeight: 'bold' }} >${i.arrears.details.PayoffBalance}</CustomText>
-          <CustomText style={{ color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED }}>{_.replace(i.dueDate, /\//g, '.') + ' '}<Icon onPress={() => alert('icon press')} style={{ backgroundColor: colors.WHITE, color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED, fontSize: pRatioToFontSize(+1) > 14 ? 14 : pRatioToFontSize(+1) }} name='info-circle' type='FontAwesome5' /></CustomText>
+          <CustomTextBold numberOfLines={1} ellipsizeMode='tail'
+            style={{ fontSize: 24 }} >${i.arrears.details.PayoffBalance}</CustomTextBold>
+          <CustomTextMedium style={{ color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED, fontSize: 14 }}>{_.replace(i.dueDate, /\//g, '.') + ' '}<Icon onPress={() => alert('icon press')} style={{ backgroundColor: colors.WHITE, color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED, fontSize: 14 }} name='info-circle' type='FontAwesome5' /></CustomTextMedium>
         </View>
         {/* <View style={styles.itemFour}></View> */}
 
@@ -475,7 +476,7 @@ render() {
                 })
               }}
             >
-              <CustomText style={{ color: colors.WHITE }}>Make Payment</CustomText>
+              <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>Make Payment</CustomText>
 
             </Button>
           </FooterTab>
@@ -507,6 +508,7 @@ const styles = StyleSheet.create({
     width: '5%'
   },
   itemTwo: {
+    paddingTop: 5,
     width: '55%',
     flex: 1,
     flexDirection: 'row',
@@ -516,7 +518,7 @@ const styles = StyleSheet.create({
   itemThree: {
     width: '30%',
     alignItems: 'flex-start',
-    paddingTop: 5
+    // paddingTop: 5
   },
   itemFour: {
     width: '10%'

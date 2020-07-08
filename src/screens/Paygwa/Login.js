@@ -8,6 +8,7 @@ import _, { times } from 'lodash';
 import * as AppAuth from 'expo-app-auth';
 import CustomText from '../../components/CustomText';
 import CustomTextBold from '../../components/CustomTextBold';
+import CustomTextMedium from '../../components/CustomTextMedium';
 import Offline from '../../components/OfflineNotice';
 import * as Font from 'expo-font';
 import Modal from 'react-native-modal';
@@ -556,14 +557,14 @@ class Login extends Component {
                                         {this.state.loadingForgotYourUsernameGWA ?
                                             <ActivityIndicator color={colors.PRIMARY_COLOR} />
                                             :
-                                            <CustomText style={{ color: colors.WHITE }}>Submit</CustomText>
+                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Submit</CustomTextMedium>
                                         }
 
                                     </Button>
                                 </View>
                                 <View style={{ paddingVertical: 10 }} >
                                     <Button transparent block light onPress={() => this.setState({ isModalVisibleUsernameGWA: false })}  >
-                                        <CustomText style={{ color: colors.BLACK }}>Cancel</CustomText>
+                                        <CustomTextMedium style={{ color: colors.BLACK, fontSize: 16 }}>Cancel</CustomTextMedium>
                                     </Button>
                                 </View>
                             </View>
@@ -658,13 +659,13 @@ class Login extends Component {
                                         {this.state.loadingForgotYourPasswordGWA ?
                                             <ActivityIndicator color={colors.PRIMARY_COLOR} />
                                             :
-                                            <CustomText style={{ color: colors.WHITE }}>Submit</CustomText>
+                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Submit</CustomTextMedium>
                                         }
                                     </Button>
                                 </View>
                                 <View style={{ paddingVertical: 10 }} >
                                     <Button transparent block light onPress={() => this.setState({ isModalVisiblePasswordGWA: false })}  >
-                                        <CustomText style={{ color: colors.BLACK }}>Cancel</CustomText>
+                                        <CustomTextMedium style={{ color: colors.BLACK, fontSize: 16 }}>Cancel</CustomTextMedium>
                                     </Button>
                                 </View>
                             </View>
@@ -725,12 +726,12 @@ class Login extends Component {
                                         })
                                     }
                                     }>
-                                        <CustomText style={{ color: colors.WHITE }}>Submit</CustomText>
+                                        <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Submit</CustomTextMedium>
                                     </Button>
                                 </View>
                                 <View style={{ paddingVertical: 10 }} >
                                     <Button transparent block light onPress={() => this.setState({ isModalVisibleUsernameGPA: false })}  >
-                                        <CustomText style={{ color: colors.BLACK }}>Cancel</CustomText>
+                                        <CustomTextMedium style={{ color: colors.BLACK, fontSize: 16 }}>Cancel</CustomTextMedium>
                                     </Button>
                                 </View>
                             </View>
@@ -792,12 +793,12 @@ class Login extends Component {
                                         })
                                     }
                                     }>
-                                        <CustomText style={{ color: colors.WHITE }}>Submit</CustomText>
+                                        <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16}}>Submit</CustomTextMedium>
                                     </Button>
                                 </View>
                                 <View style={{ paddingVertical: 10 }} >
                                     <Button transparent block light onPress={() => this.setState({ isModalVisiblePasswordGPA: false })}  >
-                                        <CustomText style={{ color: colors.BLACK }}>Cancel</CustomText>
+                                        <CustomTextMedium style={{ color: colors.BLACK, fontSize: 16 }}>Cancel</CustomTextMedium>
                                     </Button>
                                 </View>
                             </View>
@@ -872,14 +873,14 @@ class Login extends Component {
                                         {this.state.loadingQuestionForgotYourUsernameGWA ?
                                             <ActivityIndicator color={colors.PRIMARY_COLOR} />
                                             :
-                                            <CustomText style={{ color: colors.WHITE }}>Submit</CustomText>
+                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Submit</CustomTextMedium>
                                         }
 
                                     </Button>
                                 </View>
                                 <View style={{ paddingVertical: 10 }} >
                                     <Button transparent block light onPress={() => this.setState({ isModalVisibleQuestionUsernameGWA: false })}  >
-                                        <CustomText style={{ color: colors.BLACK }}>Cancel</CustomText>
+                                        <CustomTextMedium style={{ color: colors.BLACK, fontSize: 16 }}>Cancel</CustomTextMedium>
                                     </Button>
                                 </View>
                             </View>
@@ -954,14 +955,14 @@ class Login extends Component {
                                         {this.state.loadingQuestionForgotYourPasswordGWA ?
                                             <ActivityIndicator color={colors.PRIMARY_COLOR} />
                                             :
-                                            <CustomText style={{ color: colors.WHITE }}>Submit</CustomText>
+                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16}}>Submit</CustomTextMedium>
                                         }
 
                                     </Button>
                                 </View>
                                 <View style={{ paddingVertical: 10 }} >
                                     <Button transparent block light onPress={() => this.setState({ isModalVisibleQuestionPasswordGWA: false })}  >
-                                        <CustomText style={{ color: colors.BLACK }}>Cancel</CustomText>
+                                        <CustomTextMedium style={{ color: colors.BLACK, fontSize: 16}}>Cancel</CustomTextMedium>
                                     </Button>
                                 </View>
                             </View>
@@ -984,7 +985,7 @@ class Login extends Component {
 
 
                         }
-                        <Content style={{ paddingTop: 20, paddingBottom: 100, paddingHorizontal: 18, backgroundColor: 'white' }}>
+                        <Content style={{ paddingTop: 10, paddingBottom: 100, paddingHorizontal: 18, backgroundColor: 'white' }}>
                             <Tabs
                                 tabBarUnderlineStyle={{ backgroundColor: '#1787C9' }}
                                 style={{ backgroundColor: 'white', borderColor: '#DADADA', borderBottomWidth: 0.9, borderTopWidth: 0.9, borderLeftWidth: 0.9, borderRightWidth: 0.9, borderRadius: 5 }}
@@ -1008,7 +1009,7 @@ class Login extends Component {
                                             onPress={() =>
                                                 console.log('PayNow')
                                             }>
-                                            <CustomText style={{ color: colors.WHITE }}>Pay Now</CustomText>
+                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Pay Now</CustomTextMedium>
                                         </Button>
                                         {/*LABEL*/}
                                         <View style={styles.gpwa_label_container, { marginTop: 15, alignItems: 'center' }}>
@@ -1039,6 +1040,7 @@ class Login extends Component {
                                             />
                                             {/* <Icon name='person' style={{ color: 'lightgray' }} /> */}
                                         </Item>
+                                        <View style={{ padding: 5 }} />
                                         <Item regular
                                             style={styles.text_input}>
                                             <Input
@@ -1065,25 +1067,25 @@ class Login extends Component {
                                             style={[styles.buttons, { backgroundColor: '#1687C7', borderRadius: 6, borderWidth: 0.5, height: 50 }]}
                                             onPress={() =>
                                                 // GWA
-                                                // this.manualLogin(this.state.emailAdd, this.state.password)
+                                                this.manualLogin(this.state.emailAdd, this.state.password)
                                                 // this.manualLogin('gdoe', 'GDOE2018')
                                                 // this.manualLogin('Relyant01', 'Relyant01')
-                                                this.manualLogin('blas959', 'sweetheart95')
+                                                // this.manualLogin('blas959', 'sweetheart95')
                                             }>
-                                            <CustomText style={{ color: colors.WHITE }}>Login</CustomText>
+                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Login</CustomTextMedium>
                                         </Button>
 
-                                        <View style={styles.gpwa_label_container, { marginTop: 15, alignItems: 'center' }}>
-                                            <CustomTextBold style={[styles.gpwa_label, { fontSize: pRatioToFontSize(0) }]}>Don't have an account?</CustomTextBold>
+                                        <View style={styles.gpwa_label_container, { marginTop: 10, alignItems: 'center' }}>
+                                            <CustomTextBold style={[styles.gpwa_label, { fontSize: 12 }]}>Don't have an account?</CustomTextBold>
                                         </View>
 
                                         <Button block rounded transparent
-                                            style={[styles.buttons, { backgroundColor: '#15B8E8', borderRadius: 6, borderWidth: 0.5, height: 50 }]}
+                                            style={{ backgroundColor: '#15B8E8', borderRadius: 6, borderWidth: 0.5, height: 50 , marginTop: 10}}
                                             onPress={() =>
                                                 // GWA
                                                 this.props.navigation.navigate("SignUpCreateAccount")
                                             }>
-                                            <CustomText style={{ color: colors.WHITE }}>Register</CustomText>
+                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Register</CustomTextMedium>
                                         </Button>
 
 
@@ -1129,7 +1131,7 @@ class Login extends Component {
                                             onPress={() =>
                                                 console.log('PayNow')
                                             }>
-                                            <CustomText style={{ color: colors.WHITE }}>Quick Pay</CustomText>
+                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Quick Pay</CustomTextMedium>
                                         </Button>
                                         {/*LABEL*/}
                                         <View style={styles.gpwa_label_container, { marginTop: 15, alignItems: 'center' }}>
@@ -1160,6 +1162,7 @@ class Login extends Component {
                                             />
                                             {/* <Icon name='person' style={{ color: 'lightgray' }} /> */}
                                         </Item>
+                                        <View style={{ padding: 5 }} />
                                         <Item regular
                                             style={styles.text_input}>
                                             <Input
@@ -1191,15 +1194,15 @@ class Login extends Component {
                                                 // this.manualLogin('Relyant', 'Relyant01')
                                                 // this.manualLogin('bevfrisas', '123')
                                             }>
-                                            <CustomText style={{ color: colors.WHITE }}>Login</CustomText>
+                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Login</CustomTextMedium>
                                         </Button>
 
-                                        <View style={styles.gpwa_label_container, { marginTop: 15, alignItems: 'center' }}>
-                                            <CustomTextBold style={[styles.gpwa_label, { fontSize: pRatioToFontSize(0) }]}>Don't have an account?</CustomTextBold>
+                                        <View style={styles.gpwa_label_container, { marginTop: 10, alignItems: 'center' }}>
+                                            <CustomTextBold style={[styles.gpwa_label, { fontSize: 12 }]}>Don't have an account?</CustomTextBold>
                                         </View>
 
                                         <Button block rounded transparent
-                                            style={[styles.buttons, { backgroundColor: '#15B8E8', borderRadius: 6, borderWidth: 0.5, height: 50 }]}
+                                            style={{ backgroundColor: '#15B8E8', borderRadius: 6, borderWidth: 0.5, height: 50, marginTop: 10 }}
                                             onPress={() =>
                                                 console.log('REG PAYGPA')
                                                 // this.manualLogin(this.state.emailAdd,this.state.password)
@@ -1207,7 +1210,7 @@ class Login extends Component {
                                                 // this.manualLogin('Relyant01', 'Relyant01')
                                                 // this.manualLogin('bevfrisas', '123')
                                             }>
-                                            <CustomText style={{ color: colors.WHITE }}>Register</CustomText>
+                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Register</CustomTextMedium>
                                         </Button>
 
 
@@ -1262,7 +1265,7 @@ export default connect(mapStateToProps)(Login);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 45,
+        // paddingTop: 45,
         paddingBottom: 50
         //  
         // paddingBottom : 50
@@ -1295,7 +1298,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 35,
     },
     buttons: {
-        marginTop: 15,
+        marginTop: 20
     },
     text_input: {
         backgroundColor: colors.WHITE,
@@ -1311,6 +1314,6 @@ const styles = StyleSheet.create({
     },
     demo_text: {
         textAlign: 'center',
-        fontSize: pRatioToFontSize(-0.5)
+        fontSize: 12
     }
 });

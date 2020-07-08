@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   },
   drawer_button_text: {
     color: colors.BLACK,
-    fontSize: 18,
+    fontSize: 16,
     paddingLeft: 30,
   }
 })
@@ -115,15 +115,15 @@ class CustomDrawerContent extends Component {
             paddingVertical: pRatioToFontSize(),
             paddingHorizontal: pRatioToFontSize(),
           }}>
-            <Text
+            <CustomText
               style={{
                 color: colors.BLACK,
-                fontSize: pRatioToFontSize() > 30 ? 30 : pRatioToFontSize(),
+                fontSize: 16,
               }}
               ellipsizeMode='tail'
               numberOfLines={1}
             >
-             {_.get(this.props.dashboard.userAccountDetails, 'fullName', 'NA')}</Text> 
+             {_.get(this.props.dashboard.userAccountDetails, 'fullName', 'NA')}</CustomText> 
               {/* {this.props.dashboard.userAccountDetails.fullName}</Text> */}
 
           </View>
