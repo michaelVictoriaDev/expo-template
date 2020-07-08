@@ -459,6 +459,8 @@ render() {
                   subtotal = subtotal + parseFloat(data.amountToBePaid === "" ? 0 : data.amountToBePaid)
                 })
 
+                console.log(this.state.selectedAccountsId)
+
                 this.props.navigation.navigate('PaymentInput',
                   {
                     selectedAccounts: this.state.selectedAccounts,

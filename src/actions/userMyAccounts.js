@@ -16,7 +16,7 @@ import {
 import { Toast } from 'native-base';
 import { PAYGWA_URL, DASHBOARD_URL, PAYNOW_URL } from 'react-native-dotenv';
 import _ from 'lodash'
-import  moment from 'moment';
+import moment from 'moment';
 import NavigationService from '../NavigationService'; /* <-
 USED FOR NAVIGATING WITHOUT PROPS
 	REFERENCES: 
@@ -26,7 +26,15 @@ USED FOR NAVIGATING WITHOUT PROPS
 
 
 function saveToPayEezy(postData) {
-     
+    console.log('saveToPayEezypostData', {
+        amount: postData.subtotal,
+        card_num: postData.cardDetails.cardNumber,
+        exp_date: postData.cardDetails.validExpDate,
+        card_holder: postData.cardDetails.cardHolderName,
+        CAVV: postData.cardDetails.cvv,
+        custome_ref: postData.username
+    })
+
     return axios
         .post(PAYNOW_URL + '/api/v1/payeezy',
             {
@@ -39,9 +47,9 @@ function saveToPayEezy(postData) {
             },
             {
                 headers: {
-                    'Content-Type':'application/json',
+                    'Content-Type': 'application/json',
                     "origin": "https://gwadev.xtendly.com"
-                    }
+                }
             })
 }
 
@@ -51,15 +59,18 @@ export const savePaymentData = (postData) => dispatch => {
     let arrSavePaymentToCCBRequests = [], arrSaveToMarketingDBRequests = [], accountIdsList = "";
     const accountSummary = postData.accountSummary
     for (let count = 0; count < accountSummary.length; count++) {
-        if ((accountSummary[count].amountToBePaid > 0)) {
+        if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
             accountIdsList += (accountSummary[count].accID + ', ')
         }
     }
-     
+
     return new Promise((resolve, reject) => {
         axios.all([saveToPayEezy(postData)])
             .then(axios.spread(
                 async (saveToPayEezyResponse) => {
+                    if (saveToPayEezyResponse.data.result.status == "False") {
+                        resolve(saveToPayEezyResponse.data.result);
+                    }
                     const payEezyResult = saveToPayEezyResponse.data.result
                     const transDate = doTheSearch("DATE/TIME", payEezyResult)
                     const arrTransDate = transDate.split(" ")
@@ -68,66 +79,116 @@ export const savePaymentData = (postData) => dispatch => {
                     finalTransDate = "20" + arrTransDate[3] + "/" + (d.getMonth() + 1) + "/" + arrTransDate[1]
                     let paymentTotal = 0
                     for (let count = 0; count < accountSummary.length; count++) {
-                        if ((accountSummary[count].amountToBePaid > 0)) {
+                        if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
                             paymentTotal++;
                         }
                     }
+                    let emailStat = false, saveOverallPaymentResponse = [];
+                    if (payEezyResult.data.Transaction_Approved === "true") {
+                        const [sendPaymentStatEmailResponse, saveOverallPaymentResponse1] = await Promise.all([
+                            sendPaymentStatEmail(postData, accountIdsList, payEezyResult),
+                            saveOverallPayment(postData, payEezyResult, finalTransDate)
+                        ]);
+                        emailStat = sendPaymentStatEmailResponse.result.status === "success" ? true : true;
+                        saveOverallPaymentResponse = saveOverallPaymentResponse1;
+                    }
+                    else {
+                        const [saveOverallPaymentResponse1] = await Promise.all([
+                            saveOverallPayment(postData, payEezyResult, finalTransDate)
+                        ]);
+                        emailStat = true;
+                        saveOverallPaymentResponse = saveOverallPaymentResponse1;
+                    }
                     let receiptCount = 1;
-                    for (let count = 0; count < accountSummary.length; count++) {
-                        if ((accountSummary[count].amountToBePaid > 0)) {
+                    if (emailStat && saveOverallPaymentResponse.result === "Success") {
+                        let writeCCB = false;
+                        for (let count = 0; count < accountSummary.length; count++) {
+                            if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0) && payEezyResult.data.Transaction_Approved === "true") {
+                                writeCCB = true;
+                                if (paymentTotal === 1) {
+                                    const recepitNum = payEezyResult.data.Reference_No
+                                    arrSavePaymentToCCBRequests.push(savePaymentToCCB(saveOverallPaymentResponse.overallId, postData.usedCC, recepitNum, accountSummary[count].accID, accountSummary[count].amountToBePaid, payEezyResult))
+                                }
+                                else {
+                                    const str = payEezyResult.data.Reference_No + "-" + (receiptCount);
+                                    const recepitNum = str.substring(str.length - 14, str.length);
+                                    arrSavePaymentToCCBRequests.push(savePaymentToCCB(saveOverallPaymentResponse.overallId, postData.usedCC, recepitNum, accountSummary[count].accID, accountSummary[count].amountToBePaid, payEezyResult))
+                                }
+                                receiptCount++;
+                            }
+                        }
+                        receiptCount = 1;
+                        for (let count = 0; count < accountSummary.length; count++) {
+                            if (accountSummary[count].checked && (accountSummary[count].amountToBePaid > 0)) {
+                                const status = payEezyResult.data.Transaction_Approved === "true" ? "PAID" : "DECLINED"
+                                if (paymentTotal === 1) {
+                                    const recepitNum = payEezyResult.data.Reference_No
+                                    arrSaveToMarketingDBRequests.push(savePaymentToMarketingDB(status, recepitNum, postData, payEezyResult, finalTransDate, accountSummary[count].accID, saveOverallPaymentResponse.overallId, accountSummary[count].amountToBePaid))
+                                }
+                                else {
+                                    const str = payEezyResult.data.Reference_No + "-" + (receiptCount);
+                                    const recepitNum = str.substring(str.length - 14, str.length);
+                                    arrSaveToMarketingDBRequests.push(savePaymentToMarketingDB(status, recepitNum, postData, payEezyResult, finalTransDate, accountSummary[count].accID, saveOverallPaymentResponse.overallId, accountSummary[count].amountToBePaid))
+                                }
+                                receiptCount++;
+                            }
+                        }
+                        const [saveToMarketingDBRequestsResponse, savePaymentToCCBResponse] = await Promise.all([
+                            arrSaveToMarketingDBRequests,
+                            arrSavePaymentToCCBRequests
+                        ]);
+                        const secondReq = setInterval(async () => {
+                            if (writeCCB && savePaymentToCCBResponse.length === arrSavePaymentToCCBRequests.length) {
+                                console.log("running")
+                                let arrCcbResult = [];
+                                for (let count = 0; count < savePaymentToCCBResponse.length; count++) {
+                                    // arrCcbResult.push(status);
+                                    savePaymentToCCBResponse[count].then(ccbResult => {
+                                        return ccbResult
+                                    })
+                                        .then(status => {
+                                            arrCcbResult.push(status);
+                                        })
+                                        .finally(() => {
+                                            if (arrCcbResult.length === arrSavePaymentToCCBRequests.length && arrCcbResult.every((val, i, arr) => val === 200)) {
+                                                // /var/www/gwadev.xtendly.com/gwa_frontend 
+                                                // var atag = document.createElement("a");
+                                                // var file = new Blob([arrCcbResult], {type: 'text/plain'});
+                                                // atag.href = URL.createObjectURL(file);
+                                                // atag.download = "ccb_save_result.txt";
+                                                // atag.click();
+                                                clearInterval(secondReq);
+                                                const thirdReq = setInterval(async () => {
+                                                    if (arrSaveToMarketingDBRequests.length === saveToMarketingDBRequestsResponse.length) {
+                                                        clearInterval(thirdReq);
+                                                        //disable user exit confirmation popup
+                                                        window.onbeforeunload = function (event) {
+                                                            return null;
+                                                        };
+                                                        resolve(payEezyResult)
+                                                    }
+                                                }, 1000);
+                                            }
+                                        })
+                                }
 
-                            if (paymentTotal === 1) {
-                                const recepitNum = payEezyResult.data.Reference_No
-                                arrSavePaymentToCCBRequests.push(savePaymentToCCB(postData.usedCC, recepitNum, accountSummary[count].accID, accountSummary[count].amountToBePaid, payEezyResult))
+
                             }
                             else {
-                                const str = payEezyResult.data.Reference_No + "-" + (receiptCount);
-                                const recepitNum = str.substring(str.length - 14, str.length);
-                                arrSavePaymentToCCBRequests.push(savePaymentToCCB(postData.usedCC, recepitNum, accountSummary[count].accID, accountSummary[count].amountToBePaid, payEezyResult))
-                            }
-                            receiptCount++;
-                        }
-                    }
-                    const [sendPaymentStatEmailResponse, saveOverallPaymentResponse, savePaymentToCCBResponse] = await Promise.all([
-                        sendPaymentStatEmail(postData, accountIdsList, payEezyResult, transDate),
-                        saveOverallPayment(postData, payEezyResult, finalTransDate),
-                        arrSavePaymentToCCBRequests
-                    ]);
-                    const emailStat = sendPaymentStatEmailResponse.soapenvBody.soapenvFault.detail.ouafFault.ResponseStatus === "F" ? true : true;
-                    receiptCount = 1;
-                    const secondReq = setInterval(async () => {
-                        if (emailStat && saveOverallPaymentResponse.result === "Success") {
-                            for (let count = 0; count < accountSummary.length; count++) {
-                                if ((accountSummary[count].amountToBePaid > 0)) {
-                                    const status = payEezyResult.data.Transaction_Approved === "true" ? "PAID" : "DECLINED"
-                                    if (paymentTotal === 1) {
-                                        const recepitNum = payEezyResult.data.Reference_No
-                                        arrSaveToMarketingDBRequests.push(savePaymentToMarketingDB(status, recepitNum, postData, payEezyResult, finalTransDate, accountSummary[count].accID, saveOverallPaymentResponse.overallId, accountSummary[count].amountToBePaid))
-                                    }
-                                    else {
-                                        const str = payEezyResult.data.Reference_No + "-" + (receiptCount);
-                                        const recepitNum = str.substring(str.length - 14, str.length);
-                                        arrSaveToMarketingDBRequests.push(savePaymentToMarketingDB(status, recepitNum, postData, payEezyResult, finalTransDate, accountSummary[count].accID, saveOverallPaymentResponse.overallId, accountSummary[count].amountToBePaid))
-                                    }
-                                    receiptCount++;
-                                }
-                            }
-                            const [saveToMarketingDBRequestsResponse] = await Promise.all([
-                                arrSaveToMarketingDBRequests
-                            ]);
-                            if (savePaymentToCCBResponse.length === arrSavePaymentToCCBRequests.length) {
                                 clearInterval(secondReq);
-                                console.log("save payment to ccb done!");
                                 const thirdReq = setInterval(async () => {
                                     if (arrSaveToMarketingDBRequests.length === saveToMarketingDBRequestsResponse.length) {
                                         clearInterval(thirdReq);
+                                        //disable user exit confirmation popup
+                                        window.onbeforeunload = function (event) {
+                                            return null;
+                                        };
                                         resolve(payEezyResult)
                                     }
                                 }, 1000);
                             }
-                        }
-                    }, 1000);
-
+                        }, 1000);
+                    }
                 })
             )
             .catch((error) => {
@@ -137,7 +198,7 @@ export const savePaymentData = (postData) => dispatch => {
 }
 
 function fetchLatestPayment(accountId, tenderType) {
-     
+
     return axios
         .post(DASHBOARD_URL + '/api/v1/validate',
             {
@@ -146,9 +207,9 @@ function fetchLatestPayment(accountId, tenderType) {
             },
             {
                 headers: {
-                    'Content-Type':'application/json',
+                    'Content-Type': 'application/json',
                     "origin": "https://gwadev.xtendly.com"
-                    }
+                }
             })
 }
 export const saveOrderData = (postData) => dispatch => {
@@ -162,7 +223,7 @@ export const saveOrderData = (postData) => dispatch => {
     })
 }
 function savePaymentToCCB(recepitNum, accountId, amount, payEezyResult) {
-     
+
     return new Promise((resolve, reject) => {
         axios
             .post(PAYNOW_URL + '/api/v1/make-payment',
@@ -176,8 +237,8 @@ function savePaymentToCCB(recepitNum, accountId, amount, payEezyResult) {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                        'Content-Type': 'application/json',
+                        "origin": "https://gwadev.xtendly.com"
                     }
                 })
             .then(function (response) {
@@ -194,7 +255,7 @@ function savePaymentToCCB(recepitNum, accountId, amount, payEezyResult) {
     });
 }
 function savePaymentToMarketingDB(status, recepitNum, postData, payEezyResult, finalTransDate, accountId, overallId, amountToBePaid) {
-     
+
     return new Promise((resolve, reject) => {
         axios
             .post(PAYNOW_URL + '/api/v1/save-payment',
@@ -209,8 +270,8 @@ function savePaymentToMarketingDB(status, recepitNum, postData, payEezyResult, f
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                        'Content-Type': 'application/json',
+                        "origin": "https://gwadev.xtendly.com"
                     }
                 })
             .then(function (response) {
@@ -227,7 +288,7 @@ function savePaymentToMarketingDB(status, recepitNum, postData, payEezyResult, f
     });
 }
 function saveOverallPayment(postData, payEezyResult, finalTransDate) {
-     
+
     return new Promise((resolve, reject) => {
         axios
             .post(PAYNOW_URL + '/api/v1/save-overall-payment',
@@ -244,8 +305,8 @@ function saveOverallPayment(postData, payEezyResult, finalTransDate) {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                        'Content-Type': 'application/json',
+                        "origin": "https://gwadev.xtendly.com"
                     }
                 })
             .then(function (response) {
@@ -263,7 +324,7 @@ function saveOverallPayment(postData, payEezyResult, finalTransDate) {
 }
 function sendPaymentStatEmail(postData, accountIdsList, payEezyResult, transDate) {
     const auth_num = payEezyResult.data.Authorization_Num.length === 0 ? "" : payEezyResult.data.Authorization_Num
-     
+
     return new Promise((resolve, reject) => {
         axios
             .post(PAYNOW_URL + '/api/v1/confirm-email',
@@ -281,8 +342,8 @@ function sendPaymentStatEmail(postData, accountIdsList, payEezyResult, transDate
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                        'Content-Type': 'application/json',
+                        "origin": "https://gwadev.xtendly.com"
                     }
                 })
             .then(function (response) {
@@ -305,7 +366,7 @@ export const validateVisaPayment = (accountId, usedCC) => dispatch => {
     for (let count = 0; count < 1; count++) {
         arrLatestPayment.push(fetchLatestPayment(accountId, tenderType))
     }
-     
+
     return new Promise((resolve, reject) => {
         axios.all(arrLatestPayment)
             .then((response) => {
@@ -320,54 +381,54 @@ export const validateVisaPayment = (accountId, usedCC) => dispatch => {
 }
 export const fetchMultipleLatestBill = (accountId) => dispatch => {
     let arrLatestBillRequests = [], arrLatestPayment = []
-    for(var counter=0; counter < accountId.length; counter++){
+    for (var counter = 0; counter < accountId.length; counter++) {
 
         arrLatestBillRequests.push(fetchLatestBill(accountId[counter][0][0]))
 
     }
-    return new Promise((resolve,reject) => {
-        axios.all([arrLatestBillRequests, ]) //arrLatestPayment
-        .then((response) => {
-            const resLatestBillRequests = response[0];
-            const resLatestPayment = response[1];
-            let accountSummary = []
-            console.log('resLatestBillRequests', resLatestBillRequests)
-            for(let count = 0; count < resLatestBillRequests.length; count++){
-                console.log('resLatestBillRequestsCount',resLatestBillRequests[count])
-                resLatestBillRequests[count].then(billResult => {
-                    console.log('billResult', billResult)
-                    // resLatestPayment[count].then(paymentResult => {
+    return new Promise((resolve, reject) => {
+        axios.all([arrLatestBillRequests,]) //arrLatestPayment
+            .then((response) => {
+                const resLatestBillRequests = response[0];
+                const resLatestPayment = response[1];
+                let accountSummary = []
+                console.log('resLatestBillRequests', resLatestBillRequests)
+                for (let count = 0; count < resLatestBillRequests.length; count++) {
+                    console.log('resLatestBillRequestsCount', resLatestBillRequests[count])
+                    resLatestBillRequests[count].then(billResult => {
+                        console.log('billResult', billResult)
+                        // resLatestPayment[count].then(paymentResult => {
                         const billResponse = billResult.data.result
-                        let billDate      = new Date(billResponse.date.billDate);
+                        let billDate = new Date(billResponse.date.billDate);
                         let finalBillDate = moment(billDate).format('MM/DD/YYYY');
-                        let dueDate      = new Date(billResponse.date.dueDate);
-                        let finaldueDate = moment(dueDate).format('MM/DD/YYYY');                    ;
+                        let dueDate = new Date(billResponse.date.dueDate);
+                        let finaldueDate = moment(dueDate).format('MM/DD/YYYY');;
                         // const paymentResponse = paymentResult.data.result.data
                         let isDueDate = "", arrearsTotal = 0;
                         const arrears = billResponse.arrears.arrears
-                        for(let count = 0; count < arrears.length; count++){
-                            if(!arrears[count].Label.includes("new charges") && arrears[count].Label != ""){
+                        for (let count = 0; count < arrears.length; count++) {
+                            if (!arrears[count].Label.includes("new charges") && arrears[count].Label != "") {
                                 arrearsTotal = arrearsTotal + parseFloat(arrears[count].ArrearsAmount)
                             }
                         }
                         let isDueDateRed = false
-                        if(arrearsTotal === 0){
+                        if (arrearsTotal === 0) {
                             let today = new Date();
-                            today.setHours(0,0,0,0);
+                            today.setHours(0, 0, 0, 0);
                             let dueDate1 = new Date(dueDate);
-                            dueDate1.setHours(0,0,0,0);
-                            if(dueDate <= today){
+                            dueDate1.setHours(0, 0, 0, 0);
+                            if (dueDate <= today) {
                                 isDueDateRed = true
                             }
-                            else if(dueDate > today){
+                            else if (dueDate > today) {
                                 isDueDateRed = false
                             }
                         }
-                        else{
+                        else {
                             finaldueDate = "Due Now"
                             isDueDateRed = true
                         }
-                        
+
                         accountSummary.push(
                             {
                                 checked: false,
@@ -387,28 +448,28 @@ export const fetchMultipleLatestBill = (accountId) => dispatch => {
                                 usedCC: ""
                             }
                         )
-                
-                }).catch(err => {
-                    console.log(`error: ${err}`)
-                })
-            }
-            
-            const orderData = {
-                accountSummary: accountSummary,
-                subTotal: 0
-            }
-            return orderData;
-        })
-        .then((orderData) => {
-            dispatch({
-                type:    SAVE_ORDER_DATA,
-                payload: orderData
+
+                    }).catch(err => {
+                        console.log(`error: ${err}`)
+                    })
+                }
+
+                const orderData = {
+                    accountSummary: accountSummary,
+                    subTotal: 0
+                }
+                return orderData;
             })
-            resolve(true)
-        })
-        .catch((error) => {
-            reject(error)
-        })
+            .then((orderData) => {
+                dispatch({
+                    type: SAVE_ORDER_DATA,
+                    payload: orderData
+                })
+                resolve(true)
+            })
+            .catch((error) => {
+                reject(error)
+            })
     });
 }
 
@@ -466,26 +527,26 @@ export const fetchMultipleAddOpptyRequest = (accountId, personId) => dispatch =>
                         payload: latestBill
                     })
                     const isHaveConsumptionChart = fetchMonthlyBillConsumptionResponse.data.result.status;
-                    if(isHaveConsumptionChart === 'True'){
-                        const data              = fetchMonthlyBillConsumptionResponse.data.result.data;
-                        let consumptionDetails  = {};
-                        let months              = [];
-                        let amounts             = [];
-                        let totalWaters           = [];
-                        for(var count = 0; count < data.length; count++){
+                    if (isHaveConsumptionChart === 'True') {
+                        const data = fetchMonthlyBillConsumptionResponse.data.result.data;
+                        let consumptionDetails = {};
+                        let months = [];
+                        let amounts = [];
+                        let totalWaters = [];
+                        for (var count = 0; count < data.length; count++) {
                             var startDate = (data[count][0].startReadDate).slice(5, 10);
-                            var endDate   = (data[count][0].endReadDate).slice(5, 10);
-                            var amount    = (data[count][0].billSegmentCurrentAmount);
-                            var totalWater  = (Math.round(data[count][0].measuredQuantity));
-                            months.push([(startDate.split("-")[0] + "/" + startDate.split("-")[1]),' - ',(endDate.split("-")[0] + "/" + endDate.split("-")[1])])
+                            var endDate = (data[count][0].endReadDate).slice(5, 10);
+                            var amount = (data[count][0].billSegmentCurrentAmount);
+                            var totalWater = (Math.round(data[count][0].measuredQuantity));
+                            months.push([(startDate.split("-")[0] + "/" + startDate.split("-")[1]), ' - ', (endDate.split("-")[0] + "/" + endDate.split("-")[1])])
                             amounts.push((amount > 0) ? amount : 0)
                             totalWaters.push((totalWater > 0) ? totalWater : 0)
                         }
-                        consumptionDetails.months    = months;
-                        consumptionDetails.amounts   = amounts;
+                        consumptionDetails.months = months;
+                        consumptionDetails.amounts = amounts;
                         consumptionDetails.totalWater = totalWaters;
                         dispatch({
-                            type:    FETCH_CONSUMPTION_DETAILS,
+                            type: FETCH_CONSUMPTION_DETAILS,
                             payload: consumptionDetails
                         })
                         const results = {
@@ -494,7 +555,7 @@ export const fetchMultipleAddOpptyRequest = (accountId, personId) => dispatch =>
                         }
                         resolve(results);
                     }
-                    else{
+                    else {
                         const results = {
                             isHaveConsumptionChart: isHaveConsumptionChart,
                             dataFetched: true
@@ -524,7 +585,7 @@ export const saveAccountId = (accountId) => dispatch => {
 }
 
 export const submitHelpAndSupport = (postData) => dispatch => {
-    let personId = localStorage.getItem('personId') 
+    let personId = localStorage.getItem('personId')
     return new Promise((resolve, reject) => {
         axios
             .post(
@@ -540,8 +601,8 @@ export const submitHelpAndSupport = (postData) => dispatch => {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                        'Content-Type': 'application/json',
+                        "origin": "https://gwadev.xtendly.com"
                     }
                 }
             )
@@ -564,9 +625,9 @@ export const getSequQuestions = () => dispatch => {
         .get(PAYGWA_URL + '/api/v1/get-security-questions',
             {
                 headers: {
-                    'Content-Type':'application/json',
+                    'Content-Type': 'application/json',
                     "origin": "https://gwadev.xtendly.com"
-                    }
+                }
             })
         .then(response => {
             dispatch({
@@ -582,9 +643,9 @@ export const getCountry = () => dispatch => {
         .get(DASHBOARD_URL + '/api/v1/get-country',
             {
                 headers: {
-                    'Content-Type':'application/json',
+                    'Content-Type': 'application/json',
                     "origin": "https://gwadev.xtendly.com"
-                    }
+                }
             })
         .then(response => {
             dispatch({
@@ -605,8 +666,8 @@ export const fetchPaymentHistory = (accountId) => dispatch => {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                        'Content-Type': 'application/json',
+                        "origin": "https://gwadev.xtendly.com"
                     }
                 }
             )
@@ -656,8 +717,8 @@ export const fetchBillsList = (accountId) => dispatch => {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                        'Content-Type': 'application/json',
+                        "origin": "https://gwadev.xtendly.com"
                     }
                 }
             )
@@ -707,16 +768,16 @@ function fetchMonthlyBillConsumption(accountId) {
             },
             {
                 headers: {
-                    'Content-Type':'application/json',
+                    'Content-Type': 'application/json',
                     "origin": "https://gwadev.xtendly.com"
-                    }
+                }
             }
         );
 }
 
 function fetchLatestBill(accountId) {
     console.log('fetchLatestBill', accountId)
-    
+
     return axios
         .post(DASHBOARD_URL + '/api/v1/user-latest-bill',
             {
@@ -724,11 +785,11 @@ function fetchLatestBill(accountId) {
             },
             {
                 headers: {
-                    'Content-Type':'application/json',
+                    'Content-Type': 'application/json',
                     "origin": "https://gwadev.xtendly.com"
-                    }
+                }
 
-                
+
             })
 }
 
@@ -740,9 +801,9 @@ function fetchUserDetails(personId) {
             },
             {
                 headers: {
-                    'Content-Type':'application/json',
+                    'Content-Type': 'application/json',
                     "origin": "https://gwadev.xtendly.com"
-                    }
+                }
             })
 };
 
@@ -759,8 +820,8 @@ export const updateUserPassword = (postData) => dispatch => {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                        'Content-Type': 'application/json',
+                        "origin": "https://gwadev.xtendly.com"
                     }
                 }
             )
@@ -811,8 +872,8 @@ export const updateUserDetails = (postData) => dispatch => {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                        'Content-Type': 'application/json',
+                        "origin": "https://gwadev.xtendly.com"
                     }
                 }
             )
@@ -839,9 +900,9 @@ export const fetchOldUserDetails = (personId) => dispatch => {
             },
             {
                 headers: {
-                    'Content-Type':'application/json',
+                    'Content-Type': 'application/json',
                     "origin": "https://gwadev.xtendly.com"
-                    }
+                }
             })
         .then(response => {
             const oldData = response.data.result.otherDetails
@@ -875,8 +936,8 @@ export const getListSurvey = () => dispatch => {
             .get(DASHBOARD_URL + '/api/v1/get-list-survey',
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                        'Content-Type': 'application/json',
+                        "origin": "https://gwadev.xtendly.com"
                     }
                 }
             )
@@ -926,8 +987,8 @@ export const submitSurvey = (postData) => dispatch => {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                        'Content-Type': 'application/json',
+                        "origin": "https://gwadev.xtendly.com"
                     }
                 }
             )
@@ -965,8 +1026,8 @@ export const getViewBillData = (billID) => dispatch => {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                        'Content-Type': 'application/json',
+                        "origin": "https://gwadev.xtendly.com"
                     }
                 }
             )

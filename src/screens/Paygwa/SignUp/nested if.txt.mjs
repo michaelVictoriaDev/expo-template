@@ -161,21 +161,14 @@ class SignUpLoginDetails extends Component {
         if (_.isEmpty(this.state.userDetails.userName) || _.isEmpty(this.state.userDetails.password) || _.isEmpty(this.state.userDetails.passwordConfirm) || _.isEmpty(this.state.userDetails.EmailID) || _.isEmpty(this.state.userDetails.securityAnswer)) {
             alert('Please check all the required fields.');
             debugger
-
-
-
-            for (var i = 0; i < this.state.userDetails.length; i++) {
-                if (this.state.userDetails[i] === '') {
-                    console.log( "for loop ", this.state.userDetails[i])
-
-                }
-                
-
-
-              }
+            // for (var i = 0; i < this.state.userDetails.length; i++) {
+            //     if (this.state.userDetails[i] === '') {
+            //         console.log( "for loop ", this.state.userDetails[i])
+            //     }
+            //   }
 
             // first scenario
-            if (this.state.userDetails.userName == '') {
+            if (_.isEmpty(this.state.userDetails.userName)) {
                 this.setState({
                     ...this.state,
                     userNameResult: `Please choose your Username!`,
@@ -183,7 +176,7 @@ class SignUpLoginDetails extends Component {
             }
 
             // second scenario 
-            if (this.state.userDetails.password == '') {
+            if (_.isEmpty(this.state.userDetails.password)) {
                 this.setState({
                     ...this.state,
                     userDetails: {
@@ -194,7 +187,7 @@ class SignUpLoginDetails extends Component {
             }
 
             // third senario 
-            if (this.state.userDetails.password == '') {
+            if (_.isEmpty(this.state.userDetails.password)) {
                 this.setState({
                     ...this.state,
                     userDetails: {
@@ -204,20 +197,9 @@ class SignUpLoginDetails extends Component {
                 })
             }
 
-            // fourth scenario 
-            if (this.state.userDetails.passwordConfirm == '') {
-                this.setState({
-                    ...this.state,
-                    userDetails: {
-                        ...this.state.userDetails,
-                        errorPasswordConfirm: `Please confirm your Password!`,
 
-                    }
-                })
-            }
-
-            // fifth scenario 
-            if (this.state.userDetails.EmailID == '') {
+            // forth scenario 
+            if (_.isEmpty(this.state.userDetails.EmailID)) {
                 this.setState({
                     ...this.state,
                     userDetails: {
@@ -228,8 +210,8 @@ class SignUpLoginDetails extends Component {
                 })
             }
 
-            // sixth scenario 
-            if (this.state.userDetails.securityAnswer == '') {
+            // fifth  scenario 
+            if (_.isEmpty(this.state.userDetails.securityAnswer)) {
                 this.setState({
                     ...this.state,
                     userDetails: {

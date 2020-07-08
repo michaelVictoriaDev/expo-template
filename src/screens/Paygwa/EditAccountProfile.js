@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Container, Right, Content, List, ListItem, Separator, Text, Left, Body, View, Button, Icon, Item, Picker, Toast, Spinner, Header, Title } from 'native-base';
+import { Container, Right, Content, List, ListItem, Separator, Text, View, Button, Icon, Item, Picker, Toast, Spinner, Header, Title, Left, Body } from 'native-base';
 import { TextInput, Keyboard, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
 import { colors, pRatioToFontSize } from '../../utils/constants';
@@ -21,7 +21,7 @@ class EditAccountProfile extends Component {
         this.state = {
             pixelDensity: 0,
             errorEmailFormat: '',
-            saveDetails : {},
+            saveDetails: {},
             userAccDetails: {
                 fullName: '',
                 addressLine1: '',
@@ -193,12 +193,12 @@ class EditAccountProfile extends Component {
                             this.setState({
                                 ...this.state,
                                 isProcessing: false,
-                                saveDetails : {
-                                    ...this.state.saveDetails, 
+                                saveDetails: {
+                                    ...this.state.saveDetails,
                                     fullName: this.props.dashboard.userAccountDetails.fullName,
                                     emailAddress: this.props.dashboard.userAccountDetails.emailAddress,
                                     home: this.state.userAccDetails.home,
-                                    mobile:  this.state.userAccDetails.mobile,
+                                    mobile: this.state.userAccDetails.mobile,
                                     work: this.state.userAccDetails.work
                                 }
                             })
@@ -305,14 +305,14 @@ class EditAccountProfile extends Component {
                                 const { navigation } = this.props;
                                 const userAccountDetails = this.state.saveDetails
                                 console.log('userAccountDetails', userAccountDetails)
-                                if(_.isEmpty(userAccountDetails)) {
+                                if (_.isEmpty(userAccountDetails)) {
                                     navigation.goBack();
                                 } else {
                                     navigation.goBack();
                                     navigation.state.params.updateData(userAccountDetails);
                                 }
-                                 
-                                
+
+
                             }
                             }>
                             <Icon

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {  Button, Container, Right, Footer, FooterTab, Input, Toast, Content, Item,  DatePicker } from 'native-base';
+import { Button, Container, Right, Footer, FooterTab, Input, Toast, Content, Item, DatePicker, Header, Title, Left, Body, Icon, Form, Picker } from 'native-base';
 import {
-   Image, View
+    Image, View
 } from 'react-native';
 import {
     saveAccountId,
@@ -13,7 +13,7 @@ import {
     validateVisaPayment,
     savePaymentData
 } from '../../../actions/userMyAccounts';
-import { colors, pRatioToFontSize } from '../../../utils/constants';
+import { colors, pRatioToFontSize, months, years } from '../../../utils/constants';
 import CustomText from '../../../components/CustomText';
 import CustomTextBold from '../../../components/CustomTextBold';
 import OfflineNotice from '../../../components/OfflineNotice';
@@ -22,6 +22,7 @@ import _ from 'lodash'
 import { Grid, Row, Col } from 'react-native-easy-grid';
 import moment from 'moment'
 import NumberFormat from 'react-number-format';
+
 
 class PaymentPayNow extends Component {
     constructor(props) {
@@ -33,26 +34,42 @@ class PaymentPayNow extends Component {
             subtotal: this.props.navigation.state.params.subtotal,
             isPaymentProcessing: false,
             cardDetails: {
-                cardHolderName: "XtendlyDev",
+                cardHolderName: "Xtendly Dev",
                 cardNumber: "4111111111111111",
                 expDate: new Date(),
                 validExpDate: "",
                 cvv: "123",
                 billingZipCode: "123",
-                confirmationEmail: this.props.dashboard.userAccountDetails.emailAddress
+                confirmationEmail: this.props.dashboard.userAccountDetails.emailAddress,
+                selectedMonth: ('0' + (moment().month() + 1)).slice(-2),
+                selectedYear: moment().format("YY")
             },
+
+
         }
     }
-    componentWillMount(){
+    componentWillMount() {
         this.setState({
             userFullName: this.props.dashboard.userAccountDetails.fullName === undefined ? "" : this.props.dashboard.userAccountDetails.fullName,
             username: this.props.userName,
         })
-        console.log('userFullName' , this.props.dashboard.userAccountDetails.fullName === undefined ? "" : this.props.dashboard.userAccountDetails.fullName)
+        console.log('userFullName', this.props.dashboard.userAccountDetails.fullName === undefined ? "" : this.props.dashboard.userAccountDetails.fullName)
         console.log('username', this.props.userName)
     }
-    
 
+
+    onValueChangeMonth(value: string) {
+        this.setState({
+            selectedMonth: value
+        });
+    }
+
+
+    onValueChangeYear(value: string) {
+        this.setState({
+            selectedYear: value
+        });
+    }
     showCardType = () => {
         if (this.state.cardDetails.cardNumber.charAt(0) === "4") {
             return (<View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/visa-logo.png')} /></View>)
@@ -83,7 +100,7 @@ class PaymentPayNow extends Component {
                 }
             })
         };
-    
+
     }
 
 
@@ -98,317 +115,52 @@ class PaymentPayNow extends Component {
         });
     };
 
-    async savePayment() {
-        this.setState({
-            isPaymentProcessing: true
-        })
-        const accountSummary = this.state.selectedAccounts// save order data
-        const subtotal = this.state.subtotal // subtlta ng lahat
-        const usedCC = this.state.cardDetails.cardNumber.charAt(0) === "4" ? "visa" : this.state.cardDetails.cardNumber.charAt(0) === "6" ? "discover" : ""
-        this.setState({ usedCC: usedCC }, async () => {
-            let arrIsAmountValid = []
-            if (this.state.cardDetails.cardNumber.charAt(0) === "4" || this.state.cardDetails.cardNumber.charAt(0) === "6") {
-                for (let count = 0; count < accountSummary.length; count++) {
-                    try {
-                        let result = await Promise.all([this.props.validateVisaPayment(accountSummary[count].accID, this.state.usedCC)]);
-                        let paymentAmount = result[0].data.result.data.PaymentAmount;
-                        let customerClass = result[0].data.result.data.CustomerClass;
-                        const totalPayment = parseInt(accountSummary[count].amountToBePaid) + parseInt(paymentAmount);
- 
-                        if (totalPayment > 500 && !(customerClass === "RESID")) {
-                            accountSummary[count].validAmountToBePaid = false;
-                            accountSummary[count].alreadyPaid = paymentAmount;
-                            accountSummary[count].usedCC = usedCC;
-                            arrIsAmountValid.push(false);
 
-                        }
-                        else {
-                            accountSummary[count].validAmountToBePaid = true;
-                            arrIsAmountValid.push(true);
-                        }
-                    }
-                    catch (error) {
-                        console.log("errorerrorerrorerrorerror", error)
-
-                        this.props.navigation.navigate('PaymentServerFailed')
-                        // SERVER FAILED ilalabas mo dito
-                        this.setState({
-                            isPaymentProcessing: false
-                        })
-                        // this.showPaymentResult();
-                    }
-                }
-            }
-            else {
-                let postData = {}
-                for (let count = 0; count < accountSummary.length; count++) {
-                    accountSummary[count].validAmountToBePaid = true
-                }
-                arrIsAmountValid.push(true)
-            }
-            //sort accountSummary
-            let sortedAccountSummary = [];
-            //get all invalid amounts
-            let allInvalidAmounts = [];
-            for (let count = 0; count < accountSummary.length; count++) {
-                if (!accountSummary[count].validAmountToBePaid) {
-                    allInvalidAmounts.push(accountSummary[count]);
-                }
-            }
-            //get all checked rows
-            let checkedRows = [];
-            for (let count = 0; count < accountSummary.length; count++) {
-                if (accountSummary[count].validAmountToBePaid ) {
-                    checkedRows.push(accountSummary[count]);
-                }
-            }
-            //get all resid accounts
-            let residAccts = [];
-            for (let count = 0; count < accountSummary.length; count++) {
-                if (accountSummary[count].className === "RESID" && accountSummary[count].validAmountToBePaid) {
-                    residAccts.push(accountSummary[count]);
-                }
-            }
-            //get all non-resid accounts
-            let nonResidAccts = [];
-            for (let count = 0; count < accountSummary.length; count++) {
-                if (accountSummary[count].className != "RESID" && accountSummary[count].validAmountToBePaid) {
-                    nonResidAccts.push(accountSummary[count]);
-                }
-            }
-            //insert all invalid amounts
-            for (let count = 0; count < accountSummary.length; count++) {
-                for (let count1 = 0; count1 < allInvalidAmounts.length; count1++) {
-                    if (accountSummary[count].accID === allInvalidAmounts[count1].accID) {
-                        sortedAccountSummary.push(allInvalidAmounts[count1])
-                        break;
-                    }
-                }
-            }
-            //insert all checked rows
-            for (let count = 0; count < accountSummary.length; count++) {
-                for (let count1 = 0; count1 < checkedRows.length; count1++) {
-                    if (accountSummary[count].accID === checkedRows[count1].accID) {
-                        sortedAccountSummary.push(checkedRows[count1])
-                        break;
-                    }
-                }
-            }
-            //insert all resid accounts
-            for (let count = 0; count < accountSummary.length; count++) {
-                for (let count1 = 0; count1 < residAccts.length; count1++) {
-                    if (accountSummary[count].accID === residAccts[count1].accID) {
-                        sortedAccountSummary.push(residAccts[count1])
-                        break;
-                    }
-                }
-            }
-
-            //insert all non-resid accounts
-            for (let count = 0; count < accountSummary.length; count++) {
-                for (let count1 = 0; count1 < nonResidAccts.length; count1++) {
-                    if (accountSummary[count].accID === nonResidAccts[count1].accID) {
-                        sortedAccountSummary.push(nonResidAccts[count1])
-                        break;
-                    }
-                }
-            }
-
-            console.log("sortedAccountSummarysortedAccountSummary", sortedAccountSummary)
-
-            if (arrIsAmountValid.includes(false)) {
-                // get all the the selected accountids - NOTE RETURN TO PAYMENT INPUT
-
-                this.props.navigation.navigate('PaymentInput',
-                    {
-                        selectedAccounts: sortedAccountSummary,
-                        selectedAccountsId: this.state.selectedAccountsId,
-                        subtotal: this.state.subtotal
-                    })
-// payment input
-                this.setState({
-                    show: false,
-                    isPaymentProcessing: false
-                });
-            }
-            else {
-
-                //SUCCESS PAGE 
-                const postData = {
-                    subTotal: parseFloat(Math.round(subtotal * 100) / 100).toFixed(2),
-                    accountSummary: sortedAccountSummary,
-                    isHasInvalid: false
-                }
-                // this.props.saveOrderData(postData)
-                this.validUserInputs(subtotal, accountSummary)
-            }
-        });
-    }
-
-
-    validUserInputs(subtotal, accountSummary) {
-        const cardNumber = this.state.cardDetails.cardNumber
-        const usedCC = cardNumber.charAt(0) === "4" ?
-            "visa"
-            :
-            cardNumber.charAt(0) === "6" ?
-                "discover"
-                :
-                parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) > 50 && parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) < 56 ?
-                    "master"
-                    :
-                    "invalid";
-
-        console.clear()
-        if ((usedCC === "invalid")) {
-            this.setState({
-                isPaymentProcessing: false
-            })
-            Toast.show({
-                text: `Invalid Card Number Format!`,
-                duration: 3000,
-                type: 'warning'
-            })
-            // this.props.showMessage(true, 'Invalid Card Number Format!')
-        }
-        else if (this.state.isVisaChecked && usedCC != "visa") {
-            this.setState({
-                isPaymentProcessing: false
-            })
-            Toast.show({
-                text: `Please enter a valid Visa Card Number!`,
-                duration: 3000,
-                type: 'warning'
-            })
-            // this.props.showMessage(true, 'Please enter a valid Visa Card Number!')
-        }
-        else if (this.state.isMasterCardChecked && usedCC != "master") {
-            this.setState({
-                isPaymentProcessing: false
-            })
-            // this.props.showMessage(true, 'Please enter a valid Mastercard Number!')
-            Toast.show({
-                text: `Please enter a valid Mastercard Number!`,
-                duration: 3000,
-                type: 'warning'
-            })
-        }
-        else if (((this.state.cardDetails.cardNumber).length < 16 || (this.state.cardDetails.cardNumber).length > 16) && usedCC === "visa") {
-            this.setState({
-                isPaymentProcessing: false
-            })
-            // this.props.showMessage(true, 'Please enter a valid Visa Card Number!')
-            Toast.show({
-                text: `Please enter a valid Visa Card Number!`,
-                duration: 3000,
-                type: 'warning'
-            })
-        }
-        else if (((this.state.cardDetails.cardNumber).length < 16 || (this.state.cardDetails.cardNumber).length > 16) && usedCC === "master") {
-            this.setState({
-                isPaymentProcessing: false
-            })
-            Toast.show({
-                text: `Please enter a valid Mastercard Number!`,
-                duration: 3000,
-                type: 'warning'
-            })
-            // this.props.showMessage(true, 'Please enter a valid Mastercard Number!')
-        }
-        else if (((this.state.cardDetails.cardNumber).length < 16 || (this.state.cardDetails.cardNumber).length > 16) && usedCC === "discover") {
-            this.setState({
-                isPaymentProcessing: false
-            })
-            Toast.show({
-                text: `Please enter a valid Dicover Card Number!`,
-                duration: 3000,
-                type: 'warning'
-            })
-            // this.props.showMessage(true, 'Please enter a valid Dicover Card Number!')
-        }
-        else {
-            this.setState({
-                subtotal: subtotal,
-                accountSummary: accountSummary, // sorted na all
-                isPaymentProcessing: true
-            }, () => {
-                    console.log('executeRequests')
-                this.executeRequests()                                                                                                                                    
-            })
-        }
-    }
-
-
-    // execute payment na 
-
-    executeRequests = () => {
-        this.props.savePaymentData(this.state)
-            .then((result) => {
-                console.log('paymentResult', JSON.stringify(result))
-                console.log('accountSummary', this.state.accountSummary)
-                 
-                this.setState({
-                    isPaymentProcessing: false
-                })
-
-                if (result.data.Transaction_Approved == 'true' ){
-                    this.props.navigation.navigate('PaymentSuccess',
-                        {
-                            paymentResult: result,
-                            accountSummary: this.state.accountSummary
-
-                        })
-                } else if (result.data.Transaction_Approved == 'false') {
-                    this.props.navigation.navigate('PaymentUserFailed',
-                        {
-                            paymentResult: result,
-                            accountSummary: this.state.accountSummary
-
-                        })
-                } else {
-                    this.props.navigation.navigate('PaymentServerFailed')
-                }
-
-            })
-            .catch((error) => {
-                this.setState({
-                    isPaymentProcessing: false
-                })
-
-                this.props.navigation.navigate('PaymentServerFailed')
-                console.log('error')
-                console.log('accountSummary', JSON.stringify(this.state.accountSummary))
-                console.log('paymentResult', JSON.stringify(result))
-
-                // localStorage.setItem('accountSummary', JSON.stringify(this.state.accountSummary))
-                // localStorage.setItem('paymentResult', JSON.stringify(result))
-                // this.showPaymentResult();
-            })
-    }
     //RENDER MAIN COMPONENT
     render() {
         let mytextvar = 'Billing Zip Code'
         return (
             /* MAIN VIEW COMPONENT */
             <Container >
-                <CustomHeader
+                {/* <CustomHeader
                     fontSizeLeft={pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1)}
                     leftButtonFunction={this.props.navigation.goBack}
-                    title="Payment"
+                    title="My Account"
                     RightIcon={<Right />}
-                />
+                /> */}
+
+                <Header style={{
+                    backgroundColor: colors.PRIMARY_COLOR,
+                }}
+                >
+                    <Left style={{ flex: 1 }} />
+                    <Body style={{ flex: 1, alignItems: 'center' }}>
+                        <Title style={{ color: colors.WHITE, fontSize: pRatioToFontSize(-.5) > 20 ? 20 : pRatioToFontSize(- .5) }}>My Account</Title>
+                    </Body>
+                    <Right />
+                </Header>
                 <OfflineNotice />
                 <Content>
                     <View style={{ paddingVertical: 25, paddingHorizontal: 25 }}>
-                        <CustomTextBold style={{ paddingBottom: 5, fontSize: 16 }} >Pay with Credit Card</CustomTextBold>
-                        <CustomText style={{ paddingBottom: 5, fontSize: 16 }} >Card Holder name</CustomText>
+                        <CustomTextBold style={{ paddingBottom: 10, fontSize: 12 }} >Pay with Credit Card</CustomTextBold>
+                        <View style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+                            paddingBottom: 15
+                        }}>
+                            <View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/visa-logo.png')} /></View>
+                            <View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/master-logo.png')} /></View>
+                            <View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/discover-logo.png')} /></View>
+                        </View>
+                        <CustomText style={{ paddingBottom: 10, fontSize: 12, color: '#000000' }} >Credit Cardholder Name</CustomText>
                         <Item regular
                             style={{
                                 marginLeft: 0,
                                 backgroundColor: colors.WHITE,
                                 borderRadius: 6,
                                 borderColor: 'lightgray',
-                                marginBottom: 5
+                                marginBottom: 10
                             }}>
 
                             <Input
@@ -421,20 +173,20 @@ class PaymentPayNow extends Component {
 
 
                         </Item>
-                        <CustomText style={{ paddingBottom: 5, fontSize: 16 }} >Card Number</CustomText>
+                        <CustomText style={{ paddingBottom: 10, fontSize: 12 }} >Card Number</CustomText>
                         <Item regular
                             style={{
                                 marginLeft: 0,
                                 backgroundColor: colors.WHITE,
                                 borderRadius: 6,
                                 borderColor: 'lightgray',
-                                marginBottom: 5
+                                marginBottom: 10
                             }}>
 
                             <NumberFormat
                                 mask="_"
                                 value={this.state.cardDetails.cardNumber}
-                                displayType={'text'} format="#### #### #### ####" 
+                                displayType={'text'} format="#### #### #### ####"
                                 renderText={value => (
                                     <Input
                                         textAlign={'left'}
@@ -451,42 +203,81 @@ class PaymentPayNow extends Component {
                             }
                         </Item>
 
-                        <Row>   
-                        <Col size={70}>
-                            <CustomText style={{ paddingBottom: 5, fontSize: 16 }} >Expiration Date</CustomText>
-                            <Item regular
-                                style={{
-                                    height: 52,
-                                    marginLeft: 0,
-                                    backgroundColor: colors.WHITE,
-                                    borderRadius: 6,
-                                    borderColor: 'lightgray',
-                                    marginBottom: 5
-                                }}>
-                                <DatePicker
-                                    dateFormat="MM/YYYY"
-                                    locale={"en"}
-                                    animationType={"fade"}
-                                    androidMode={"default"}
-                                    placeholderTextColor='lightgray'
-                                    placeHolderText="mm/yyyy"
-                                    textStyle={{ color: colors.BLACK }}
-                                    placeHolderTextStyle={{ color: "#d3d3d3" }}
-                                    onDateChange={this.handleExpDate}
-                                    formatChosenDate={date => { return moment(date).format('MM/YYYY'); }}
-                                />
-                            </Item>
-                        </Col>
-                        <Col size={3} />
-                        <Col size={27}>
-                            <CustomText style={{ paddingBottom: 5, fontSize: 16 }} >CVV</CustomText>
+                        <Row>
+                            <Col size={70}>
+                                <CustomText style={{ paddingBottom: 10, fontSize: 12 }} >Expiration Date</CustomText>
+                                <Item regular
+                                    style={{
+                                        height: 52,
+                                        marginLeft: 0,
+                                        backgroundColor: colors.WHITE,
+                                        borderRadius: 6,
+                                        borderColor: 'lightgray',
+                                        marginBottom: 10
+                                    }}>
+                                    <Form>
+                                        <Picker
+                                            note
+                                            mode="dropdown"
+                                            style={{ width: 120 }}
+                                            selectedValue={this.state.cardDetails.selectedMonth}
+                                            onValueChange={(value) =>
+
+                                                this.setState({
+                                                    ...this.state,
+                                                    cardDetails: {
+                                                        ...this.state.cardDetails,
+                                                        selectedMonth: value
+                                                    }
+                                                })
+                                            }
+                                        >
+                                            {_.map(months, (monthData, index) => {
+                                                return (
+                                                    <Picker.Item label={monthData.name} value={monthData.value} />
+                                                )
+                                            })
+                                            }
+                                        </Picker>
+                                    </Form>
+                                    <CustomText>/</CustomText>
+                                    <Form>
+                                        <Picker
+                                            note
+                                            mode="dropdown"
+                                            style={{ width: 120 }}
+                                            selectedValue={this.state.cardDetails.selectedYear}
+                                            onValueChange={(value) =>
+                                                this.setState({
+                                                    ...this.state,
+                                                    cardDetails: {
+                                                        ...this.state.cardDetails,
+                                                        selectedYear: value
+                                                    }
+                                                })}
+                                        >
+                                            {_.map(years, (yearData, index) => {
+                                                return (
+                                                    <Picker.Item label={yearData.year} value={yearData.value} />
+                                                )
+                                            })
+                                            }
+                                        </Picker>
+                                    </Form>
+
+                                </Item>
+
+                            </Col>
+                            <Col size={3} />
+                            <Col size={27}>
+                                <CustomText style={{ paddingBottom: 10, fontSize: 12 }} >CVV</CustomText>
                                 <Item regular
                                     style={{
                                         marginLeft: 0,
                                         backgroundColor: colors.WHITE,
                                         borderRadius: 6,
                                         borderColor: 'lightgray',
-                                        marginBottom: 5
+                                        marginBottom: 10
                                     }}>
                                     <Input
                                         autoCapitalize='none'
@@ -495,73 +286,28 @@ class PaymentPayNow extends Component {
                                         value={this.state.cardDetails.cvv}
                                         onChangeText={this._handleMultiInput('cvv')}
                                     />
-                            </Item>
-                        </Col>
-                        </Row>
-                        <Row>
-                            <View >
-                            <Col size={27}>
-                                <CustomText style={{
-                                    paddingBottom: 5, fontSize: pRatioToFontSize() > 16 ? 16 : pRatioToFontSize(), flex: 1
-                                }} ellipsizeMode='tail' numberOfLines={1}  >Billing Zip Code</CustomText>
-                                <Item regular
-                                    style={{
-                                        marginLeft: 0,
-                                        backgroundColor: colors.WHITE,
-                                        borderRadius: 6,
-                                        borderColor: 'lightgray',
-                                        marginBottom: 5
-                                    }}>
-                                    <Input
-                                        autoCapitalize='none'
-                                        placeholderTextColor='lightgray'
-                                        keyboardType="numeric"
-                                        value={this.state.cardDetails.billingZipCode}
-                                        onChangeText={this._handleMultiInput('billingZipCode')}
-                                    />
                                 </Item>
                             </Col>
-                            </View>
-                            <Col size={3} />
-                            <Col size={70}>
-                                <CustomText style={{ paddingBottom: 5, fontSize: 16 }} >Confirmation Email</CustomText>
-                                <Item regular
-                                    style={{
-                                        marginLeft: 0,
-                                        backgroundColor: colors.WHITE,
-                                        borderRadius: 6,
-                                        borderColor: 'lightgray',
-                                        marginBottom: 5
-                                    }}>
-                                    <Input
-                                        disabled
-                                        autoCapitalize='none'
-                                        placeholderTextColor='lightgray'
-                                        keyboardType="numeric"
-                                        value={this.state.cardDetails.confirmationEmail}
-                                    />
+                        </Row>
 
-                                </Item>
-                            </Col>
-                        </Row>
-                       
                     </View>
                 </Content>
                 <Footer>
                     <FooterTab style={{ backgroundColor: colors.LIGHT_GREEN }}>
                         <Button full
-                            disabled={this.state.isPaymentProcessing}
                             onPress={() => {
-                                this.savePayment()
-                                // this.props.navigation.navigate('PaymentSuccess')
+
+                                console.log('cardDetails', this.state.cardDetails)
+                                this.props.navigation.navigate('PaymentView',
+                                    {
+                                        selectedAccounts: this.state.selectedAccounts,
+                                        selectedAccountsId: this.state.selectedAccountsId,
+                                        subtotal: this.state.subtotal,
+                                        cardDetails: this.state.cardDetails
+                                    })
                             }}
                         >
-                            <CustomText style={{ color: colors.WHITE }}>{
-                                this.state.isPaymentProcessing ?
-                                'Please wait...'
-                                : 
-                                'Pay Now '
-                                }</CustomText>
+                            <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>Continue </CustomText>
                         </Button>
                     </FooterTab>
                 </Footer>

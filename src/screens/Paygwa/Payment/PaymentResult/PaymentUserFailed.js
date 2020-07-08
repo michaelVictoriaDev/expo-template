@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Container, Right, Content } from 'native-base';
 import {
-   View
+    View
 } from 'react-native';
 import {
     searchString
@@ -56,52 +56,57 @@ class PaymentUserFailed extends Component {
                         paddingTop: 25,
                         alignItems: 'center',
                         justifyContent: 'center',
-                        paddingHorizontal: 25
                     }}>
                         <FontAwesome
                             name='times-circle-o'
-                            size={pRatioToFontSize(+5) > 50 ? 50 : pRatioToFontSize(+5)}
+                            size={60}
                             color={'#c40808'}
                         />
-                        <CustomTextBold adjustsFontSizeToFit style={{ fontSize: pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1), textAlignVertical: "center", textAlign: "center" }}> Sorry, your payment was not processed.</CustomTextBold>
-                        <CustomText style={{ paddingVertical: 5, paddingHorizontal: 25, fontSize: pRatioToFontSize(+1) > 20 ? 20 : pRatioToFontSize(+1), textAlignVertical: "center", textAlign: "center", }}>We're sorry, but your transaction was either declined or could not be completed.</CustomText>
-                        <CustomText style={{ paddingVertical: 5, paddingHorizontal: 25, fontSize: pRatioToFontSize(+1) > 20 ? 20 : pRatioToFontSize(+1), textAlignVertical: "center", textAlign: "center", }}>Please refer to the information below regarding your transaction failure. Print a copy of this page for your records.</CustomText>
+                        <CustomText />
+                        <CustomTextBold adjustsFontSizeToFit style={{ fontSize: 24, textAlignVertical: "center", textAlign: "center" }}> Sorry, your payment was not processed.</CustomTextBold>
+                        <CustomText style={{ paddingVertical: 5, paddingHorizontal: 25, fontSize: 14, textAlignVertical: "center", textAlign: "center", }}>We're sorry, but your transaction was either declined or could not be completed.</CustomText>
+                        <CustomText style={{ paddingVertical: 5, paddingHorizontal: 25, fontSize: 14, textAlignVertical: "center", textAlign: "center", }}>Please refer to the information below regarding your transaction failure. Print a copy of this page for your records.</CustomText>
                     </View>
                     <Row style={{
-                        paddingVertical: 25, paddingHorizontal: 25,
+                        paddingTop: 20, paddingHorizontal: 25,
                     }}
                     >
                         <Col size={50}>
-                            <CustomTextBold numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: pRatioToFontSize(+1) > 16 ? 16 : pRatioToFontSize(+1) }}>CARD & AMOUNT:</CustomTextBold>
-                            <CustomTextBold numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: pRatioToFontSize(+1) > 16 ? 16 : pRatioToFontSize(+1) }}>CARDHOLDER NAME:</CustomTextBold>
-                            <CustomTextBold numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: pRatioToFontSize(+1) > 16 ? 16 : pRatioToFontSize(+1) }}>DATE/TIME:</CustomTextBold>
-                            <CustomTextBold numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: pRatioToFontSize(+1) > 16 ? 16 : pRatioToFontSize(+1) }}>REFERENCE #:</CustomTextBold>
-                            <CustomTextBold numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: pRatioToFontSize(+1) > 16 ? 16 : pRatioToFontSize(+1) }}>AUTHORIZATION #:</CustomTextBold>
-                            <CustomTextBold numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: pRatioToFontSize(+1) > 16 ? 16 : pRatioToFontSize(+1) }}>RECEIPT NO.:</CustomTextBold>
+                            <CustomText numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 16, paddingBottom: 10, color: '#666666' }}>Card & Amount:</CustomText>
+                            <CustomText numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 16, paddingBottom: 10, color: '#666666' }}>Cardholder Name:</CustomText>
+                            <CustomText numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 16, paddingBottom: 10, color: '#666666' }}>Card Number:</CustomText>
+                            <CustomText numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 16, paddingBottom: 10, color: '#666666' }}>Date/Time:</CustomText>
+                            <CustomText numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 16, paddingBottom: 10, color: '#666666' }}>Reference #:</CustomText>
+                            <CustomText numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 16, paddingBottom: 10, color: '#666666' }}>Authorization #:</CustomText>
+                            <CustomText numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 16, paddingBottom: 10, color: '#666666' }}>Receipt #.:</CustomText>
 
                         </Col>
-                        <Col size={50}>
-                            <CustomText adjustsFontSizeToFit style={{ fontSize: pRatioToFontSize(+1) > 16 ? 16 : pRatioToFontSize(+1) }}>{result.data.CardType + " $ " + parseFloat(Math.round(result.data.DollarAmount * 100) / 100).toFixed(2) + " " + result.data.Currency}</CustomText>
-                            <CustomText adjustsFontSizeToFit style={{ fontSize: pRatioToFontSize(+1) > 16 ? 16 : pRatioToFontSize(+1) }}>{result.data.CardHoldersName}</CustomText>
-                            <CustomText adjustsFontSizeToFit style={{ fontSize: pRatioToFontSize(+1) > 16 ? 16 : pRatioToFontSize(+1) }}>{" " + dateTime}</CustomText>
-                            <CustomText adjustsFontSizeToFit style={{ fontSize: pRatioToFontSize(+1) > 16 ? 16 : pRatioToFontSize(+1) }}>{this.getFieldValue("REFERENCE #", result)}</CustomText>
-                            <CustomText adjustsFontSizeToFit style={{ fontSize: pRatioToFontSize(+1) > 16 ? 16 : pRatioToFontSize(+1) }}>{this.getFieldValue("AUTHOR. #", result)}</CustomText>
-                            <CustomText adjustsFontSizeToFit style={{ fontSize: pRatioToFontSize(+1) > 16 ? 16 : pRatioToFontSize(+1) }}>{this.getFieldValue("TRANS. REF.", result)}</CustomText>
+                        <Col size={50} style={{ alignItems: 'flex-end' }}>
+                            <CustomText adjustsFontSizeToFit style={{ paddingBottom: 10, fontSize: 16 }}>{result.data.CardType + " $ " + parseFloat(Math.round(result.data.DollarAmount * 100) / 100).toFixed(2) + " " + result.data.Currency}</CustomText>
+                            <CustomText adjustsFontSizeToFit style={{ paddingBottom: 10, fontSize: 16 }}>{result.data.CardHoldersName}</CustomText>
+                            <CustomText adjustsFontSizeToFit style={{ fontSize: 16, paddingBottom: 10 }}> {result.data.Card_Number}</CustomText>
+                            <CustomText adjustsFontSizeToFit style={{ paddingBottom: 10, fontSize: 16 }}>{" " + dateTime}</CustomText>
+                            <CustomText adjustsFontSizeToFit style={{ paddingBottom: 10, fontSize: 16 }}>{this.getFieldValue("REFERENCE #", result)}</CustomText>
+                            <CustomText adjustsFontSizeToFit style={{ paddingBottom: 10, fontSize: 16 }}>{this.getFieldValue("AUTHOR. #", result)}</CustomText>
+                            <CustomText adjustsFontSizeToFit style={{ fontSize: 16 }}>{this.getFieldValue("TRANS. REF.", result)}</CustomText>
                         </Col>
 
                     </Row>
                     <View style={{
-                        paddingVertical: 25, paddingHorizontal: 30,
+                       paddingBottom: 40, paddingHorizontal: 60,
                     }}>
                         <Button block rounded transparent
                             style={{ marginTop: 25, backgroundColor: colors.PRIMARY_COLOR, borderRadius: 6, borderWidth: 0.5, height: 50 }}
                             onPress={() => {
-                                this.props.navigation.navigate('MyAccounts', {
-                                    onGoBack: () => this.onRefresh
-                                })
+                                this.props.navigation.pop(2)
                             }
                             }>
-                            <CustomText style={{ color: colors.WHITE }}>Back to Home</CustomText>
+                            <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>Pay Again</CustomText>
+                        </Button>
+                        <Button style={{ borderRadius: 6 }} transparent block onPress={() => {
+                            this.props.navigation.navigate('MyAccounts')
+                        }} >
+                            <CustomText uppercase={false} style={{ color: colors.GRAYISHRED, fontSize: 12, textDecorationLine: 'underline' }} >Cancel</CustomText>
                         </Button>
                     </View>
                 </Content>
