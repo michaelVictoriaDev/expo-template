@@ -75,7 +75,7 @@ getApiData() {
           let timer = setInterval(() => {
             console.log("loading!!!!!!")
             const sortedAccountSummary = this.sortAccountSummary();
-            console.log("sortedAccountSummary.lengthsortedAccountSummary.lengthsortedAccountSummary.length", sortedAccountSummary.length)
+            console.log("sortedAccountSummary.lengthsortedAccountSummary.lengthsortedAccountSummary.length", sortedAccountSummary)
             this.setState({
               accountSummary: this.props.dashboard.orderData.accountSummary,
             });
@@ -332,7 +332,7 @@ renderItemsInfiniteScroll(itemIndex, i) {
         <View style={styles.itemThree}>
 
           <CustomTextBold numberOfLines={1} ellipsizeMode='tail'
-            style={{ fontSize: 24 }} >${i.arrears.details.PayoffBalance}</CustomTextBold>
+            style={{ fontSize: 24 }} >$ {i.amount}</CustomTextBold>
           <CustomTextMedium style={{ color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED, fontSize: 14 }}>{_.replace(i.dueDate, /\//g, '.') + ' '}<Icon onPress={() => alert('icon press')} style={{ backgroundColor: colors.WHITE, color: i.validAmountToBePaid ? colors.RED : colors.GRAYISHRED, fontSize: 14 }} name='info-circle' type='FontAwesome5' /></CustomTextMedium>
         </View>
         {/* <View style={styles.itemFour}></View> */}

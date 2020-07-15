@@ -34,12 +34,12 @@ class PaymentPayNow extends Component {
             subtotal: this.props.navigation.state.params.subtotal,
             isPaymentProcessing: false,
             cardDetails: {
-                cardHolderName: "Xtendly Dev",
-                cardNumber: "4111111111111111",
+                cardHolderName: "",
+                cardNumber: "",
                 expDate: new Date(),
                 validExpDate: "",
-                cvv: "123",
-                billingZipCode: "123",
+                cvv: "",
+                billingZipCode: "t",
                 confirmationEmail: this.props.dashboard.userAccountDetails.emailAddress,
                 selectedMonth: ('0' + (moment().month() + 1)).slice(-2),
                 selectedYear: moment().format("YY")
@@ -79,8 +79,6 @@ class PaymentPayNow extends Component {
 
     _handleMultiInput(name) {
         return text => {
-
-
             this.setState({
                 ...this.state,
                 cardDetails: {

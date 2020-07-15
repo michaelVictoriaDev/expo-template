@@ -65,12 +65,15 @@ class AccountSummary extends Component {
                 Amount Due
               </CustomTextBold>
               <View style={{ paddingTop: 8 }} />
-              <Button block success style={{ borderRadius: 6 }}>  
-                <Text>Pay Now</Text>
+              <Button block success style={{ borderRadius: 6 }}
+                onPress={() =>
+                  this.props.navigation.navigate('PayNowWithoutAccount')
+                }>
+                <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>Pay Now</CustomText>
               </Button>
-              <View style={{padding: 5}}/>
+              <View style={{ padding: 5 }} />
             </View>
-            
+
 
             <Row
               style={{

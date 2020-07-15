@@ -171,6 +171,9 @@ class PaymentInput extends Component {
                           value={data.amountToBePaid}
                           displayType={'text'}
                           thousandSeparator={true}
+                          prefix={'$ '}
+                          decimalScale={2}
+                          fixedDecimalScale={true}
                           renderText={value => (
                             <React.Fragment>
                               <Input

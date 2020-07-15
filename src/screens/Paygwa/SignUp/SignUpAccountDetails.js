@@ -316,6 +316,7 @@ class SignUpAccountDetails extends Component {
                                             borderColor: 'lightgray',
                                             marginBottom: 5,
                                             borderWidth: 1,
+                                            backgroundColor: '#e6ebf4'
                                         }}>
                                         <Input
                                             disabled

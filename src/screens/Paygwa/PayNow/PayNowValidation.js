@@ -111,6 +111,7 @@ class PayNowValidation extends Component {
                                         borderColor: 'lightgray',
                                         marginBottom: 5,
                                         borderWidth: 1,
+                                        backgroundColor: '#e6ebf4'
                                     }}>
                                     <Input
                                         disabled
@@ -129,7 +130,8 @@ class PayNowValidation extends Component {
                                         borderRadius: 6,
                                         borderColor: 'lightgray',
                                         marginBottom: 5,
-                                        borderWidth: 1
+                                        borderWidth: 1,
+                                        backgroundColor: '#e6ebf4'
                                     }}>
                                     <Input
                                         disabled

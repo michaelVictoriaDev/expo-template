@@ -128,12 +128,14 @@ class PayNowEnterPayment extends Component {
                                         borderWidth: 1
                                     }}>
                                     <NumberFormat
-                                    fixedDecimalScale
-                                        
+
+
                                         value={this.state.amountToBePaid}
                                         displayType={'text'}
                                         thousandSeparator={true}
                                         prefix={'$ '}
+                                        decimalScale={2}
+                                        fixedDecimalScale={true}
                                         renderText={value => (
                                             <Input
                                                 textAlign={'left'}
@@ -215,28 +217,28 @@ class PayNowEnterPayment extends Component {
 
                                 </Item>
                                 <CustomText style={{ paddingVertical: 5 }}>CVV</CustomText>
-                                    <Item regular
-                                        style={{
-                                            borderStyle: 'solid',
-                                            marginLeft: 0,
-                                            backgroundColor: colors.WHITE,
-                                            borderRadius: 6,
-                                            borderColor: 'lightgray',
-                                            marginBottom: 5,
-                                            borderWidth: 1
-                                        }}>
-                                        <Input
-                                            onChangeText={(input) => {
-                                                this.setState({
-                                                    cardNumber: input
-                                                })
-                                            }}
-                                            blurOnSubmit={true}
-                                        />
+                                <Item regular
+                                    style={{
+                                        borderStyle: 'solid',
+                                        marginLeft: 0,
+                                        backgroundColor: colors.WHITE,
+                                        borderRadius: 6,
+                                        borderColor: 'lightgray',
+                                        marginBottom: 5,
+                                        borderWidth: 1
+                                    }}>
+                                    <Input
+                                        onChangeText={(input) => {
+                                            this.setState({
+                                                cardNumber: input
+                                            })
+                                        }}
+                                        blurOnSubmit={true}
+                                    />
 
-                                    </Item>
+                                </Item>
 
-               
+
                                 <CustomText style={{ paddingVertical: 5 }}>Confirmation Email</CustomText>
                                 <Item regular
                                     style={{
@@ -268,6 +270,7 @@ class PayNowEnterPayment extends Component {
                                         borderColor: 'lightgray',
                                         marginBottom: 5,
                                         borderWidth: 1,
+                                        backgroundColor: '#e6ebf4'
                                     }}>
                                     <Input
                                         disabled
@@ -286,7 +289,8 @@ class PayNowEnterPayment extends Component {
                                         borderRadius: 6,
                                         borderColor: 'lightgray',
                                         marginBottom: 5,
-                                        borderWidth: 1
+                                        borderWidth: 1,
+                                        backgroundColor: '#e6ebf4'
                                     }}>
                                     <Input
                                         disabled
@@ -296,7 +300,7 @@ class PayNowEnterPayment extends Component {
                                 </Item>
                             </View>
 
-                           
+
                             <View style={{ paddingTop: 30, paddingHorizontal: 30 }}>
                                 <Button block success onPress={() => console.log('Done')} >
                                     <Text>Submit</Text>

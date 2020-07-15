@@ -80,9 +80,7 @@ class SignUpCreateAccount extends Component {
     };
 
 
-    onPaymentStepComplete = () => {
 
-    };
 
     componentWillMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
@@ -240,20 +238,8 @@ class SignUpCreateAccount extends Component {
                 })
         }
     }
-    onChange = (e) => {
-        this.setState({
-            ...this.state,
-            accountId: e.target.value
-        })
-    }
 
-    handleClose() {
-        this.setState({ showSample: false });
-    }
 
-    handleShow(e) {
-        this.setState({ showSample: true });
-    }
 
     // End of Account Number Details Function
 
@@ -331,7 +317,7 @@ class SignUpCreateAccount extends Component {
                                     marginLeft: 0,
                                     backgroundColor: colors.WHITE,
                                     borderRadius: 6,
-                                    borderColor: this.state.isValid ? 'red' : 'lightgray',
+                                    borderColor: 'lightgray',
                                     marginBottom: 5,
                                     borderWidth: 1
                                 }}>
@@ -346,7 +332,7 @@ class SignUpCreateAccount extends Component {
                                         })
                                     }}
                                 />
-                                {this.state.isValid ?
+                                {/* {this.state.isValid ?
                                     <Icon onPress={() => {
                                         this.setState({
                                             ...this.state,
@@ -355,7 +341,7 @@ class SignUpCreateAccount extends Component {
                                     }} style={{ color: colors.RED }} name='close-circle' />
                                     :
                                     null
-                                }
+                                } */}
 
                             </Item>
 

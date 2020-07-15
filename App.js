@@ -28,6 +28,9 @@ import PaymentInputScreen from './src/screens/Paygwa/Payment/PaymentInput';
 import PaymentViewScreen from './src/screens/Paygwa/Payment/PaymentView';
 import PaymentPayNowScreen from './src/screens/Paygwa/Payment/PaymentPayNow';
 
+// Payment Without Account
+import PayNowWithoutAccount from './src/screens/Paygwa/PayNowWithoutAccount/PayNowCustomerInformation'
+
 //PaymentResult
 import PaymentSuccessScreen from './src/screens/Paygwa/Payment/PaymentResult/PaymentSuccess';
 import PaymentUserFailedScreen from './src/screens/Paygwa/Payment/PaymentResult/PaymentUserFailed';
@@ -99,6 +102,9 @@ const MyAccountsStack = createStackNavigator(
     },
     AccountSummary: {
       screen: AccountSummaryScreen
+    },
+    PayNowWithoutAccount: {
+      screen: PayNowWithoutAccount
     },
     AccountSummaryBill : {
       screen: AccountSummaryBillScreen

@@ -169,7 +169,7 @@ class PaymentSuccess extends Component {
                             style={{ marginTop: 25, backgroundColor: '#4caf50', borderRadius: 6, borderWidth: 0.5, height: 50 }}
                             onPress={() => {
                                 // this.props.navigation.navigate('MyAccounts')
-                                // this.props.navigation.pop(2)
+                                this.props.navigation.pop(4)
                             }
                             }>
                             <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>Back to Dashboard</CustomText>

@@ -75,9 +75,7 @@ class PayNowCustomerInformation extends Component {
     };
 
 
-    onPaymentStepComplete = () => {
 
-    };
 
 
     onSubmit = () => {
@@ -141,7 +139,7 @@ class PayNowCustomerInformation extends Component {
                                     marginLeft: 0,
                                     backgroundColor: colors.WHITE,
                                     borderRadius: 6,
-                                    borderColor: this.state.isValid ? 'red' : 'lightgray',
+                                    borderColor: 'lightgray',
                                     marginBottom: 5,
                                     borderWidth: 1,
                                 }}>
@@ -156,7 +154,7 @@ class PayNowCustomerInformation extends Component {
                                         })
                                     }}
                                 />
-                                {this.state.isValid ?
+                                {/* {this.state.isValid ?
                                     <Icon onPress={() => {
                                         this.setState({
                                             ...this.state,
@@ -165,7 +163,7 @@ class PayNowCustomerInformation extends Component {
                                     }} style={{ color: colors.RED }} name='close-circle' />
                                     :
                                     null
-                                }
+                                } */}
 
                             </Item>
                         </View>
@@ -191,7 +189,7 @@ class PayNowCustomerInformation extends Component {
                                     marginLeft: 0,
                                     backgroundColor: colors.WHITE,
                                     borderRadius: 6,
-                                    borderColor: this.state.isValid ? 'red' : 'lightgray',
+                                    borderColor: 'lightgray',
                                     marginBottom: 5,
                                     borderWidth: 1,
                                 }}>
@@ -206,7 +204,7 @@ class PayNowCustomerInformation extends Component {
                                         })
                                     }}
                                 />
-                                {this.state.isValid ?
+                                {/* {this.state.isValid ?
                                     <Icon onPress={() => {
                                         this.setState({
                                             ...this.state,
@@ -215,7 +213,7 @@ class PayNowCustomerInformation extends Component {
                                     }} style={{ color: colors.RED }} name='close-circle' />
                                     :
                                     null
-                                }
+                                } */}
 
                             </Item>
                         </View>
