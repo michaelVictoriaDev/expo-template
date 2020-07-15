@@ -58,6 +58,7 @@ class PayNowValidation extends Component {
         super(props);
 
         this.state = {
+            accountSummary: this.props.accountSummary,
             userDetails: this.props.userDetails,
             userLatestBill: this.props.userLatestBill,
             currentPosition: 1
@@ -150,14 +151,16 @@ class PayNowValidation extends Component {
 
             (this.state.isSuccess === true) ?
                 <PayNowPayment
-                userDetails={this.state.userDetails}
-                userLatestBill={this.state.userLatestBill}
+                    userDetails={this.state.userDetails}
+                    userLatestBill={this.state.userLatestBill}
+                    accountSummary={this.state.accountSummary}
                 />
 
                 // null
                 :
                 this.state.isGoBack === true ?
                     <PayNowCustomerInformation
+                        accountSummary={this.state.accountSummary}
                         userDetails={this.state.userDetails}
                         userLatestBill={this.state.userLatestBill} />
                     :

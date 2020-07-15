@@ -67,7 +67,9 @@ class AccountSummary extends Component {
               <View style={{ paddingTop: 8 }} />
               <Button block success style={{ borderRadius: 6 }}
                 onPress={() =>
-                  this.props.navigation.navigate('PayNowWithoutAccount')
+                  this.props.navigation.navigate('PayNowWithoutAccount', {
+                    accountSummary: this.state.accountDetails
+                  })
                 }>
                 <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>Pay Now</CustomText>
               </Button>

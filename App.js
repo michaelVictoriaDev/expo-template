@@ -31,6 +31,12 @@ import PaymentPayNowScreen from './src/screens/Paygwa/Payment/PaymentPayNow';
 // Payment Without Account
 import PayNowWithoutAccount from './src/screens/Paygwa/PayNowWithoutAccount/PayNowCustomerInformation'
 
+//PaymentResult Without Account
+import PaymentSuccessWAScreen from './src/screens/Paygwa/PayNowWithoutAccount/PaymentResult/PaymentSuccess';
+import PaymentUserFailedWAScreen from './src/screens/Paygwa/PayNowWithoutAccount/PaymentResult/PaymentUserFailed';
+import PaymentServerFailedWAScreen from './src/screens/Paygwa/PayNowWithoutAccount/PaymentResult/PaymentServerFailed';
+
+
 //PaymentResult
 import PaymentSuccessScreen from './src/screens/Paygwa/Payment/PaymentResult/PaymentSuccess';
 import PaymentUserFailedScreen from './src/screens/Paygwa/Payment/PaymentResult/PaymentUserFailed';
@@ -105,6 +111,15 @@ const MyAccountsStack = createStackNavigator(
     },
     PayNowWithoutAccount: {
       screen: PayNowWithoutAccount
+    },
+    PaymentSuccessWA: {
+      screen: PaymentSuccessWAScreen
+    },
+    PaymentUserFailedWA: {
+      screen: PaymentUserFailedWAScreen
+    },
+    PaymentServerFailedWA: {
+      screen: PaymentServerFailedWAScreen
     },
     AccountSummaryBill : {
       screen: AccountSummaryBillScreen

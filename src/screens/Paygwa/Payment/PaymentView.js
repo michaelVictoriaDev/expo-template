@@ -48,8 +48,6 @@ class PaymentView extends Component {
             userFullName: this.props.dashboard.userAccountDetails.fullName === undefined ? "" : this.props.dashboard.userAccountDetails.fullName,
             username: this.props.userName,
         })
-        console.log('userFullName', this.props.dashboard.userAccountDetails.fullName === undefined ? "" : this.props.dashboard.userAccountDetails.fullName)
-        console.log('username', this.props.userName)
     }
 
     async savePayment() {
@@ -62,37 +60,6 @@ class PaymentView extends Component {
         this.setState({ usedCC: usedCC }, async () => {
             let arrIsAmountValid = []
             if (this.state.cardDetails.cardNumber.charAt(0) === "4" || this.state.cardDetails.cardNumber.charAt(0) === "6") {
-                //     for (let count = 0; count < accountSummary.length; count++) {
-                //         try {
-                //             let result = await Promise.all([this.props.validateVisaPayment(accountSummary[count].accID, this.state.usedCC)]);
-                //             let paymentAmount = result[0].data.result.data.PaymentAmount;
-                //             let customerClass = result[0].data.result.data.CustomerClass;
-                //             const totalPayment = parseInt(accountSummary[count].amountToBePaid) + parseInt(paymentAmount);
-
-                //             if (totalPayment > 500 && !(customerClass === "RESID")) {
-                //                 accountSummary[count].validAmountToBePaid = false;
-                //                 accountSummary[count].alreadyPaid = paymentAmount;
-                //                 accountSummary[count].usedCC = usedCC;
-                //                 arrIsAmountValid.push(false);
-
-                //             }
-                //             else {
-                //                 accountSummary[count].validAmountToBePaid = true;
-                //                 arrIsAmountValid.push(true);
-                //             }
-                //         }
-                //         catch (error) {
-                //             console.log("errorerrorerrorerrorerror", error)
-
-                //             this.props.navigation.navigate('PaymentServerFailed')
-                //             // SERVER FAILED ilalabas mo dito
-                //             this.setState({
-                //                 isPaymentProcessing: false
-                //             })
-                //             // this.showPaymentResult();
-                //         }
-                //     }
-                // }
 
                 for (let count = 0; count < accountSummary.length; count++) {
                     accountSummary[count].validAmountToBePaid = true
@@ -366,10 +333,6 @@ class PaymentView extends Component {
                 console.log('error')
                 console.log('accountSummary', JSON.stringify(this.state.accountSummary))
                 console.log('paymentResult', JSON.stringify(result))
-
-                // localStorage.setItem('accountSummary', JSON.stringify(this.state.accountSummary))
-                // localStorage.setItem('paymentResult', JSON.stringify(result))
-                // this.showPaymentResult();
             })
     }
 

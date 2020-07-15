@@ -19,6 +19,11 @@ import {
     getAcovInfo
 } from '../../../actions/userSignUp';
 
+import { 
+    fetchMultipleLatestBill,
+} from '../../../actions/userMyAccounts';
+
+
 import NavigationService from '../../../NavigationService';
 import StepIndicator from 'react-native-step-indicator';
 import Modal from 'react-native-modal'
@@ -66,16 +71,17 @@ class PayNowCustomerInformation extends Component {
             isSuccess: false,
             showSample: false,
             isLoading: false,
-            accountId: '3430200000',
-            billingZipCode: '96921',
-            // accountId: '',
-            // billingZipCode: '',
+            // accountId: '3430200000',
+            // billingZipCode: '96921',
+            accountId: '',
+            billingZipCode: '',
             isValid: false,
             isValidBilling: false,
             errors: false,
             currentPosition: 0,
             isModalShow: false,
-            userLatestBill: []
+            userLatestBill: [],
+            accountSummary: this.props.navigation.state.params.accountSummary
         }
     }
     // For Function ProgressStep
@@ -101,6 +107,11 @@ class PayNowCustomerInformation extends Component {
     handleBackButtonClick() {
         NavigationService.goBack()
         return true;
+    }
+
+    async executeRequests(postData) {
+        await this.props.fetchMultipleLatestBill(postData)
+
     }
 
     onSubmit() {
@@ -165,12 +176,14 @@ class PayNowCustomerInformation extends Component {
                             .then(response => {
 
                                 console.log('/api/v1/user-latest-bill', response.data.result)
+                                this.executeRequests(this.state.accountSummary)
                                 this.setState({
                                     error: '',
                                     isLoading: false,
                                     isSuccess: true,
                                     userLatestBill: response.data.result
                                 })
+                                
 
                             })
                             .catch(error => {
@@ -202,10 +215,6 @@ class PayNowCustomerInformation extends Component {
                         error: 'Server Error'
                     })
                 })
-
-
-
-
         }
     }
 
@@ -229,6 +238,7 @@ class PayNowCustomerInformation extends Component {
                 <PayNowValidation
                     userDetails={this.state.userDetails}
                     userLatestBill={this.state.userLatestBill}
+                    accountSummary={this.state.accountSummary}
                 />
 
                 :

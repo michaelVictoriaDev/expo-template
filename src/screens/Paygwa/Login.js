@@ -1067,10 +1067,10 @@ class Login extends Component {
                                             style={[styles.buttons, { backgroundColor: '#1687C7', borderRadius: 6, borderWidth: 0.5, height: 50 }]}
                                             onPress={() =>
                                                 // GWA
-                                                // this.manualLogin(this.state.emailAdd, this.state.password)
+                                                this.manualLogin(this.state.emailAdd, this.state.password)
                                                 // this.manualLogin('gdoe', 'GDOE2018')
                                                 // this.manualLogin('Relyant01', 'Relyant01')
-                                                this.manualLogin('blas959', 'sweetheart95')
+                                                // this.manualLogin('blas959', 'sweetheart95')
                                                 // this.manualLogin('neilg671', 'TO1108370z!')
                                             }>
                                             <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Login</CustomTextMedium>
