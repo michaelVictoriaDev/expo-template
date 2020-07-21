@@ -81,12 +81,14 @@ class PayNowPayment extends Component {
             currentPosition: 2,
             isModalShow: false,
             isModalShowEmail: false,
+            event: this.props.event,
             cardDetails: {
                 // cardHolderName: "Xtendly Dev",
                 cardHolderName: "",
                 // cardNumber: "4111111111111111",
                 cardNumber: "",
                 cvv: "",
+                validExpDate: "",
                 selectedMonth: ('0' + (moment().month() + 1)).slice(-2),
                 selectedYear: moment().format("YY"),
                 customerName: '',
@@ -136,12 +138,7 @@ class PayNowPayment extends Component {
 
     onSubmit() {
         if (this.state.cardDetails.amountToBePaid <= 0 || this.state.cardDetails.cardHolderName == "" || this.state.cardDetails.cardNumber == "" || this.state.cardDetails.cvv == "") {
-            debugger
-            console.log('ifBolean', !this.state.cardDetails.amountToBePaid > 0)
-            console.log('ifBolean', this.state.cardDetails.cardHolderName == "")
-            console.log('ifBolean', this.state.cardDetails.cardNumber == "")
-            console.log('ifBolean', this.state.cardDetails.cvv == "")
-
+    
             var amountToBePaid
             var cardHolderName
             var cardNumber
@@ -199,16 +196,16 @@ class PayNowPayment extends Component {
             })
 
 
-            debugger
-
-            console.log('if', this.state.errors.amountToBePaid)
-            console.log('if', this.state.errors.cardHolderName)
-            console.log('if', this.state.errors.cardNumber)
-            console.log('if', this.state.errors.cvv)
         } else {
             console.log('proceed')
+
+            
             this.setState({
                 ...this.state,
+                cardDetails: {
+                    ...this.state.cardDetails,
+                    validExpDate: _.toString(this.state.cardDetails.selectedMonth).concat(this.state.cardDetails.selectedYear),
+                },
                 errors: {
                     ...this.state.errors,
                     amountToBePaid: '',
@@ -219,34 +216,37 @@ class PayNowPayment extends Component {
                 isPaymentProcessing: true
 
             })
+
+            
+
             this.validateAmount()
         }
 
     }
 
-    checkedUsedCC = (cardNumber) => {
-        const usedCC =
-            cardNumber.charAt(0) === "4" ?
-                "visa"
-                :
-                cardNumber.charAt(0) === "6" ?
-                    "discover"
-                    :
-                    parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) > 50 && parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) < 56 ?
-                        "master"
-                        :
-                        "invalid";
-        this.setState({ usedCC: usedCC })
-        return usedCC
-    }
 
     validateAmount() {
+
+        console.log('data', this.state)
         // e.preventDefault()
         const accountSummary = this.state.accountSummary
         const subtotal = this.state.cardDetails.amountToBePaid
-        const usedCC = this.checkedUsedCC(this.state.cardDetails.cardNumber);
+        const cardNumber = this.state.cardDetails.cardNumber
+        const usedCC = cardNumber.charAt(0) === "4" ?
+            "visa"
+            :
+            cardNumber.charAt(0) === "6" ?
+                "discover"
+                :
+                parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) > 50 && parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) < 56 ?
+                    "master"
+                    :
+                    "invalid";
+
+
+        console.log('usedCC', this.state.usedCC)
         let arrIsAmountValid = []
-        if (this.state.cardDetails.cardNumber.charAt(0) === "4" || this.state.cardDetails.cardNumber.charAt(0) === "6") {
+        if(this.state.cardDetails.cardNumber.charAt(0) === "4" || this.state.cardDetails.cardNumber.charAt(0) === "6"){
             for (let count = 0; count < accountSummary.length; count++) {
                 accountSummary[count].validAmountToBePaid = true
             }
@@ -264,6 +264,7 @@ class PayNowPayment extends Component {
             accountSummary: accountSummary
         };
         if (arrIsAmountValid.includes(false)) {
+            debugger
             this.props.saveOrderData(postData);
             this.setState({
                 isPaymentProcessing: false
@@ -288,12 +289,14 @@ class PayNowPayment extends Component {
         }
         else {
             this.props.saveOrderData(postData);
+            debugger
             this.validUserInputs(subtotal, accountSummary);
         }
     }
 
 
     validUserInputs(subtotal, accountSummary) {
+        debugger
         const cardNumber = this.state.cardDetails.cardNumber
         const usedCC = cardNumber.charAt(0) === "4" ?
             "visa"
@@ -406,6 +409,8 @@ class PayNowPayment extends Component {
         }
     }
     executeRequests = () => {
+
+
         this.props.savePaymentData(this.state)
             .then((result) => {
                 console.log('paymentResult', JSON.stringify(result))
@@ -419,18 +424,22 @@ class PayNowPayment extends Component {
                     NavigationService.navigate('PaymentSuccessWA',
                         {
                             paymentResult: result,
-                            accountSummary: this.state.accountSummary
+                            accountSummary: [this.state.accountSummary],
+                            event : this.state.event
 
                         })
                 } else if (result.data.Transaction_Approved == 'false') {
                     NavigationService.navigate('PaymentUserFailedWA',
                         {
                             paymentResult: result,
-                            accountSummary: this.state.accountSummary
+                            accountSummary:[this.state.accountSummary],
+                            event : this.state.event
 
                         })
                 } else {
-                    NavigationService.navigate('PaymentServerFailedWA')
+                    NavigationService.navigate('PaymentServerFailedWA', {
+                        event: this.state.event
+                    })
                 }
 
             })
@@ -439,546 +448,552 @@ class PayNowPayment extends Component {
                     isPaymentProcessing: false
                 })
 
-                NavigationService.navigate('PaymentServerFailedWA')
+                NavigationService.navigate('PaymentServerFailedWA', {
+                    event: this.state.event
+                })
                 console.log('error')
                 console.log('accountSummary', JSON.stringify(this.state.accountSummary))
                 console.log('paymentResult', JSON.stringify(result))
             })
     }
 
-_handleMultiInput(name) {
-    return text => {
+    _handleMultiInput(name) {
+        return text => {
+            this.setState({
+                ...this.state,
+                cardDetails: {
+                    ...this.state.cardDetails,
+                    [name]: text
+                }
+            })
+        };
+
+    }
+
+    showCardType() {
+
+        const cardNumber = this.state.cardDetails.cardNumber
+
+        if (cardNumber.charAt(0) === "4") {
+            return (<View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/visa-logo.png')} /></View>)
+        }
+        else if (cardNumber.charAt(0) === "6") {
+            return (<View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/discover-logo.png')} /></View>)
+        }
+        else if (parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) > 50 && parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) < 56 ? true : false) {
+            return (<View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/master-logo.png')} /></View>)
+        }
+        else if (cardNumber === "") {
+            return (null)
+        }
+        else {
+            return (<View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/forbidden-mark.png')} /></View>)
+        }
+    }
+
+
+
+    formatAmount = (value, callback) => {
+        value = value.replace('$ ', ''); //removes '$ '
+        value = value.replace(/\,/g, '') //removes all ','
+        return value = parseFloat(Math.round(value * 100) / 100).toFixed(2)
+    }
+
+    amountToBePaidOnChange = (text) => {
+        var value = text
+        value = this.formatAmount(value);
         this.setState({
             ...this.state,
             cardDetails: {
                 ...this.state.cardDetails,
-                [name]: text
+                amountToBePaid: value
             }
         })
-    };
-
-}
-
-showCardType = () => {
-    if (this.state.cardDetails.cardNumber.charAt(0) === "4") {
-        return (<View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/visa-logo.png')} /></View>)
     }
-    else if (this.state.cardDetails.cardNumber.charAt(0) === "6") {
-        return (<View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/discover-logo.png')} /></View>)
-    }
-    else if (parseInt(this.state.cardDetails.cardNumber.charAt(0) + "" + this.state.cardDetails.cardNumber.charAt(1)) > 50 && parseInt(this.state.cardDetails.cardNumber.charAt(0) + "" + this.state.cardDetails.cardNumber.charAt(1)) < 56 ? true : false) {
-        return (<View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/master-logo.png')} /></View>)
-    }
-    else if (this.state.cardDetails.cardNumber === "") {
-        return (null)
-    }
-    else {
-        return (<View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/forbidden-mark.png')} /></View>)
-    }
-}
 
 
 
-formatAmount = (value, callback) => {
-    value = value.replace('$ ', ''); //removes '$ '
-    value = value.replace(/\,/g, '') //removes all ','
-    return value = parseFloat(Math.round(value * 100) / 100).toFixed(2)
-}
+    maskString = (value) => {
+        let str = value;
+        let count = 0;
+        let new_str = "";
+        for (let i = 0; i < str.length; i++) {
+            if (count > 1) {
+                if (str.charAt(i) != " ") {
+                    new_str = new_str + '*'
+                    count = count + 1
+                }
+                else {
+                    new_str = new_str + " "
+                    count = 0;
+                }
 
-amountToBePaidOnChange = (text) => {
-    var value = text
-    value = this.formatAmount(value);
-    this.setState({
-        ...this.state,
-        cardDetails: {
-            ...this.state.cardDetails,
-            amountToBePaid: value
-        }
-    })
-}
-
-
-
-maskString = (value) => {
-    let str = value;
-    let count = 0;
-    let new_str = "";
-    for (let i = 0; i < str.length; i++) {
-        if (count > 1) {
-            if (str.charAt(i) != " ") {
-                new_str = new_str + '*'
-                count = count + 1
             }
-            else {
-                new_str = new_str + " "
-                count = 0;
+            else if (count < 2) {
+                if (str.charAt(i) != " ") {
+                    new_str = new_str + str.charAt(i)
+                    count = count + 1
+                }
+                else {
+                    new_str = new_str + " "
+                    count = 0;
+                }
             }
 
         }
-        else if (count < 2) {
-            if (str.charAt(i) != " ") {
-                new_str = new_str + str.charAt(i)
-                count = count + 1
-            }
-            else {
-                new_str = new_str + " "
-                count = 0;
-            }
-        }
-
+        return new_str;
     }
-    return new_str;
-}
 
-//RENDER MAIN COMPONENT
-render() {
-    const { width } = Dimensions.get('window');
+    //RENDER MAIN COMPONENT
+    render() {
+        const { width } = Dimensions.get('window');
 
-    let fullName = this.state.userDetails.Name
-    const finalFullName = this.maskString(fullName);
+        let fullName = this.state.userDetails.Name
+        const finalFullName = this.maskString(fullName);
 
 
-    let fullAddress = this.state.userDetails.Address
-    const finalAdd1 = this.maskString(fullAddress);
+        let fullAddress = this.state.userDetails.Address
+        const finalAdd1 = this.maskString(fullAddress);
 
 
-    return (
-        /* MAIN VIEW COMPONENT */
-        this.state.isGoBack === true ?
-            <PayNowValidation
-                userDetails={this.state.userDetails}
-                userLatestBill={this.state.userLatestBill}
-                accountSummary={this.state.accountSummary}
-            />
-            :
-            <Container >
-                <CustomHeader
-                    fontSizeLeft={pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1)}
-                    leftButtonFunction={
-                        () =>
-                            this.setState({
-                                isGoBack: true
-                            })
-
-                    }
-                    title="Pay Now"
-                    RightIcon={<Right />}
+        return (
+            /* MAIN VIEW COMPONENT */
+            this.state.isGoBack === true ?
+                <PayNowValidation
+                    userDetails={this.state.userDetails}
+                    userLatestBill={this.state.userLatestBill}
+                    accountSummary={this.state.accountSummary}
+                    event={this.state.event}
                 />
+                :
+                <Container >
+                    <CustomHeader
+                        fontSizeLeft={pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1)}
+                        leftButtonFunction={
+                            () =>
+                                this.setState({
+                                    isGoBack: true
+                                })
 
-                {this.state.isModalShow ?
-                    <Modal isVisible={this.state.isModalShow} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
-                        avoidKeyboard={true}
-                        onBackdropPress={() => this.setState({ isModalShow: false })}
+                        }
+                        title="Pay Now"
+                        RightIcon={<Right />}
+                    />
 
-                    >
-                        <View style={{
-                            backgroundColor: colors.WHITE, paddingVertical: 20, borderTopStartRadius: 8,
-                            borderTopEndRadius: 8
-                        }}>
+                    {this.state.isModalShow ?
+                        <Modal isVisible={this.state.isModalShow} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
+                            avoidKeyboard={true}
+                            onBackdropPress={() => this.setState({ isModalShow: false })}
+
+                        >
                             <View style={{
-                                flex: 1,
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'flex-end'
-
+                                backgroundColor: colors.WHITE, paddingVertical: 20, borderTopStartRadius: 8,
+                                borderTopEndRadius: 8
                             }}>
-                                <Button transparent small onPress={() => this.setState({ isModalShow: false })}  >
-                                    <Icon style={{ color: '#656667', fontSize: 24 }} name='md-close-circle' type='Ionicons' />
-                                </Button>
+                                <View style={{
+                                    flex: 1,
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    alignItems: 'flex-end'
+
+                                }}>
+                                    <Button transparent small onPress={() => this.setState({ isModalShow: false })}  >
+                                        <Icon style={{ color: '#656667', fontSize: 24 }} name='md-close-circle' type='Ionicons' />
+                                    </Button>
 
 
-                            </View>
-                        </View>
-                        <View style={{
-                            backgroundColor: colors.WHITE,
-                            flexDirection: 'row',
-                            flexWrap: 'wrap',
-                            alignItems: 'flex-start',
-                            paddingBottom: 10, borderBottomEndRadius: 8, borderBottomStartRadius: 8
-                        }}>
-                            <View style={{
-                                width: '50%',
-                                // flexBasis: '50%',
-                                // maxWidth: '50%'
-                            }}>
-                                < Image source={require('../../../../assets/credit-cards/cvv-hint.png')}
-
-                                    style={{
-                                        width: '100%',
-                                        // height: '40%',
-                                        // justifyContent: 'center', alignItems: 'center',
-                                        // overflow: 'visible'
-                                    }} />
+                                </View>
                             </View>
                             <View style={{
-                                width: '5%'
-                            }} />
-                            <View style={{
-                                width: '45%',
-                                paddingTop: '30%',
-                                // width: 270,
-                            }}>
-                                <CustomTextBold>
-                                    CVV Code
-                                    </CustomTextBold>
-                                <CustomText>
-                                    The CVV Code is a security code and is the last 3-digits printed on the signature panel on the back of your credit card.
-                                    </CustomText>
-
-                            </View>
-                        </View>
-                    </Modal>
-                    :
-                    false
-                }
-
-                {this.state.isModalShowEmail ?
-                    <Modal isVisible={this.state.isModalShowEmail} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
-                        avoidKeyboard={true}
-                        onBackdropPress={() => this.setState({ isModalShowEmail: false })}
-
-                    >
-                        <View style={{
-                            backgroundColor: colors.WHITE, paddingVertical: 20, borderTopStartRadius: 8,
-                            borderTopEndRadius: 8
-                        }}>
-                            <View style={{
-                                flex: 1,
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'flex-end'
-
-                            }}>
-                                <Button transparent small onPress={() => this.setState({ isModalShowEmail: false })}  >
-                                    <Icon style={{ color: '#656667', fontSize: 24 }} name='md-close-circle' type='Ionicons' />
-                                </Button>
-
-
-                            </View>
-                        </View>
-                        <View style={{
-                            backgroundColor: colors.WHITE,
-                            justifyContent: 'center', alignItems: 'center',
-                            paddingBottom: 10, borderBottomEndRadius: 8,
-                            borderBottomStartRadius: 8, paddingHorizontal: 20
-                        }}>
-                            <CustomText style={{ textAlign: 'center' }}>
-                                Enter email address to which the receipt will be sent to, otherwise, leave it blank.
-                                    </CustomText>
-                        </View>
-                    </Modal>
-                    :
-                    false
-                }
-                <OfflineNotice />
-
-                <Content >
-                    <View style={{ paddingTop: 40, paddingBottom: 10, paddingHorizontal: 40 }} >
-                        <StepIndicator
-                            stepCount={3}
-                            customStyles={customStyles}
-                            currentPosition={this.state.currentPosition}
-                            labels={labels}
-                        />
-                    </View>
-                    <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 60 }} >
-                        <CustomText style={{ paddingVertical: 5, paddingVertical: 8 }}>Amount to be paid </CustomText>
-                        <Item regular
-                            style={{
-                                borderStyle: 'solid',
-                                marginLeft: 0,
                                 backgroundColor: colors.WHITE,
-                                borderRadius: 6,
-                                borderColor: 'lightgray',
-                                marginBottom: 5,
-                                borderWidth: 1
+                                flexDirection: 'row',
+                                flexWrap: 'wrap',
+                                alignItems: 'flex-start',
+                                paddingBottom: 10, borderBottomEndRadius: 8, borderBottomStartRadius: 8
                             }}>
+                                <View style={{
+                                    width: '50%',
+                                    // flexBasis: '50%',
+                                    // maxWidth: '50%'
+                                }}>
+                                    < Image source={require('../../../../assets/credit-cards/cvv-hint.png')}
 
-                            <NumberFormat
-                                value={this.state.cardDetails.amountToBePaid}
-                                displayType={'text'}
-                                thousandSeparator={true}
-                                prefix={'$ '}
-                                decimalScale={2}
-                                fixedDecimalScale={true}
-                                renderText={value => (
-                                    <React.Fragment>
+                                        style={{
+                                            width: '100%',
+                                            // height: '40%',
+                                            // justifyContent: 'center', alignItems: 'center',
+                                            // overflow: 'visible'
+                                        }} />
+                                </View>
+                                <View style={{
+                                    width: '5%'
+                                }} />
+                                <View style={{
+                                    width: '45%',
+                                    paddingTop: '30%',
+                                    // width: 270,
+                                }}>
+                                    <CustomTextBold>
+                                        CVV Code
+                                    </CustomTextBold>
+                                    <CustomText>
+                                        The CVV Code is a security code and is the last 3-digits printed on the signature panel on the back of your credit card.
+                                    </CustomText>
+
+                                </View>
+                            </View>
+                        </Modal>
+                        :
+                        false
+                    }
+
+                    {this.state.isModalShowEmail ?
+                        <Modal isVisible={this.state.isModalShowEmail} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
+                            avoidKeyboard={true}
+                            onBackdropPress={() => this.setState({ isModalShowEmail: false })}
+
+                        >
+                            <View style={{
+                                backgroundColor: colors.WHITE, paddingVertical: 20, borderTopStartRadius: 8,
+                                borderTopEndRadius: 8
+                            }}>
+                                <View style={{
+                                    flex: 1,
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    alignItems: 'flex-end'
+
+                                }}>
+                                    <Button transparent small onPress={() => this.setState({ isModalShowEmail: false })}  >
+                                        <Icon style={{ color: '#656667', fontSize: 24 }} name='md-close-circle' type='Ionicons' />
+                                    </Button>
+
+
+                                </View>
+                            </View>
+                            <View style={{
+                                backgroundColor: colors.WHITE,
+                                justifyContent: 'center', alignItems: 'center',
+                                paddingBottom: 10, borderBottomEndRadius: 8,
+                                borderBottomStartRadius: 8, paddingHorizontal: 20
+                            }}>
+                                <CustomText style={{ textAlign: 'center' }}>
+                                    Enter email address to which the receipt will be sent to, otherwise, leave it blank.
+                                    </CustomText>
+                            </View>
+                        </Modal>
+                        :
+                        false
+                    }
+                    <OfflineNotice />
+
+                    <Content >
+                        <View style={{ paddingTop: 40, paddingBottom: 10, paddingHorizontal: 40 }} >
+                            <StepIndicator
+                                stepCount={3}
+                                customStyles={customStyles}
+                                currentPosition={this.state.currentPosition}
+                                labels={labels}
+                            />
+                        </View>
+                        <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 60 }} >
+                            <CustomText style={{ paddingVertical: 5, paddingVertical: 8 }}>Amount to be paid </CustomText>
+                            <Item regular
+                                style={{
+                                    borderStyle: 'solid',
+                                    marginLeft: 0,
+                                    backgroundColor: colors.WHITE,
+                                    borderRadius: 6,
+                                    borderColor: 'lightgray',
+                                    marginBottom: 5,
+                                    borderWidth: 1
+                                }}>
+
+                                <NumberFormat
+                                    value={this.state.cardDetails.amountToBePaid}
+                                    displayType={'text'}
+                                    thousandSeparator={true}
+                                    prefix={'$ '}
+                                    decimalScale={2}
+                                    fixedDecimalScale={true}
+                                    renderText={value => (
+                                        <React.Fragment>
+                                            <Input
+                                                returnKeyType='done'
+
+                                                autoCapitalize='none'
+                                                placeholderTextColor='lightgray'
+                                                keyboardType="numeric"
+                                                value={value}
+                                                onChangeText={(value) => this.amountToBePaidOnChange(value)}
+                                            />
+
+                                        </React.Fragment>
+                                    )}
+                                />
+                            </Item>
+                            {!_.isEmpty(this.state.errors.amountToBePaid) ?
+                                <CustomText style={{
+                                    color: colors.RED, paddingVertical: 5
+                                }}>
+                                    {this.state.errors.amountToBePaid}
+                                </CustomText>
+                                :
+                                null
+                            }
+                            <CustomText style={{ paddingVertical: 5, paddingVertical: 8 }}>Card Holder Name </CustomText>
+                            <Item regular
+                                style={{
+                                    borderStyle: 'solid',
+                                    marginLeft: 0,
+                                    backgroundColor: colors.WHITE,
+                                    borderRadius: 6,
+                                    borderColor: 'lightgray',
+                                    marginBottom: 5,
+                                    borderWidth: 1
+                                }}>
+                                <Input
+                                    keyboardType='default'
+                                    autoCapitalize='none'
+                                    value={this.state.cardDetails.cardHolderName}
+                                    onChangeText={this._handleMultiInput('cardHolderName')}
+                                />
+
+
+                            </Item>
+
+                            {!_.isEmpty(this.state.errors.cardHolderName) ?
+                                <CustomText style={{
+                                    color: colors.RED, paddingVertical: 5
+                                }}>
+                                    {this.state.errors.cardHolderName}
+                                </CustomText>
+                                :
+                                null
+                            }
+                            <CustomText style={{ paddingVertical: 5, paddingVertical: 8 }}>Card Number </CustomText>
+                            <Item regular
+                                style={{
+                                    borderStyle: 'solid',
+                                    marginLeft: 0,
+                                    backgroundColor: colors.WHITE,
+                                    borderRadius: 6,
+                                    borderColor: 'lightgray',
+                                    marginBottom: 5,
+                                    borderWidth: 1
+                                }}>
+                                <NumberFormat
+                                    mask="_"
+                                    value={this.state.cardDetails.cardNumber}
+                                    displayType={'text'} format="#### #### #### ####"
+                                    renderText={value => (
                                         <Input
-                                            returnKeyType='done'
-
+                                            textAlign={'left'}
                                             autoCapitalize='none'
                                             placeholderTextColor='lightgray'
                                             keyboardType="numeric"
                                             value={value}
-                                            onChangeText={(value) => this.amountToBePaidOnChange(value)}
+                                            onChangeText={this._handleMultiInput('cardNumber')}
+                                        />
+                                    )}
+                                />
+                                {
+                                    this.showCardType()
+                                }
+                            </Item>
+                            {!_.isEmpty(this.state.errors.cardNumber) ?
+                                <CustomText style={{
+                                    color: colors.RED, paddingVertical: 5
+                                }}>
+                                    {this.state.errors.cardNumber}
+                                </CustomText>
+                                :
+                                null
+                            }
+
+
+                            <Row>
+                                <Col size={60}>
+                                    <CustomText style={{ paddingVertical: 8 }} >Expiration Date</CustomText>
+                                    <Item regular
+                                        style={{
+                                            height: 52,
+                                            marginLeft: 0,
+                                            backgroundColor: colors.WHITE,
+                                            borderRadius: 6,
+                                            borderColor: 'lightgray',
+                                            marginBottom: 10
+                                        }}>
+                                        <Form>
+                                            <Picker
+                                                note
+                                                mode="dropdown"
+                                                style={{ width: 120 }}
+                                                selectedValue={this.state.cardDetails.selectedMonth}
+                                                onValueChange={(value) =>
+
+                                                    this.setState({
+                                                        ...this.state,
+                                                        cardDetails: {
+                                                            ...this.state.cardDetails,
+                                                            selectedMonth: value
+                                                        }
+                                                    })
+                                                }
+                                            >
+                                                {_.map(months, (monthData, index) => {
+                                                    return (
+                                                        <Picker.Item label={monthData.name} value={monthData.value} />
+                                                    )
+                                                })
+                                                }
+                                            </Picker>
+                                        </Form>
+                                        <CustomText>/</CustomText>
+                                        <Form>
+                                            <Picker
+                                                note
+                                                mode="dropdown"
+                                                style={{ width: 120 }}
+                                                selectedValue={this.state.cardDetails.selectedYear}
+                                                onValueChange={(value) =>
+                                                    this.setState({
+                                                        ...this.state,
+                                                        cardDetails: {
+                                                            ...this.state.cardDetails,
+                                                            selectedYear: value
+                                                        }
+                                                    })}
+                                            >
+                                                {_.map(years, (years, index) => {
+                                                    return (
+                                                        <Picker.Item label={years.year} value={years.value} />
+                                                    )
+                                                })
+                                                }
+                                            </Picker>
+                                        </Form>
+
+                                    </Item>
+
+                                </Col>
+                                <Col size={5} />
+                                <Col size={25}>
+                                    <CustomText style={{ paddingVertical: 8 }} >CVV</CustomText>
+                                    <Item regular
+                                        style={{
+                                            marginLeft: 0,
+                                            backgroundColor: colors.WHITE,
+                                            borderRadius: 6,
+                                            borderColor: 'lightgray',
+                                            marginBottom: 10
+                                        }}>
+                                        <Input
+                                            autoCapitalize='none'
+                                            placeholderTextColor='lightgray'
+                                            keyboardType="numeric"
+                                            value={this.state.cardDetails.cvv}
+                                            onChangeText={this._handleMultiInput('cvv')}
                                         />
 
-                                    </React.Fragment>
-                                )}
-                            />
-                        </Item>
-                        {!_.isEmpty(this.state.errors.amountToBePaid) ?
-                            <CustomText style={{
-                                color: colors.RED, paddingVertical: 5
-                            }}>
-                                {this.state.errors.amountToBePaid}
-                            </CustomText>
-                            :
-                            null
-                        }
-                        <CustomText style={{ paddingVertical: 5, paddingVertical: 8 }}>Card Holder Name </CustomText>
-                        <Item regular
-                            style={{
-                                borderStyle: 'solid',
-                                marginLeft: 0,
-                                backgroundColor: colors.WHITE,
-                                borderRadius: 6,
-                                borderColor: 'lightgray',
-                                marginBottom: 5,
-                                borderWidth: 1
-                            }}>
-                            <Input
-                                keyboardType='default'
-                                autoCapitalize='none'
-                                value={this.state.cardDetails.cardHolderName}
-                                onChangeText={this._handleMultiInput('cardHolderName')}
-                            />
+                                    </Item>
+                                    {!_.isEmpty(this.state.errors.cvv) ?
+                                        <CustomText style={{
+                                            color: colors.RED, paddingVertical: 5
+                                        }}>
+                                            {this.state.errors.cvv}
+                                        </CustomText>
+                                        :
+                                        null
+                                    }
+                                </Col>
+                                <Col size={10}>
+                                    <CustomText style={{ paddingVertical: 8 }} />
+                                    <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 15 }}>
+                                        <TouchableOpacity onPress={() => this.setState({ isModalShow: true })}>
+                                            <Icon style={{ color: colors.BLACK, fontSize: 18 }} name='info-circle' type='FontAwesome' />
+                                        </TouchableOpacity>
+                                    </View>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col size={90}>
+                                    <CustomText style={{ paddingVertical: 5, paddingVertical: 8 }}>Confirmation Email</CustomText>
+                                    <Item regular
+                                        style={{
+                                            borderStyle: 'solid',
+                                            marginLeft: 0,
+                                            backgroundColor: colors.WHITE,
+                                            borderRadius: 6,
+                                            borderColor: 'lightgray',
+                                            marginBottom: 5,
+                                            borderWidth: 1
+                                        }}>
+                                        <Input
+                                            keyboardType='numeric'
+                                            autoCapitalize='none'
+                                            value={this.state.cardDetails.confirmationEmail}
+                                            onChangeText={this._handleMultiInput('confirmationEmail')}
+                                        />
+                                    </Item>
+                                </Col>
+                                <Col size={10}>
+                                    <CustomText style={{ paddingVertical: 8 }} />
+                                    <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 15 }}>
+                                        <TouchableOpacity onPress={() => this.setState({ isModalShowEmail: true })}>
+                                            <Icon style={{ color: colors.BLACK, fontSize: 18 }} name='info-circle' type='FontAwesome' />
+                                        </TouchableOpacity>
+                                    </View>
+                                </Col>
+                            </Row>
+                            <CustomText style={{ paddingVertical: 5, paddingVertical: 8 }}>Customer Name</CustomText>
+                            <Item regular
+                                style={{
+                                    borderStyle: 'solid',
+                                    marginLeft: 0,
+                                    backgroundColor: colors.WHITE,
+                                    borderRadius: 6,
+                                    borderColor: 'lightgray',
+                                    marginBottom: 5,
+                                    borderWidth: 1
+                                }}>
+                                <Input
+                                    value={finalFullName}
+                                    disabled
+                                />
+                            </Item>
 
+                            <CustomText style={{ paddingVertical: 5, paddingVertical: 8 }}>Address</CustomText>
+                            <Item regular
+                                style={{
+                                    borderStyle: 'solid',
+                                    marginLeft: 0,
+                                    backgroundColor: colors.WHITE,
+                                    borderRadius: 6,
+                                    borderColor: 'lightgray',
+                                    marginBottom: 5,
+                                    borderWidth: 1
+                                }}>
+                                <Input
+                                    value={finalAdd1}
+                                    disabled
+                                />
+                            </Item>
 
-                        </Item>
+                            <View style={{ paddingTop: 15, paddingBottom: 20 }}>
+                                <Button style={{ borderRadius: 5 }} block success onPress={() => this.onSubmit()} disabled={this.state.isPaymentProcessing}>
+                                    <CustomText style={{ fontSize: 16, color: colors.WHITE }} uppercase={false} >{this.state.isPaymentProcessing ? 'Verifying' : 'Pay Now'}</CustomText>
+                                </Button>
+                            </View>
+                            <View style={{ paddingHorizontal: 30 }} >
+                                <Button style={{ borderRadius: 6 }} transparent block onPress={() =>
+                                    NavigationService.goBack()
 
-                        {!_.isEmpty(this.state.errors.cardHolderName) ?
-                            <CustomText style={{
-                                color: colors.RED, paddingVertical: 5
-                            }}>
-                                {this.state.errors.cardHolderName}
-                            </CustomText>
-                            :
-                            null
-                        }
-                        <CustomText style={{ paddingVertical: 5, paddingVertical: 8 }}>Card Number </CustomText>
-                        <Item regular
-                            style={{
-                                borderStyle: 'solid',
-                                marginLeft: 0,
-                                backgroundColor: colors.WHITE,
-                                borderRadius: 6,
-                                borderColor: 'lightgray',
-                                marginBottom: 5,
-                                borderWidth: 1
-                            }}>
-                            <NumberFormat
-                                mask="_"
-                                value={this.state.cardDetails.cardNumber}
-                                displayType={'text'} format="#### #### #### ####"
-                                renderText={value => (
-                                    <Input
-                                        textAlign={'left'}
-                                        autoCapitalize='none'
-                                        placeholderTextColor='lightgray'
-                                        keyboardType="numeric"
-                                        value={value}
-                                        onChangeText={this._handleMultiInput('cardNumber')}
-                                    />
-                                )}
-                            />
-                            {
-                                this.showCardType()
-                            }
-                        </Item>
-                        {!_.isEmpty(this.state.errors.cardNumber) ?
-                            <CustomText style={{
-                                color: colors.RED, paddingVertical: 5
-                            }}>
-                                {this.state.errors.cardNumber}
-                            </CustomText>
-                            :
-                            null
-                        }
-
-
-                        <Row>
-                            <Col size={60}>
-                                <CustomText style={{ paddingVertical: 8 }} >Expiration Date</CustomText>
-                                <Item regular
-                                    style={{
-                                        height: 52,
-                                        marginLeft: 0,
-                                        backgroundColor: colors.WHITE,
-                                        borderRadius: 6,
-                                        borderColor: 'lightgray',
-                                        marginBottom: 10
-                                    }}>
-                                    <Form>
-                                        <Picker
-                                            note
-                                            mode="dropdown"
-                                            style={{ width: 120 }}
-                                            selectedValue={this.state.cardDetails.selectedMonth}
-                                            onValueChange={(value) =>
-
-                                                this.setState({
-                                                    ...this.state,
-                                                    cardDetails: {
-                                                        ...this.state.cardDetails,
-                                                        selectedMonth: value
-                                                    }
-                                                })
-                                            }
-                                        >
-                                            {_.map(months, (monthData, index) => {
-                                                return (
-                                                    <Picker.Item label={monthData.name} value={monthData.value} />
-                                                )
-                                            })
-                                            }
-                                        </Picker>
-                                    </Form>
-                                    <CustomText>/</CustomText>
-                                    <Form>
-                                        <Picker
-                                            note
-                                            mode="dropdown"
-                                            style={{ width: 120 }}
-                                            selectedValue={this.state.cardDetails.selectedYear}
-                                            onValueChange={(value) =>
-                                                this.setState({
-                                                    ...this.state,
-                                                    cardDetails: {
-                                                        ...this.state.cardDetails,
-                                                        selectedYear: value
-                                                    }
-                                                })}
-                                        >
-                                            {_.map(years, (years, index) => {
-                                                return (
-                                                    <Picker.Item label={years.year} value={years.value} />
-                                                )
-                                            })
-                                            }
-                                        </Picker>
-                                    </Form>
-
-                                </Item>
-
-                            </Col>
-                            <Col size={5} />
-                            <Col size={25}>
-                                <CustomText style={{ paddingVertical: 8 }} >CVV</CustomText>
-                                <Item regular
-                                    style={{
-                                        marginLeft: 0,
-                                        backgroundColor: colors.WHITE,
-                                        borderRadius: 6,
-                                        borderColor: 'lightgray',
-                                        marginBottom: 10
-                                    }}>
-                                    <Input
-                                        autoCapitalize='none'
-                                        placeholderTextColor='lightgray'
-                                        keyboardType="numeric"
-                                        value={this.state.cardDetails.cvv}
-                                        onChangeText={this._handleMultiInput('cvv')}
-                                    />
-
-                                </Item>
-                                {!_.isEmpty(this.state.errors.cvv) ?
-                                    <CustomText style={{
-                                        color: colors.RED, paddingVertical: 5
-                                    }}>
-                                        {this.state.errors.cvv}
-                                    </CustomText>
-                                    :
-                                    null
-                                }
-                            </Col>
-                            <Col size={10}>
-                                <CustomText style={{ paddingVertical: 8 }} />
-                                <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 15 }}>
-                                    <TouchableOpacity onPress={() => this.setState({ isModalShow: true })}>
-                                        <Icon style={{ color: colors.BLACK, fontSize: 18 }} name='info-circle' type='FontAwesome' />
-                                    </TouchableOpacity>
-                                </View>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col size={90}>
-                                <CustomText style={{ paddingVertical: 5, paddingVertical: 8 }}>Confirmation Email</CustomText>
-                                <Item regular
-                                    style={{
-                                        borderStyle: 'solid',
-                                        marginLeft: 0,
-                                        backgroundColor: colors.WHITE,
-                                        borderRadius: 6,
-                                        borderColor: 'lightgray',
-                                        marginBottom: 5,
-                                        borderWidth: 1
-                                    }}>
-                                    <Input
-                                        keyboardType='numeric'
-                                        autoCapitalize='none'
-                                        value={this.state.cardDetails.confirmationEmail}
-                                        onChangeText={this._handleMultiInput('confirmationEmail')}
-                                    />
-                                </Item>
-                            </Col>
-                            <Col size={10}>
-                                <CustomText style={{ paddingVertical: 8 }} />
-                                <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 15 }}>
-                                    <TouchableOpacity onPress={() => this.setState({ isModalShowEmail: true })}>
-                                        <Icon style={{ color: colors.BLACK, fontSize: 18 }} name='info-circle' type='FontAwesome' />
-                                    </TouchableOpacity>
-                                </View>
-                            </Col>
-                        </Row>
-                        <CustomText style={{ paddingVertical: 5, paddingVertical: 8 }}>Customer Name</CustomText>
-                        <Item regular
-                            style={{
-                                borderStyle: 'solid',
-                                marginLeft: 0,
-                                backgroundColor: colors.WHITE,
-                                borderRadius: 6,
-                                borderColor: 'lightgray',
-                                marginBottom: 5,
-                                borderWidth: 1
-                            }}>
-                            <Input
-                                value={finalFullName}
-                                disabled
-                            />
-                        </Item>
-
-                        <CustomText style={{ paddingVertical: 5, paddingVertical: 8 }}>Address</CustomText>
-                        <Item regular
-                            style={{
-                                borderStyle: 'solid',
-                                marginLeft: 0,
-                                backgroundColor: colors.WHITE,
-                                borderRadius: 6,
-                                borderColor: 'lightgray',
-                                marginBottom: 5,
-                                borderWidth: 1
-                            }}>
-                            <Input
-                                value={finalAdd1}
-                                disabled
-                            />
-                        </Item>
-
-                        <View style={{ paddingTop: 15, paddingBottom: 20 }}>
-                            <Button style={{ borderRadius: 5 }} block success onPress={() => this.onSubmit()} disabled={this.state.isPaymentProcessing}>
-                                <CustomText style={{ fontSize: 16, color: colors.WHITE }} uppercase={false} >{this.state.isPaymentProcessing ? 'Verifying' : 'Pay Now'}</CustomText>
-                            </Button>
-                        </View>
-                        <View style={{ paddingHorizontal: 30 }} >
-                            <Button style={{ borderRadius: 6 }} transparent block onPress={() =>
-                                NavigationService.goBack()
-
-                            } >
-                                <CustomText uppercase={false} style={{ color: '#999999', CustomTextDecorationLine: 'underline' }} >Cancel</CustomText>
-                            </Button>
-                        </View>
-                        {/* <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                } >
+                                    <CustomText uppercase={false} style={{ color: '#999999', CustomTextDecorationLine: 'underline' }} >Cancel</CustomText>
+                                </Button>
+                            </View>
+                            {/* <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                                 <CustomText style={{ fontSize: 16 }}>Already Registered? </CustomText>
                                 <TouchableOpacity
                                     onPress={() => {
@@ -1004,14 +1019,14 @@ render() {
                                 </TouchableOpacity>
 
                             </View> */}
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 50, }} />
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 50, }} />
 
-                    </View>
-                </Content>
-            </Container >
+                        </View>
+                    </Content>
+                </Container >
 
-    )
-}
+        )
+    }
 }
 
 const mapStateToProps = (state) => ({

@@ -29,7 +29,8 @@ class AccountSummary extends Component {
     // local state
     this.state = {
       pixelDensity: 0,
-      accountDetails: this.props.navigation.state.params.accountDetails
+      accountDetails: this.props.navigation.state.params.accountDetails,
+      event: 'fromAccountSummary'
     };
   }
 
@@ -68,7 +69,8 @@ class AccountSummary extends Component {
               <Button block success style={{ borderRadius: 6 }}
                 onPress={() =>
                   this.props.navigation.navigate('PayNowWithoutAccount', {
-                    accountSummary: this.state.accountDetails
+                    accountSummary: this.state.accountDetails,
+                    event: this.state.event
                   })
                 }>
                 <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>Pay Now</CustomText>

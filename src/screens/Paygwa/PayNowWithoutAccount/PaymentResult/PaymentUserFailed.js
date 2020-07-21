@@ -14,6 +14,7 @@ import OfflineNotice from '../../../../components/OfflineNotice';
 import CustomHeader from '../../../../components/MultiCustomHeader'
 import { Grid, Row, Col } from 'react-native-easy-grid';
 import { FontAwesome } from '@expo/vector-icons';
+import NavigationService from '../../../../NavigationService';
 
 class PaymentUserFailed extends Component {
     constructor(props) {
@@ -21,7 +22,8 @@ class PaymentUserFailed extends Component {
 
         this.state = {
             paymentResult: this.props.navigation.state.params.paymentResult,
-            accountSummary: this.props.navigation.state.params.accountSummary
+            accountSummary: this.props.navigation.state.params.accountSummary,
+            event: this.props.navigation.state.params.event
         }
     }
     componentDidMount() {
@@ -93,18 +95,30 @@ class PaymentUserFailed extends Component {
 
                     </Row>
                     <View style={{
-                       paddingBottom: 40, paddingHorizontal: 60,
+                        paddingBottom: 40, paddingHorizontal: 60,
                     }}>
                         <Button block rounded transparent
                             style={{ marginTop: 25, backgroundColor: colors.PRIMARY_COLOR, borderRadius: 6, borderWidth: 0.5, height: 50 }}
                             onPress={() => {
-                                this.props.navigation.pop(2)
+
+                                if (this.state.event == 'fromAccountSummary') {
+                                    this.props.navigation.pop(2)
+                                } else {
+                                    NavigationService.navigate('Login')
+
+                                }
                             }
                             }>
                             <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>Pay Again</CustomText>
                         </Button>
                         <Button style={{ borderRadius: 6 }} transparent block onPress={() => {
-                            this.props.navigation.navigate('MyAccounts')
+                            if (this.state.event == 'fromAccountSummary') {
+                                this.props.navigation.navigate('MyAccounts')
+                            } else {
+                                NavigationService.navigate('Login')
+
+                            }
+
                         }} >
                             <CustomText uppercase={false} style={{ color: colors.GRAYISHRED, fontSize: 12, textDecorationLine: 'underline' }} >Cancel</CustomText>
                         </Button>

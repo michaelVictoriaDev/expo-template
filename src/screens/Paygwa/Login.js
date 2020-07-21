@@ -15,7 +15,7 @@ import Modal from 'react-native-modal';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'react-native-axios'
 import { PAYGWA_URL, DASHBOARD_URL, PAYNOW_URL } from 'react-native-dotenv';
-
+import NavigationService from '../../NavigationService'
 
 class Login extends Component {
 
@@ -1007,7 +1007,9 @@ class Login extends Component {
                                         <Button block rounded transparent
                                             style={[styles.buttons, { backgroundColor: colors.LIGHT_GREEN, borderRadius: 6, borderWidth: 0.5, height: 50 }]}
                                             onPress={() =>
-                                                console.log('PayNow')
+                                                NavigationService.navigate('PayNowWithoutAccount', {
+                                                    event: 'fromLogin'
+                                                }) 
                                             }>
                                             <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Pay Now</CustomTextMedium>
                                         </Button>

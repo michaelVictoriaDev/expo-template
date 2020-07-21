@@ -15,6 +15,7 @@ class PaymentServerFailed extends Component {
         super(props);
 
         this.state = {
+            event: this.props.navigation.state.params.event
 
         }
     }
@@ -58,12 +59,15 @@ class PaymentServerFailed extends Component {
                         <Button block rounded transparent
                             style={{ marginTop: 25, backgroundColor: colors.PRIMARY_COLOR, borderRadius: 6, borderWidth: 0.5, height: 50 }}
                             onPress={() => {
-                                this.props.navigation.navigate('MyAccounts', {
-                                    onGoBack: () => this.onRefresh
-                                })
+                                if (this.state.event == 'fromAccountSummary') {
+                                    this.props.navigation.navigate('MyAccounts')
+                                } else {
+                                    NavigationService.navigate('Login')
+
+                                }
                             }
                             }>
-                            <CustomText style={{ color: colors.WHITE }}>Back to Home</CustomText>
+                            <CustomText style={{ color: colors.WHITE }}>{this.state.event == 'fromAccountSummary' ? 'Back to Home' : 'Back To Login' }</CustomText>
                         </Button>
                     </View>
                 </Content>

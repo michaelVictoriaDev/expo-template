@@ -11,7 +11,7 @@ import { colors, pRatioToFontSize } from '../../../utils/constants';
 import CustomText from '../../../components/CustomText';
 import OfflineNotice from '../../../components/OfflineNotice';
 import CustomHeader from '../../../components/MultiCustomHeader'
-import _ from 'lodash'
+import _, { isUndefined } from 'lodash'
 import {
     checkAccountNumber,
     getOtherDetails,
@@ -81,7 +81,8 @@ class PayNowCustomerInformation extends Component {
             currentPosition: 0,
             isModalShow: false,
             userLatestBill: [],
-            accountSummary: this.props.navigation.state.params.accountSummary
+            accountSummary: _.isUndefined(this.props.navigation) ? this.props.accountSummary : this.props.navigation.state.params.accountSummary,
+            event: _.isUndefined(this.props.navigation) ? this.props.event : this.props.navigation.state.params.event 
         }
     }
     // For Function ProgressStep
@@ -239,6 +240,7 @@ class PayNowCustomerInformation extends Component {
                     userDetails={this.state.userDetails}
                     userLatestBill={this.state.userLatestBill}
                     accountSummary={this.state.accountSummary}
+                    event={this.state.event}
                 />
 
                 :
@@ -452,5 +454,6 @@ export default connect(mapStateToProps, {
     checkAccountNumber,
     getOtherDetails,
     getPremiseInfo,
-    getAcovInfo
+    getAcovInfo,
+    fetchMultipleLatestBill
 })(PayNowCustomerInformation);

@@ -17,7 +17,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import _ from 'lodash';
 import { captureRef, ViewShot } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
-
+import NavigationService from '../../../../NavigationService';
 
 
 class PaymentSuccess extends Component {
@@ -26,10 +26,13 @@ class PaymentSuccess extends Component {
 
         this.state = {
             paymentResult: this.props.navigation.state.params.paymentResult,
-            accountSummary: this.props.navigation.state.params.accountSummary
+            accountSummary: this.props.navigation.state.params.accountSummary,
+            event : this.props.navigation.state.params.event
         }
     }
     componentDidMount() {
+        console.log('PaymentSuccess',this.props.navigation.state.params.accountSummary)
+
     }
 
 
@@ -136,6 +139,7 @@ class PaymentSuccess extends Component {
                     >
                         <Col size={50}>
                             {_.map(this.state.accountSummary, (item, index) => {
+                                debugger
                                 return (
                                     <CustomText key={index} adjustsFontSizeToFit style={{ fontSize: 16, color: '#333333' }}>{item.accID[0]}</CustomText>
                                 )
@@ -146,12 +150,14 @@ class PaymentSuccess extends Component {
                         </Col>
                         <Col size={50} style={{ alignItems: 'flex-end' }}>
                             {_.map(this.state.accountSummary, (item, index) => {
+                                debugger
                                 return (
                                     <CustomText key={index} adjustsFontSizeToFit style={{ fontSize: 16 }}>{"$ " + parseFloat(Math.round(item.amountToBePaid * 100) / 100).toFixed(2)}</CustomText>
                                 )
                             })
                             }
                             {_.sumBy(this.state.accountSummary, (item, index) => {
+                                debugger
                                 return (
                                     <CustomText key={index} adjustsFontSizeToFit style={{ paddingTop: 10, fontSize: 24 }}>{"$ " + parseFloat(Math.round(item.amountToBePaid * 100) / 100).toFixed(2)}</CustomText>
                                 )
@@ -169,10 +175,15 @@ class PaymentSuccess extends Component {
                             style={{ marginTop: 25, backgroundColor: '#4caf50', borderRadius: 6, borderWidth: 0.5, height: 50 }}
                             onPress={() => {
                                 // this.props.navigation.navigate('MyAccounts')
-                                this.props.navigation.pop(4)
+                                if (this.state.event == 'fromAccountSummary') {
+                                    this.props.navigation.pop(4)
+                                } else {
+                                    NavigationService.navigate('Login')
+
+                                }
                             }
                             }>
-                            <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>Back to Dashboard</CustomText>
+                            <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>{this.state.event == 'fromAccountSummary' ? 'Back to Dashboard' : 'Back To Login' }</CustomText>
                         </Button>
 
 

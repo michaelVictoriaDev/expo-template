@@ -136,6 +136,7 @@ class PaymentSuccess extends Component {
                     >
                         <Col size={50}>
                             {_.map(this.state.accountSummary, (item, index) => {
+                                debugger
                                 return (
                                     <CustomText key={index} adjustsFontSizeToFit style={{ fontSize: 16, color: '#333333' }}>{item.accID[0]}</CustomText>
                                 )
@@ -146,12 +147,14 @@ class PaymentSuccess extends Component {
                         </Col>
                         <Col size={50} style={{ alignItems: 'flex-end' }}>
                             {_.map(this.state.accountSummary, (item, index) => {
+                                debugger
                                 return (
                                     <CustomText key={index} adjustsFontSizeToFit style={{ fontSize: 16 }}>{"$ " + parseFloat(Math.round(item.amountToBePaid * 100) / 100).toFixed(2)}</CustomText>
                                 )
                             })
                             }
                             {_.sumBy(this.state.accountSummary, (item, index) => {
+                                debugger
                                 return (
                                     <CustomText key={index} adjustsFontSizeToFit style={{ paddingTop: 10, fontSize: 24 }}>{"$ " + parseFloat(Math.round(item.amountToBePaid * 100) / 100).toFixed(2)}</CustomText>
                                 )

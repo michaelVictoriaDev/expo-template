@@ -185,7 +185,10 @@ const InitialStack = createStackNavigator(
     },
     SuccessScreen : {
       screen : SuccessScreen
-    }
+    },
+    PayNowWithoutAccount: {
+      screen: PayNowWithoutAccount
+    },
   },
   {
     initialRouteName: 'Login',

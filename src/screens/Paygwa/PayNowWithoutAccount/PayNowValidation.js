@@ -61,7 +61,8 @@ class PayNowValidation extends Component {
             accountSummary: this.props.accountSummary,
             userDetails: this.props.userDetails,
             userLatestBill: this.props.userLatestBill,
-            currentPosition: 1
+            currentPosition: 1,
+            event: this.props.event
         }
         this.onSubmit = this.onSubmit.bind(this);
     }
@@ -154,12 +155,14 @@ class PayNowValidation extends Component {
                     userDetails={this.state.userDetails}
                     userLatestBill={this.state.userLatestBill}
                     accountSummary={this.state.accountSummary}
+                    event={this.state.event}
                 />
 
                 // null
                 :
                 this.state.isGoBack === true ?
                     <PayNowCustomerInformation
+                        event={this.state.event}
                         accountSummary={this.state.accountSummary}
                         userDetails={this.state.userDetails}
                         userLatestBill={this.state.userLatestBill} />
