@@ -26,7 +26,7 @@ class AccountProfile extends Component {
         this.setState({
             isLoading: true
         })
-        
+
         const userAccountDetails = this.props.dashboard.userAccountDetails;
 
         this.setState({
@@ -45,7 +45,7 @@ class AccountProfile extends Component {
                 workPhone: userAccountDetails.workPhone,
                 emailAddress: userAccountDetails.emailAddress,
             }
-        }, () => console.log('componentWillMount',this.state.userAccDetails))
+        }, () => console.log('componentWillMount', this.state.userAccDetails))
 
 
 
@@ -72,7 +72,7 @@ class AccountProfile extends Component {
                 workPhone: userAccountDetails.work,
                 emailAddress: userAccountDetails.emailAddress,
             }
-        }, () => console.log('updateData',this.state.userAccDetails))
+        }, () => console.log('updateData', this.state.userAccDetails))
 
         // some other stuff
     };
@@ -87,7 +87,8 @@ class AccountProfile extends Component {
                     RightIcon={<Right style={{ paddingRight: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, flex: 1 }}>
                         <Button
                             transparent style={{ paddingLeft: 0, elevation: 0 }}
-                            onPress={() =>
+                            onPress={() => {
+                                console.log('EditAccountProfile', this.state.userAccDetails )
                                 this.props.navigation.navigate('EditAccountProfile', {
                                     fullName: this.state.userAccDetails.fullName,
                                     addressLine1: this.state.userAccDetails.addressLine1,
@@ -101,7 +102,7 @@ class AccountProfile extends Component {
                                     emailAddress: this.state.userAccDetails.emailAddress,
                                     updateData: this.updateData
                                 })
-
+                            }
                             } >
                             <Icon style={{ backgroundColor: colors.PRIMARY_COLOR, color: colors.WHITE, fontSize: pRatioToFontSize(+1) > 20 ? 20 : pRatioToFontSize(+1) }} name='mode-edit' type='MaterialIcons' />
 

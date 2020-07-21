@@ -59,26 +59,28 @@ class EditAccountProfile extends Component {
                 this.props.getCountry().then(() => {
                     this.props.fetchOldUserDetails(this.props.userPersonId)
                         .then(() => {
+                            console.log('userAccountDetails', this.props.dashboard.userAccountDetails)
                             this.setState({
                                 ...this.state,
                                 isLoading: false,
                                 isAdressEditable: (this.props.dashboard.userOldDataDetails.billAddressSource !== "PER") ? false : true,
                                 userAccDetails: {
+                                    ...this.state.userAccDetails,
                                     personId: this.props.userPersonId,
                                     accountId: this.props.accountId[0][0],
                                     username: this.props.userName,
-                                    fullName: this.props.dashboard.userAccountDetails.fullName || '',
-                                    emailAddress: this.props.dashboard.userAccountDetails.emailAddress || '',
-                                    address1: this.props.dashboard.userAccountDetails.addressLine1 || '',
-                                    address2: this.props.dashboard.userAccountDetails.addressLine2 || '',
-                                    city: this.props.dashboard.userAccountDetails.city || '',
-                                    postal: this.props.dashboard.userAccountDetails.postal || '',
-                                    stateInitials: this.props.dashboard.userAccountDetails.stateInitials || '',
-                                    stateDesc: this.props.dashboard.userAccountDetails.state || '',
-                                    country: this.props.dashboard.userAccountDetails.country || '',
-                                    home: this.props.dashboard.userAccountDetails.homePhone,
-                                    mobile: this.props.dashboard.userAccountDetails.mobilePhone,
-                                    work: this.props.dashboard.userAccountDetails.workPhone,
+                                    fullName: this.props.navigation.state.params.fullName || '',
+                                    emailAddress: this.props.navigation.state.params.emailAddress || '',
+                                    address1: this.props.navigation.state.params.addressLine1 || '',
+                                    address2: this.props.navigation.state.params.addressLine2 || '',
+                                    city: this.props.navigation.state.params.city || '',
+                                    postal: this.props.navigation.state.params.postal || '',
+                                    stateInitials: this.props.navigation.state.params.stateInitials || '',
+                                    stateDesc: this.props.navigation.state.params.state || '',
+                                    country: this.props.navigation.state.params.country || '',
+                                    home: this.props.navigation.state.params.homePhone,
+                                    mobile: this.props.navigation.state.params.mobilePhone,
+                                    work: this.props.navigation.state.params.workPhone,
                                     oldDateEmail: this.props.dashboard.userOldDataDetails.oldDateEmailAdd || '',
                                     oldDateQuestion: this.props.dashboard.userOldDataDetails.oldDateSecuQuestion || '',
                                     oldDateAnswer: this.props.dashboard.userOldDataDetails.oldDateAnswer || '',
@@ -138,13 +140,16 @@ class EditAccountProfile extends Component {
 
     onSave() {
         // check the contact Types
-        if (_.isEmpty(this.state.userAccDetails.home) || _.isEmpty(this.state.userAccDetails.mobile) || _.isEmpty(this.state.userAccDetails.work)) {
+        if (_.isEmpty(this.state.userAccDetails.home) && _.isEmpty(this.state.userAccDetails.mobile) && _.isEmpty(this.state.userAccDetails.work)) {
             alert('Please fill at least 1 contact number!')
         } else if (this.state.isInvalidPhones.mobilePhone || this.state.isInvalidPhones.workPhone || this.state.isInvalidPhones.homePhone) {
             alert('Please enter a valid Phone Numbers.')
         } else {
             // check if required field
-            if (_.isEmpty(this.state.userAccDetails.emailAddress) || _.isEmpty(this.state.userAccDetails.answer)) {
+            if (!_.isEmpty(this.state.errorEmailFormat)) {
+                alert('Please check your email address')
+            }
+            else if (_.isEmpty(this.state.userAccDetails.emailAddress) || _.isEmpty(this.state.userAccDetails.answer)) {
                 alert('Please check your email address and security answer.')
             } else {
                 this.setState({
@@ -177,8 +182,10 @@ class EditAccountProfile extends Component {
                     characteristicValue: this.state.userAccDetails.characteristicValue,
                     answer: this.state.userAccDetails.answer
                 }
+                console.log('postData', postData)
                 this.props.updateUserDetails(postData)
                     .then((response) => {
+                        debugger
                         this.setState({
                             ...this.state,
                             isProcessing: false
@@ -195,8 +202,8 @@ class EditAccountProfile extends Component {
                                 isProcessing: false,
                                 saveDetails: {
                                     ...this.state.saveDetails,
-                                    fullName: this.props.dashboard.userAccountDetails.fullName,
-                                    emailAddress: this.props.dashboard.userAccountDetails.emailAddress,
+                                    fullName: this.state.userAccDetails.fullName,
+                                    emailAddress: this.state.userAccDetails.emailAddress,
                                     home: this.state.userAccDetails.home,
                                     mobile: this.state.userAccDetails.mobile,
                                     work: this.state.userAccDetails.work
@@ -316,13 +323,13 @@ class EditAccountProfile extends Component {
                             }
                             }>
                             <Icon
-                                style={{ color: colors.WHITE, fontSize: pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1) }}
+                                style={{ color: colors.WHITE, fontSize: 24 }}
                                 name={'chevron-left'} type='FontAwesome'
                             />
                         </Button>
                     </Left>
-                    <Body style={{ flex: 1, alignItems: 'center' }}>
-                        <Title style={{ color: colors.WHITE, fontSize: pRatioToFontSize(-.5) > 20 ? 20 : pRatioToFontSize(- .5) }}>Edit Profile</Title>
+                    <Body style={{ flex: 3, alignItems: 'center' }}>
+                        <Title style={{ color: colors.WHITE, fontSize: 18 }}>Edit Profile</Title>
                     </Body>
                     <Right style={{ paddingRight: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, flex: 1 }}>
 

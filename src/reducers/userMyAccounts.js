@@ -11,7 +11,8 @@ import {
     FETCH_SURVEY_LIST,
     SAVE_VIEW_BILL_DATA,
     SAVE_ORDER_DATA,
-    FETCH_PAYMENT_HISTORY_LIST
+    FETCH_PAYMENT_HISTORY_LIST,
+    FETCH_OLD_BEGIN
 } from '../actions/types';
 
 initialState = {
@@ -32,6 +33,11 @@ initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case FETCH_OLD_BEGIN:
+            return {
+                ...state,
+                userOldDataDetails: action.payload
+            };
         case SAVE_ACCOUNT_ID:
             return {
                 ...state,

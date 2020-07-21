@@ -14,31 +14,31 @@ USED FOR NAVIGATING WITHOUT PROPS
 
 
 export const fetchLoginBegin = () => ({
-	type : FETCH_LOGIN_BEGIN
+	type: FETCH_LOGIN_BEGIN
 })
 
 export const fetchLoginSuccess = (accountIds, userPersonId, accountId, userName) => ({
-	type : FETCH_LOGIN_SUCCESS,
+	type: FETCH_LOGIN_SUCCESS,
 	payload: { accountIds, userPersonId, accountId, userName }
 })
 
-export const fetchLoginFail = ( error ) => ({
-	type : FETCH_LOGIN_FAIL,
-	payload : { error }
+export const fetchLoginFail = (error) => ({
+	type: FETCH_LOGIN_FAIL,
+	payload: { error }
 })
 
 
 // CHECK SIGN IN IN DATABASE ( MANUAL LOG IN )
-export function fetchLogin (dataObject) {
+export function fetchLogin(dataObject) {
 	return dispatch => {
 		//SHOW LOADING
-		dispatch(fetchLoginBegin());
+		// dispatch(fetchLoginBegin());
 		axios.post(
-			PAYGWA_URL+'/api/v1/user-login', //endpoint url
+			PAYGWA_URL + '/api/v1/user-login', //endpoint url
 			{//data
 				webUserPersonIdTypeCode: 'WEB',
-				userName : dataObject.emailAddress,
-				password : dataObject.password,
+				userName: dataObject.emailAddress,
+				password: dataObject.password,
 				webAccessFlag: 'ALWD',
 				wrongPasswordCountPersonCharTypeCode: 'WPCOUNT',
 				cisDivision: 'GWA',
@@ -47,92 +47,99 @@ export function fetchLogin (dataObject) {
 			{//config
 
 				headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
-                    }
+					'Content-Type': 'application/json',
+					"origin": "https://gwadev.xtendly.com"
+				}
 			}
 		)
-		.then (response => {
-			
-			 
-			const premiseData = response.data.result.premiseData;
-			if (Array.isArray(premiseData)) {
-				console.log('personId', premiseData[0].PersonID)
-			}
-			const personId = premiseData[0].PersonID
-			if (response.data.result.loginSuccessful !== 'false') {
-				if (premiseData.length > 1) {
-					var accountIds = []
-					for (var count = 0; count < premiseData.length; count++) {
-						accountIds.push([premiseData[count].AccountID, premiseData[count].PremiseInfo.replace(/,/g, ""), premiseData[count].customerClass])
-					}
-					console.log('accountIds', accountIds)
-					var empty = ''
-					dispatch(fetchLoginSuccess(accountIds, personId, empty, dataObject.emailAddress));
-					// localStorage.setItem('accountIds', accountIds)
-				}
-				else {
-					var accountId = []
-					accountId.push([premiseData[0].AccountID, premiseData[0].PremiseInfo.replace(/,/g, ""), premiseData[0].customerClass])
-					console.log('accountId', accountId)
-					var empty = ''
-					dispatch(fetchLoginSuccess(empty, personId, accountId, dataObject.emailAddress));
-					// localStorage.setItem('accountId', accountId)
-				}
-			}
-			const loginSuccessful = response.data.result.loginSuccessful
-			const status = response.status
-			if (!(status === null)) {
-				if (loginSuccessful.toString() === "true") {
-					// another call function
-
-					// end function
-					Toast.show({
-						text: `Log in successfully.. Please wait.`,
-						duration: 3000,
-						type: 'success'
-					})
-					NavigationService.navigate('MyAccounts');
-				}
-				else {
-					let errMsg = ""
-					if (status.loginMessage === "Exceeded number of wrong password") {
-						errMsg = "You have exceeded the maximum number of failed login attempts"
+			.then(response => {
+				console.log('labas', response.data.result)
+				const loginSuccessful = response.data.result.loginSuccessful
+				if (loginSuccessful == true) {
+					const premiseData = response.data.result.premiseData;
+					console.log('loob',response.data.result)
+					console.log(premiseData)
+					const personId = premiseData[0].PersonID
+					if (premiseData.length > 1) {
+						var accountIds = []
+						for (var count = 0; count < premiseData.length; count++) {
+							accountIds.push([premiseData[count].AccountID, premiseData[count].PremiseInfo.replace(/,/g, ""), premiseData[count].customerClass])
+						}
+						console.log('accountIds', accountIds)
+						var empty = ''
+						dispatch(fetchLoginSuccess(accountIds, personId, empty, dataObject.emailAddress));
+						localStorage.setItem('accountIds', accountIds)
 					}
 					else {
-						errMsg = status.loginMessage
+						var accountId = []
+						accountId.push([premiseData[0].AccountID, premiseData[0].PremiseInfo.replace(/,/g, ""), premiseData[0].customerClass])
+						console.log('accountId', accountId)
+						var empty = ''
+						dispatch(fetchLoginSuccess(empty, personId, accountId, dataObject.emailAddress));
+						localStorage.setItem('accountId', accountId)
 					}
+				}
 
+
+				
+				const status = response.data.result.status
+
+				console.log('loginSuccessful', loginSuccessful)
+				console.log('status', status)
+				if (!(status === null)) {
+					if (loginSuccessful.toString() === "true") {
+						// another call function
+
+						// end function
+						Toast.show({
+							text: `Log in successfully.. Please wait.`,
+							duration: 3000,
+							type: 'success'
+						})
+						NavigationService.navigate('MyAccounts');
+					}
+					else {
+						var errMsg = ""
+						if (status.loginMessage === "Exceeded number of wrong password") {
+							errMsg = "You have exceeded the maximum number of failed login attempts"
+						}
+						else {
+							errMsg = status.loginMessage
+						}
+
+						// console.log('errMsg',status.loginMessage)
+						Toast.show({
+							text: errMsg,
+							duration: 3000,
+							type: 'danger'
+						})
+						
+					}
+				}
+				else {
 					Toast.show({
-						text: errMsg,
+						text: `Server not responding.Please try again later.`,
 						duration: 3000,
 						type: 'danger'
 					})
+
 				}
-			}
-			else {
+
+
+			})
+			.catch(error => {
+
+				// dispatch(fetchLoginFail(String(error)));
 				Toast.show({
-					text: `Server not responding.Please try again later.`,
+					text: 'Error in log-in: Account might not be existing. ' + error,
 					duration: 3000,
 					type: 'danger'
 				})
-
-			}
-
-		})
-		.catch(error => {
-				
-				dispatch(fetchLoginFail(String(error)));
-				Toast.show({
-					text : 'Error in log-in: Account might not be existing. ' + error,
-					duration : 3000,
-					type : 'danger'
-				})
-		});
+			});
 	}
 }
 
 export const appStateHandler = (appState) => ({
-	type : HANDLE_APPSTATE,
-	globalAppState : appState
+	type: HANDLE_APPSTATE,
+	globalAppState: appState
 })

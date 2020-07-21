@@ -34,7 +34,10 @@ class AccountSummary extends Component {
     };
   }
 
-  componentDidMount() { }
+  componentDidMount() { 
+
+    console.log('accountDetails', this.state.accountDetails.amountToBePaid)
+  }
 
   componentWillUnmount() { }
 
@@ -67,11 +70,23 @@ class AccountSummary extends Component {
               </CustomTextBold>
               <View style={{ paddingTop: 8 }} />
               <Button block success style={{ borderRadius: 6 }}
-                onPress={() =>
-                  this.props.navigation.navigate('PayNowWithoutAccount', {
-                    accountSummary: this.state.accountDetails,
-                    event: this.state.event
-                  })
+                onPress={() => {
+                  let subtotal = 0
+                  const arrAccountSummary = this.state.accountDetails
+                  subtotal = subtotal + parseFloat( this.state.accountDetails.amountToBePaid === "" ? 0 :  this.state.accountDetails.amountToBePaid)
+
+                  console.log(this.state.accountDetails)
+
+                  this.props.navigation.navigate('PaymentInput',
+                    {
+                      selectedAccounts: [this.state.accountDetails],
+                      selectedAccountsId: [this.state.accountDetails.arrears.details.AccountID],
+                      subtotal: subtotal,
+                      screenAccountSummaryKey: this.props.navigation.state.key
+                    })
+
+                }
+                  
                 }>
                 <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>Pay Now</CustomText>
               </Button>

@@ -120,8 +120,8 @@ class PaymentPayNow extends Component {
                 }}
                 >
                     <Left style={{ flex: 1 }} />
-                    <Body style={{ flex: 1, alignItems: 'center' }}>
-                        <Title style={{ color: colors.WHITE, fontSize: pRatioToFontSize(-.5) > 20 ? 20 : pRatioToFontSize(- .5) }}>My Account</Title>
+                    <Body style={{ flex: 3, alignItems: 'center' }}>
+                        <Title style={{ color: colors.WHITE, fontSize: 18, fontFamily: 'Lato_Bold' }}>My Account</Title>
                     </Body>
                     <Right />
                 </Header>
@@ -289,7 +289,8 @@ class PaymentPayNow extends Component {
                                         selectedAccounts: this.state.selectedAccounts,
                                         selectedAccountsId: this.state.selectedAccountsId,
                                         subtotal: this.state.subtotal,
-                                        cardDetails: this.state.cardDetails
+                                        cardDetails: this.state.cardDetails,
+                                        screenAccountSummaryKey : this.props.navigation.state.params.screenAccountSummaryKey
                                     })
                             }}
                         >

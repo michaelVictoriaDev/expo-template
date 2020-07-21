@@ -156,7 +156,8 @@ class PaymentView extends Component {
                     {
                         selectedAccounts: sortedAccountSummary,
                         selectedAccountsId: this.state.selectedAccountsId,
-                        subtotal: parseFloat(Math.round(subtotal * 100) / 100).toFixed(2)
+                        subtotal: parseFloat(Math.round(subtotal * 100) / 100).toFixed(2),
+                        screenAccountSummaryKey : this.props.navigation.state.params.screenAccountSummaryKey
                     })
                 // payment input
                 this.setState({
@@ -309,14 +310,16 @@ class PaymentView extends Component {
                     this.props.navigation.navigate('PaymentSuccess',
                         {
                             paymentResult: result,
-                            accountSummary: this.state.accountSummary
+                            accountSummary: this.state.accountSummary,
+                            screenAccountSummaryKey : this.props.navigation.state.params.screenAccountSummaryKey
 
                         })
                 } else if (result.data.Transaction_Approved == 'false') {
                     this.props.navigation.navigate('PaymentUserFailed',
                         {
                             paymentResult: result,
-                            accountSummary: this.state.accountSummary
+                            accountSummary: this.state.accountSummary,
+                            screenAccountSummaryKey : this.props.navigation.state.params.screenAccountSummaryKey
 
                         })
                 } else {

@@ -17,6 +17,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import _ from 'lodash';
 import { captureRef, ViewShot } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
+import { NavigationActions } from 'react-navigation';
+import NavigationService from  '../../../../NavigationService'
 
 
 
@@ -172,7 +174,12 @@ class PaymentSuccess extends Component {
                             style={{ marginTop: 25, backgroundColor: '#4caf50', borderRadius: 6, borderWidth: 0.5, height: 50 }}
                             onPress={() => {
                                 // this.props.navigation.navigate('MyAccounts')
-                                this.props.navigation.pop(4)
+                                // this.props.navigation.navigate.goBack('AccountSummary')
+                                // this.props.navigation.dispatch(NavigationActions.back('AccountSummary'))
+                                // this.props.navigation.navigate.goBack('AccountSummary')
+                                // NavigationService.goBack('AccountSummary')
+                                console.log(this.props.navigation.goBack(this.props.navigation.state.params.screenAccountSummaryKey))
+                                this.props.navigation.goBack(this.props.navigation.state.params.screenAccountSummaryKey);
                             }
                             }>
                             <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>Back to Dashboard</CustomText>

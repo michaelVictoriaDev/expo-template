@@ -11,7 +11,8 @@ import {
     FETCH_SURVEY_LIST,
     SAVE_VIEW_BILL_DATA,
     SAVE_ORDER_DATA,
-    FETCH_PAYMENT_HISTORY_LIST
+    FETCH_PAYMENT_HISTORY_LIST,
+    FETCH_OLD_BEGIN
 } from './types';
 import { Toast } from 'native-base';
 import { PAYGWA_URL, DASHBOARD_URL, PAYNOW_URL } from 'react-native-dotenv';
@@ -890,8 +891,14 @@ export const updateUserDetails = (postData) => dispatch => {
             })
     });
 }
+export const fetchClearOldDetails = () => ({
+    type : FETCH_OLD_BEGIN,
+    payload: []
+})
+
 
 export const fetchOldUserDetails = (personId) => dispatch => {
+    dispatch(fetchClearOldDetails())
     return axios
         .post(DASHBOARD_URL + '/api/v1/user-details-edit-account',
             {
@@ -922,6 +929,8 @@ export const fetchOldUserDetails = (personId) => dispatch => {
                     userOldDetails.oldDateEmailAdd = oldData[count].EffectiveDate
                 }
             }
+            console.log('oldData', oldData)
+            console.log('userOldDetails', userOldDetails)
             dispatch({
                 type: FETCH_USER_OLD_DETAILS,
                 payload: userOldDetails

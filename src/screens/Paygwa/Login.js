@@ -1072,8 +1072,8 @@ class Login extends Component {
                                                 this.manualLogin(this.state.emailAdd, this.state.password)
                                                 // this.manualLogin('gdoe', 'GDOE2018')
                                                 // this.manualLogin('Relyant01', 'Relyant01')
-                                                // this.manualLogin('blas959', 'sweetheart95')
-                                                // this.manualLogin('neilg671', 'TO1108370z!')
+                                                // this.manualLogin('dblas95', 'sweetheart95')
+                                                // this.manualLogin('neilg671', 'TO1108370z!!')
                                             }>
                                             <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Login</CustomTextMedium>
                                         </Button>

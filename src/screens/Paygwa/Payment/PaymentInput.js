@@ -36,7 +36,7 @@ class PaymentInput extends Component {
     }
   }
   componentDidMount() {
-    console.log(this.props.navigation.state.params.selectedAccounts)
+    
   }
 
   // _handleMultiInput(index) {
@@ -228,7 +228,8 @@ class PaymentInput extends Component {
                   {
                     selectedAccounts: this.state.selectedAccounts,
                     selectedAccountsId: this.state.selectedAccountsId,
-                    subtotal: this.state.subtotal
+                    subtotal: this.state.subtotal,
+                    screenAccountSummaryKey : this.props.navigation.state.params.screenAccountSummaryKey
                   })
               }}
             >

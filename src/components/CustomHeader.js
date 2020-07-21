@@ -38,7 +38,7 @@ class CustomHeader extends Component {
             <Button style={{ paddingLeft: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, elevation: 0 }} onPress={() => this.props.leftButtonFunction()
             }>
               <Icon
-                style={{ color: colors.WHITE, fontSize: pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1) }}
+                style={{ color: colors.WHITE, fontSize: 24 }}
                 name={this.props.leftIconName == null ? 'chevron-left' : this.props.leftIconName} type='FontAwesome'
               />
             </Button>
@@ -49,7 +49,7 @@ class CustomHeader extends Component {
         </Left>
 
         <Body style={{ flex: 1, alignItems: 'center' }}>
-          <Title style={{ color: colors.WHITE, fontSize: pRatioToFontSize(-.5) > 25 ? 25 : pRatioToFontSize(-.5) }}>{this.props.title}</Title>
+          <Title style={{ color: colors.WHITE, fontSize: 18, fontFamily: 'Lato_Bold' }}>{this.props.title}</Title>
         </Body>
         <Right style={{ paddingRight: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, flex: 1 }}>
           {
@@ -70,7 +70,7 @@ class CustomHeader extends Component {
                         <FontAwesome
                           style={{
                             color: this.props.notificationStore.unreadNotifs > 0 ? 'red' : 'white',
-                            fontSize: pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1)
+                            fontSize: 24
                           }} name={'bell'} />
                       </View>
                     }

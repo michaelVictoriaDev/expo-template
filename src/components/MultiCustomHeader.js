@@ -37,7 +37,7 @@ class MultiCustomHeader extends Component {
           <Button style={{ paddingLeft: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, elevation : 0}} onPress={() => this.props.leftButtonFunction()
           }>
             <Icon
-              style={{ color: colors.WHITE, fontSize: this.props.fontSizeLeft == null ? pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1) : this.props.fontSizeLeft }}
+              style={{ color: colors.WHITE, fontSize: 24 }}
               name={this.props.leftIconName == null ? 'chevron-left' : this.props.leftIconName} type='FontAwesome'
             />
           </Button> 
@@ -46,8 +46,8 @@ class MultiCustomHeader extends Component {
             this.props.LeftIcon 
   }
         </Left>
-        <Body style={{ flex: 1, alignItems : 'center' }}>
-          <Title style={{ color: colors.WHITE, fontSize: pRatioToFontSize(-.5) > 20 ? 20 : pRatioToFontSize(- .5)}}>{this.props.title}</Title>
+        <Body style={{ flex: 2, alignItems : 'center' }}>
+          <Title style={{ color: colors.WHITE, fontSize: 18, fontFamily: 'Lato_Bold' }}>{this.props.title}</Title>
         </Body>
         <Right style={{ paddingRight: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, flex: 1 }} >
           {
@@ -55,7 +55,7 @@ class MultiCustomHeader extends Component {
               ?
               <Button style={{ paddingRight: 0, backgroundColor: colors.PRIMARY_COLOR, borderColor: colors.PRIMARY_COLOR, elevation: 0 }} onPress={() => this.props.rightButtonFunction()}>
                 <Icon
-                  style={{ color: colors.WHITE, fontSize: pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1) }}
+                  style={{ color: colors.WHITE, fontSize: 24 }}
                   name={this.props.rightIconName == null ? 'md-checkmark' : this.props.rightIconName}
                 />
               </Button>

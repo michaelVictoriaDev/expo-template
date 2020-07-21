@@ -291,7 +291,7 @@ class AccountSummaryBill extends Component {
                         alignItems: "center",
                         justifyContent: "center"
                       }}>
-                      <Text style={{ color: colors.PRIMARY_COLOR }} onPress={() => Linking.openURL(GWA+ `/view-bill/${data.Parent} `)}>View</Text>
+                      <Text style={{ color: colors.PRIMARY_COLOR }} onPress={() => Linking.openURL(GWA+ `/view-bill?bill-id=${data.Parent} `)}>View</Text>
                       
                     </Col>
                   </Row>)
