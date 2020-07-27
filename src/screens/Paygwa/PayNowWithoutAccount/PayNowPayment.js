@@ -38,6 +38,10 @@ import { Grid, Row, Col } from 'react-native-easy-grid';
 import moment from 'moment'
 import NumberFormat from 'react-number-format';
 
+import 'intl';
+import 'intl/locale-data/jsonp/fr';
+
+
 
 const labels = ["Customer Information", "Validation", "Enter Payment"];
 
@@ -83,11 +87,11 @@ class PayNowPayment extends Component {
             isModalShowEmail: false,
             event: this.props.event,
             cardDetails: {
-                // cardHolderName: "Xtendly Dev",
-                cardHolderName: "",
-                // cardNumber: "4111111111111111",
-                cardNumber: "",
-                cvv: "",
+                cardHolderName: "Xtendly Dev",
+                // cardHolderName: "",
+                cardNumber: "4111111111111111",
+                // cardNumber: "",
+                cvv: "123",
                 validExpDate: "",
                 selectedMonth: ('0' + (moment().month() + 1)).slice(-2),
                 selectedYear: moment().format("YY"),

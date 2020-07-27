@@ -383,12 +383,12 @@ export const validateVisaPayment = (accountId, usedCC) => dispatch => {
 export const fetchMultipleLatestBill = (accountId) => dispatch => {
     let arrLatestBillRequests = [], arrLatestPayment = []
     for (var counter = 0; counter < accountId.length; counter++) {
-
-        arrLatestBillRequests.push(fetchLatestBill(accountId[counter][0][0]))
-
+        arrLatestBillRequests.push(fetchLatestBill(accountId[counter][0]))
     }
+
+    
     return new Promise((resolve, reject) => {
-        axios.all([arrLatestBillRequests,]) //arrLatestPayment
+        axios.all([arrLatestBillRequests]) //arrLatestPayment
             .then((response) => {
                 const resLatestBillRequests = response[0];
                 const resLatestPayment = response[1];
@@ -451,6 +451,11 @@ export const fetchMultipleLatestBill = (accountId) => dispatch => {
                         )
 
                     }).catch(err => {
+                        Toast.show({
+                            text: 'fetchMultipleLatestBill, Server Error:' + err,
+                            duration: 3000,
+                            type: 'danger'
+                        })
                         console.log(`error: ${err}`)
                     })
                 }

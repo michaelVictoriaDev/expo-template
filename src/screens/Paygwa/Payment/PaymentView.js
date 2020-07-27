@@ -423,7 +423,7 @@ class PaymentView extends Component {
                             return (
                                 <Row style={{ paddingBottom: 5 }}>
                                     <Col>
-                                        <CustomText style={{ fontSize: 16 }} >{data.accID[0]}</CustomText>
+                                        <CustomText style={{ fontSize: 16 }} >{data.accID}</CustomText>
                                         <CustomTextBold style={{ fontSize: 18 }}>${data.arrears.details.PayoffBalance}</CustomTextBold>
                                     </Col>
                                     <Col style={{ alignItems: 'flex-end' }}>

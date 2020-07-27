@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Container, Right, Footer, FooterTab, Icon, Text } from 'native-base';
+import { Button, Container, Right, Footer, FooterTab, Icon, Text , Toast} from 'native-base';
 import {
   TouchableHighlight, FlatList, View, ActivityIndicator, TouchableOpacity, StyleSheet
 } from 'react-native';
@@ -58,8 +58,9 @@ class MyAccount extends Component {
   getApiData() {
     // accountIds multiple accounts
     // accountId single account
-    // debugger
+    debugger
     this.setState({ isLoading: true })
+    
     if (_.isEmpty(this.props.accountIds)) {
       var usethis = this.props.accountId
     } else {
@@ -67,7 +68,7 @@ class MyAccount extends Component {
     }
 
 
-
+debugger
     this.props.saveAccountId(usethis[0][0])
       .then(() => {
         this.props.savePremiseAddress(usethis[0][1])
@@ -136,6 +137,7 @@ class MyAccount extends Component {
   }
 
   getLocalData() {
+    debugger
     // ls meaning =localStorage
     //session storage key search
     let sessionAccountId, sessionPersonId;
@@ -145,35 +147,17 @@ class MyAccount extends Component {
     console.log('lsAccountIds', this.props.accountIds)
 
     if (!(lsAccountId === '' || lsAccountId === null || lsAccountId === undefined)) {
+      debugger
       var accountId = [];
       var arrAccountId = lsAccountId
-      accountId.push([arrAccountId[0], arrAccountId[1], arrAccountId[2]])
-      sessionAccountId = accountId
+      accountId.push([arrAccountId[0][0], arrAccountId[0][1], arrAccountId[0][2]])
+      sessionAccountId = lsAccountId
     }
     else if (!(lsAccountIds === '' || lsAccountIds === null || lsAccountIds === undefined)) {
-      var storageAccIds = [], premiseAddresses = [], currPaidAmounts = [], accountIds = [];
-      var arrAccountIds = _.split(lsAccountIds, ',');
-      let flag = 0
-      for (var count = 0; count < arrAccountIds.length; count++) {
-        if (flag === 0) {
-          storageAccIds.push(arrAccountIds[count])
-          flag = flag + 1
-        }
-        else if (flag === 1) {
-          premiseAddresses.push(arrAccountIds[count])
-          flag = flag + 1
-        }
-        else if (flag === 2) {
-          currPaidAmounts.push(arrAccountIds[count])
-          flag = 0
-        }
-      }
-      for (var count = 0; count < storageAccIds.length; count++) {
-        accountIds.push([storageAccIds[count], premiseAddresses[count], currPaidAmounts[count]])
-      }
-
-      sessionAccountId = accountIds;
+      sessionAccountId = lsAccountIds;
+      debugger
     }
+    debugger
     sessionPersonId = this.props.userPersonId
     console.log('selectedAccountId', this.props.dashboard.selectedAccountId)
     this.setState({
@@ -238,7 +222,12 @@ class MyAccount extends Component {
       }
     }
     catch (error) {
-      this.props.showMessage(true, "Server Error. Try again later!")
+      Toast.show({
+        text: `Server Error. Try again later!`,
+        duration: 2500,
+        type: 'danger'
+    })
+     
       setInterval(() => {
         this.getApiData()
       }, 1000);
@@ -252,11 +241,11 @@ class MyAccount extends Component {
     let selectedAccountsId = this.state.selectedAccountsId
 
 
-    if (selectedAccountsId.indexOf(i.accID[0]) == -1) {
-      selectedAccountsId.push(i.accID[0]);
+    if (selectedAccountsId.indexOf(i.accID) == -1) {
+      selectedAccountsId.push(i.accID);
       selected.push(i) // insert array of object
     } else {
-      let index = selectedAccountsId.indexOf(i.accID[0]);
+      let index = selectedAccountsId.indexOf(i.accID);
       // _.remove(selected, (e) => {
       //   return e !== i.accID
       // })
@@ -307,7 +296,7 @@ class MyAccount extends Component {
 
                   name={
                     // sl.indexOf(i.accID) != -1 
-                    _.includes(sl, i.accID[0])
+                    _.includes(sl, i.accID)
                       ? 'check-box' : 'check-box-outline-blank'
                   }
                   size={pRatioToFontSize(-0.1)}
@@ -320,7 +309,7 @@ class MyAccount extends Component {
           </View>
 
           <View style={styles.itemTwo}>
-            <CustomText style={{ fontsize: 16, alignItems: 'center' }} numberOfLines={1} ellipsizeMode='tail'>{i.accID[0]}{' '}{i.accID[2] === 'COMM' ?
+            <CustomText style={{ fontsize: 16, alignItems: 'center' }} numberOfLines={1} ellipsizeMode='tail'>{i.accID}{' '}{i.accID[2] === 'COMM' ?
               <Icon type={'FontAwesome5'} name='building' style={{ fontSize: 20 }} />
               :
               <Icon type={'Entypo'} name='home' style={{ fontSize: 20, }} />
@@ -367,7 +356,7 @@ class MyAccount extends Component {
                 let fl = [];
                 fl = this.state.accountSummary;
                 for (var i = 0; i < fl.length; i++) {
-                  selectedAccountsId.push(fl[i].accID[0]);
+                  selectedAccountsId.push(fl[i].accID);
                   selected.push(fl[i]);
                 }
               }

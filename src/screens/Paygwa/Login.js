@@ -379,11 +379,13 @@ class Login extends Component {
             'emailAddress': emailAdd,
             'password': password
         }
+
+
         if (_.isEmpty(emailAdd) && _.isEmpty(password)) {
             Toast.show({
-                text: 'Complete all fields',
+                text: 'Invalid User Name or Password',
                 duration: 2500,
-                type: 'warning'
+                type: 'danger'
             })
         }
         else if (_.isEmpty(emailAdd) || _.isEmpty(password)) {
@@ -793,7 +795,7 @@ class Login extends Component {
                                         })
                                     }
                                     }>
-                                        <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16}}>Submit</CustomTextMedium>
+                                        <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Submit</CustomTextMedium>
                                     </Button>
                                 </View>
                                 <View style={{ paddingVertical: 10 }} >
@@ -955,14 +957,14 @@ class Login extends Component {
                                         {this.state.loadingQuestionForgotYourPasswordGWA ?
                                             <ActivityIndicator color={colors.PRIMARY_COLOR} />
                                             :
-                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16}}>Submit</CustomTextMedium>
+                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Submit</CustomTextMedium>
                                         }
 
                                     </Button>
                                 </View>
                                 <View style={{ paddingVertical: 10 }} >
                                     <Button transparent block light onPress={() => this.setState({ isModalVisibleQuestionPasswordGWA: false })}  >
-                                        <CustomTextMedium style={{ color: colors.BLACK, fontSize: 16}}>Cancel</CustomTextMedium>
+                                        <CustomTextMedium style={{ color: colors.BLACK, fontSize: 16 }}>Cancel</CustomTextMedium>
                                     </Button>
                                 </View>
                             </View>
@@ -1009,7 +1011,7 @@ class Login extends Component {
                                             onPress={() =>
                                                 NavigationService.navigate('PayNowWithoutAccount', {
                                                     event: 'fromLogin'
-                                                }) 
+                                                })
                                             }>
                                             <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Pay Now</CustomTextMedium>
                                         </Button>
@@ -1066,16 +1068,17 @@ class Login extends Component {
 
                                         {/* MANUAL SIGN IN */}
                                         <Button block rounded transparent
+                                            disabled={this.props.payGwaUserDetails.userState.isLoginLoading}
                                             style={[styles.buttons, { backgroundColor: '#1687C7', borderRadius: 6, borderWidth: 0.5, height: 50 }]}
                                             onPress={() =>
                                                 // GWA
-                                                this.manualLogin(this.state.emailAdd, this.state.password)
+                                                // this.manualLogin(this.state.emailAdd, this.state.password)
                                                 // this.manualLogin('gdoe', 'GDOE2018')
-                                                // this.manualLogin('Relyant01', 'Relyant01')
+                                                // this.manualLogin('relyant01', 'Relyant01')
                                                 // this.manualLogin('dblas95', 'sweetheart95')
-                                                // this.manualLogin('neilg671', 'TO1108370z!!')
+                                                this.manualLogin('neilg671', 'TO1108370z!')
                                             }>
-                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Login</CustomTextMedium>
+                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>{this.props.payGwaUserDetails.userState.isLoginLoading ? 'Please wait...' :  'Login' } </CustomTextMedium>
                                         </Button>
 
                                         <View style={styles.gpwa_label_container, { marginTop: 10, alignItems: 'center' }}>
@@ -1083,7 +1086,7 @@ class Login extends Component {
                                         </View>
 
                                         <Button block rounded transparent
-                                            style={{ backgroundColor: '#15B8E8', borderRadius: 6, borderWidth: 0.5, height: 50 , marginTop: 10}}
+                                            style={{ backgroundColor: '#15B8E8', borderRadius: 6, borderWidth: 0.5, height: 50, marginTop: 10 }}
                                             onPress={() =>
                                                 // GWA
                                                 this.props.navigation.navigate("SignUpCreateAccount")

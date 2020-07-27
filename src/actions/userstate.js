@@ -32,7 +32,7 @@ export const fetchLoginFail = (error) => ({
 export function fetchLogin(dataObject) {
 	return dispatch => {
 		//SHOW LOADING
-		// dispatch(fetchLoginBegin());
+		dispatch(fetchLoginBegin());
 		axios.post(
 			PAYGWA_URL + '/api/v1/user-login', //endpoint url
 			{//data
@@ -53,13 +53,15 @@ export function fetchLogin(dataObject) {
 			}
 		)
 			.then(response => {
+				debugger
 				console.log('labas', response.data.result)
 				const loginSuccessful = response.data.result.loginSuccessful
-				if (loginSuccessful == true) {
+				if (loginSuccessful == "true") {
 					const premiseData = response.data.result.premiseData;
 					console.log('loob',response.data.result)
 					console.log(premiseData)
 					const personId = premiseData[0].PersonID
+					debugger
 					if (premiseData.length > 1) {
 						var accountIds = []
 						for (var count = 0; count < premiseData.length; count++) {
@@ -68,7 +70,7 @@ export function fetchLogin(dataObject) {
 						console.log('accountIds', accountIds)
 						var empty = ''
 						dispatch(fetchLoginSuccess(accountIds, personId, empty, dataObject.emailAddress));
-						localStorage.setItem('accountIds', accountIds)
+						// localStorage.setItem('accountIds', accountIds)
 					}
 					else {
 						var accountId = []
@@ -76,7 +78,6 @@ export function fetchLogin(dataObject) {
 						console.log('accountId', accountId)
 						var empty = ''
 						dispatch(fetchLoginSuccess(empty, personId, accountId, dataObject.emailAddress));
-						localStorage.setItem('accountId', accountId)
 					}
 				}
 
@@ -108,6 +109,7 @@ export function fetchLogin(dataObject) {
 						}
 
 						// console.log('errMsg',status.loginMessage)
+						dispatch(fetchLoginFail(String(error)));
 						Toast.show({
 							text: errMsg,
 							duration: 3000,
@@ -117,6 +119,7 @@ export function fetchLogin(dataObject) {
 					}
 				}
 				else {
+					dispatch(fetchLoginFail(String(error)));
 					Toast.show({
 						text: `Server not responding.Please try again later.`,
 						duration: 3000,
@@ -129,7 +132,7 @@ export function fetchLogin(dataObject) {
 			})
 			.catch(error => {
 
-				// dispatch(fetchLoginFail(String(error)));
+				dispatch(fetchLoginFail(String(error)));
 				Toast.show({
 					text: 'Error in log-in: Account might not be existing. ' + error,
 					duration: 3000,

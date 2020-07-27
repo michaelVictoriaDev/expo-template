@@ -15,8 +15,6 @@ import CustomHeader from '../../../../components/MultiCustomHeader'
 import { Row, Col } from 'react-native-easy-grid';
 import { FontAwesome } from '@expo/vector-icons';
 import _ from 'lodash';
-import { captureRef, ViewShot } from 'react-native-view-shot';
-import * as Sharing from 'expo-sharing';
 import NavigationService from '../../../../NavigationService';
 
 
@@ -141,7 +139,7 @@ class PaymentSuccess extends Component {
                             {_.map(this.state.accountSummary, (item, index) => {
                                 debugger
                                 return (
-                                    <CustomText key={index} adjustsFontSizeToFit style={{ fontSize: 16, color: '#333333' }}>{item.accID[0]}</CustomText>
+                                    <CustomText key={index} adjustsFontSizeToFit style={{ fontSize: 16, color: '#333333' }}>{item.accID}</CustomText>
                                 )
                             })
                             }

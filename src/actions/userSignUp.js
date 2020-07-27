@@ -29,8 +29,7 @@ export const forgotPassword = (postData) => dispatch => {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                    'Content-Type':'application/json'
                     }
                 })
             .then(response => {
@@ -53,8 +52,7 @@ export const forgotUsername = (postData) => dispatch => {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                    'Content-Type':'application/json'
                     }
                 })
             .then(response => {
@@ -75,8 +73,7 @@ export const getOtherDetails = (personId) => dispatch => {
             },
             {
                 headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                    'Content-Type':'application/json'
                     }
             })
         .then(response => {
@@ -158,8 +155,7 @@ export const signUpUser = (postData) => dispatch => {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                    'Content-Type':'application/json'
                     }
                 })
             .then(response => {
@@ -182,8 +178,7 @@ export const checkAccountNumber = (accountId) => dispatch => {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                    'Content-Type':'application/json'
                     }
                 }
             )
@@ -205,8 +200,7 @@ export const checkUsername = (username) => dispatch => {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                    'Content-Type':'application/json'
                     }
                 }
             )
@@ -237,8 +231,7 @@ export const loginUser = (postData) => dispatch => {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                    'Content-Type':'application/json'
                     }
                 }
             )
@@ -279,8 +272,7 @@ export const getPremiseInfo = (accountId) => dispatch => {
                 },
                 {
                     headers: {
-                    'Content-Type':'application/json',
-                    "origin": "https://gwadev.xtendly.com"
+                    'Content-Type':'application/json'
                     }
                 }
             )

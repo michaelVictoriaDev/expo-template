@@ -23,6 +23,10 @@ import { Grid, Row, Col } from 'react-native-easy-grid';
 import moment from 'moment'
 import NumberFormat from 'react-number-format';
 
+import 'intl';
+import 'intl/locale-data/jsonp/fr';
+
+
 
 class PaymentPayNow extends Component {
     constructor(props) {
@@ -35,10 +39,13 @@ class PaymentPayNow extends Component {
             isPaymentProcessing: false,
             cardDetails: {
                 cardHolderName: "Xtendly Dev",
+                // cardHolderName: "",
                 cardNumber: "4111111111111111",
+                // cardNumber: "",
                 expDate: new Date(),
                 validExpDate: "",
                 cvv: "123",
+                // cvv: "",
                 confirmationEmail: this.props.dashboard.userAccountDetails.emailAddress,
                 selectedMonth: ('0' + (moment().month() + 1)).slice(-2),
                 selectedYear: moment().format("YY")

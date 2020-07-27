@@ -23,6 +23,9 @@ import _ from 'lodash'
 import { Grid, Row, Col } from 'react-native-easy-grid';
 import { FETCH_CONSUMPTION_DETAILS } from '../../../actions/types';
 import NumberFormat from 'react-number-format';
+import 'intl';
+import 'intl/locale-data/jsonp/fr';
+
 
 class PaymentInput extends Component {
   constructor(props) {
@@ -147,7 +150,7 @@ class PaymentInput extends Component {
             <View style={{ paddingVertical: 25, paddingHorizontal: 25 }}>
               <CustomTextBold style={{ paddingBottom: 20, fontSize: 14 }} >Account Number</CustomTextBold>
               {_.map(this.state.selectedAccounts, (data, index) => {
-                var accID = data.accID[index]
+                var accID = data.accID
                 console.log('amountToBePaid', data.amountToBePaid)
                 return (
                   <Row style={{ paddingBottom: 20 }}>

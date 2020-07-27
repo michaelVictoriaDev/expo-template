@@ -94,7 +94,7 @@ class CustomDrawerContent extends Component {
 
   render() {
     var fullName = _.get(this.props.dashboard.userAccountDetails, 'fullName', 'Not Applicable NONO')
-    var finalFullName = fullName.split(' ').slice(0, -1).join(' '); // returns 
+    var finalFullName = fullName.charAt(0) // returns 
     
     return (
       <ContainerView>
