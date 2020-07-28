@@ -156,7 +156,7 @@ class PaymentInput extends Component {
                   <Row style={{ paddingBottom: 20 }}>
                     <Col size={45} style={{ paddingTop: 5 }}>
                       <CustomText style={{ fontSize: 16 }} >{accID}</CustomText>
-                      <CustomTextBold style={{ fontSize: 16 }}>${data.arrears.details.PayoffBalance}</CustomTextBold>
+                      <CustomTextBold style={{ fontSize: 16 }}>${data.arrears.details.CurrentBalance}</CustomTextBold>
                     </Col>
                     <Col size={5} style={{ justifyContent: 'center', alignItems: 'center' }}>
                       <CustomText style={{ fontSize: 16 }}>$ </CustomText>

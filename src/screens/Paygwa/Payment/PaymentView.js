@@ -424,7 +424,7 @@ class PaymentView extends Component {
                                 <Row style={{ paddingBottom: 5 }}>
                                     <Col>
                                         <CustomText style={{ fontSize: 16 }} >{data.accID}</CustomText>
-                                        <CustomTextBold style={{ fontSize: 18 }}>${data.arrears.details.PayoffBalance}</CustomTextBold>
+                                        <CustomTextBold style={{ fontSize: 18 }}>${data.arrears.details.CurrentBalance}</CustomTextBold>
                                     </Col>
                                     <Col style={{ alignItems: 'flex-end' }}>
                                         <CustomText style={{ fontSize: 16 }} >$ {parseFloat(data.amountToBePaid).toFixed(2)}

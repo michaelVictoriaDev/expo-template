@@ -285,12 +285,14 @@ class AccountSummaryConsumption extends Component {
                             width={1000}
                             // responsive={false}
                             theme={Theme}
+                            // domainPadding={{ x: 20 }}
                             // domainPadding will add space to each side of VictoryBar to
                             // prevent it from overlapping the axis
 
 
                             labelComponent={<VictoryTooltip renderInPortal={false} />}
-                            domainPadding={{ x: 15 }}>
+                            domainPadding={{ x: 25 }}
+                            >
                             <VictoryAxis
                               responsive={false}
                               style={{
@@ -320,7 +322,7 @@ class AccountSummaryConsumption extends Component {
                               x="x"
                               y="y"
                               style={{
-                                data: { fill: '#3F71D7', width: 30 },
+                                data: { fill: '#1888C7', width: 30 },
                                 parent: { border: '1px solid #ccc' },
                               }}
                             />
@@ -348,7 +350,7 @@ class AccountSummaryConsumption extends Component {
                             //      }
 
                             labelComponent={<VictoryTooltip renderInPortal={false} />}
-                            domainPadding={{ x: 15 }}>
+                            domainPadding={{ x: 25 }}>
                             <VictoryAxis
                               responsive={false}
                               style={{
@@ -382,11 +384,12 @@ class AccountSummaryConsumption extends Component {
                                 <VictoryTooltip
                                   flyoutStyle={{ stroke: "tomato", strokeWidth: 2 }}
                                 />}
-                              data={this.state.consumptionDetails.billAmountDataChart}
+                              // data={this.state.consumptionDetails.billAmountDataChart}
+                              data={_.sortBy(this.state.consumptionDetails.billAmountDataChart, ['y'])}
                               x="x"
                               y="y"
                               style={{
-                                data: { fill: '#3F71D7', width: 30 },
+                                data: { fill: '#1888C7', width: 30 },
                                 parent: { border: '1px solid #ccc' },
                               }}
                             />

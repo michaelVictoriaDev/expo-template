@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Button, Container, Right, Icon, Input, Picker, Content, Item, Text, CheckBox, ListItem, Body, Toast } from 'native-base';
 import {
-    KeyboardAvoidingView, View, Alert, BackHandler, Linking, Keyboard
+    KeyboardAvoidingView, View, Alert, BackHandler, Linking, Keyboard, Platform
 } from 'react-native';
 
 import { colors, pRatioToFontSize } from '../../../utils/constants';
@@ -72,12 +72,7 @@ class SignUpLoginDetails extends Component {
 
     componentWillMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-        console.log('userDetails', {
-            EmailID: this.props.userDetails.EmailID,
-            home: this.props.users.userContactNumbers.homePhone,
-            mobile: this.props.users.userContactNumbers.mobilePhone,
-            work: this.props.users.userContactNumbers.workPhone
-        })
+
     }
 
     componentWillUnmount() {
@@ -150,112 +145,68 @@ class SignUpLoginDetails extends Component {
 
     onSumbit() {
 
-        console.log('click')
 
-        console.log('userName', _.isEmpty(this.state.userDetails.userName))
-        console.log('password', _.isEmpty(this.state.userDetails.password))
-        console.log('passwordConfirm', _.isEmpty(this.state.userDetails.passwordConfirm))
-        console.log('EmailID', _.isEmpty(this.state.userDetails.EmailID))
-        console.log('securityAnswer', _.isEmpty(this.state.userDetails.securityAnswer))
+        if (_.isEmpty(this.state.userDetails.userName) || _.isEmpty(this.state.userDetails.password) || _.isEmpty(this.state.userDetails.passwordConfirm) || _.isEmpty(this.state.userDetails.EmailID) || _.isEmpty(this.state.userDetails.securityAnswer)) {
+            alert('Please check all the required fields.');
 
-        if (_.isEmpty(this.state.userDetails.userName) && _.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm) && _.isEmpty(this.state.userDetails.EmailID) && _.isEmpty(this.state.userDetails.securityAnswer)) {
-            console.log('1',_.isEmpty(this.state.userDetails.userName) && _.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm) && _.isEmpty(this.state.userDetails.EmailID) && _.isEmpty(this.state.userDetails.securityAnswer))
-            alert('Please check all the required fields.');
+            var userName
+            var password
+            var passwordConfirm
+            var EmailID
+            var securityAnswer
+
+            if (_.isEmpty(this.state.userDetails.userName)) {
+                userName = `Please choose your Username!`
+
+            } else {
+                userName = ``
+
+            }
+            
+            if (_.isEmpty(this.state.userDetails.password)) {
+                password = `Please enter your Password!`
+
+            } else {
+                password = ``
+
+            }
+
+            if (_.isEmpty(this.state.userDetails.passwordConfirm)) {
+                passwordConfirm = `Please confirm your Password!`
+
+            } else {
+                passwordConfirm = ``
+
+            }
+
+
+            if (_.isEmpty(this.state.userDetails.EmailID)) {
+                EmailID = `Please enter a valid Email Address!`
+
+            } else {
+                EmailID = ``
+
+            }
+
+            if (_.isEmpty(this.state.userDetails.securityAnswer)) {
+                securityAnswer = `Please enter your Security Answer!`
+
+            } else {
+                securityAnswer = ``
+
+            }
             this.setState({
                 ...this.state,
-                userNameResult: `Please choose your Username!`,
+                userNameResult: userName ,
                 userDetails: {
                     ...this.state.userDetails,
-                    errorPassword: `Please enter your Password!`,
-                    errorPasswordConfirm: `Please confirm your Password!`,
-                    errorEmailFormat: 'Please enter a valid Email Address!',
-                    errorSecurityQuestion: 'Please enter your Security Answer!'
-                }
-            })
-        } else if (_.isEmpty(this.state.userDetails.userName) && _.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm) && _.isEmpty(this.state.userDetails.securityAnswer)) {
-            alert('Please check all the required fields.');
-            console.log('2',_.isEmpty(this.state.userDetails.userName) && _.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm) && _.isEmpty(this.state.userDetails.securityAnswer))
-            this.setState({
-                ...this.state,
-                userNameResult: `Please choose your Username!`,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorPassword: `Please enter your Password!`,
-                    errorPasswordConfirm: `Please confirm your Password!`,
-                    errorSecurityQuestion: 'Please enter your Security Answer!'
-                }
-            })
-        } else if (_.isEmpty(this.state.userDetails.userName) && _.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm)) {
-            console.log('3',_.isEmpty(this.state.userDetails.userName) && _.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm))
-            alert('Please check all the required fields.');
-            this.setState({
-                ...this.state,
-                userNameResult: `Please choose your Username!`,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorPassword: `Please enter your Password!`,
-                    errorPasswordConfirm: `Please confirm your Password!`
-                }
-            })
-        } else if (_.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm)) {
-            console.log('4',_.isEmpty(this.state.userDetails.password) && _.isEmpty(this.state.userDetails.passwordConfirm))
-            alert('Please check all the required fields.');
-            this.setState({
-                ...this.state,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorPassword: `Please enter your Password!`,
-                    errorPasswordConfirm: `Please confirm your Password!`
-                }
-            })
-        } else if (_.isEmpty(this.state.userDetails.userName)) {
-            console.log('userName')
-            alert('Please check all the required fields.');
-            this.setState({
-                ...this.state,
-                userNameResult: `Please choose your Username!`
-            })
-        } else if (_.isEmpty(this.state.userDetails.password)) {
-            alert('Please check all the required fields.');
-            console.log('password')
-            this.setState({
-                ...this.state,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorPassword: `Please enter your Password!`
+                    errorPassword: password,
+                    errorPasswordConfirm: passwordConfirm,
+                    errorEmailFormat: EmailID,
+                    errorSecurityQuestion: securityAnswer
                 }
             })
 
-        } else if (_.isEmpty(this.state.userDetails.passwordConfirm)) {
-            alert('Please check all the required fields.');
-            console.log('passwordConfirm')
-            this.setState({
-                ...this.state,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorPasswordConfirm: `Please confirm your Password!`
-                }
-            })
-        } else if (_.isEmpty(this.state.userDetails.EmailID)) {
-            alert('Please check all the required fields.');
-            console.log('EmailID')
-            this.setState({
-                ...this.state,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorEmailFormat: 'Please enter a valid Email Address!'
-                }
-            })
-        } else if (_.isEmpty(this.state.userDetails.securityAnswer)) {
-            alert('Please check all the required fields.');
-            console.log('securityAnswer')
-            this.setState({
-                ...this.state,
-                userDetails: {
-                    ...this.state.userDetails,
-                    errorSecurityQuestion: 'Please enter your Security Answer!'
-                }
-            })
         } else {
             console.log('else')
 
@@ -272,10 +223,10 @@ class SignUpLoginDetails extends Component {
             })
             if (this.state.selectedQuestion === 0) {
                 alert('Please select a security question');
-    
+
             } else {
                 console.log('else')
-    
+
                 debugger
                 const postData = {
                     personId: this.state.personId,
@@ -347,18 +298,18 @@ class SignUpLoginDetails extends Component {
                 })
             .then(response => {
                 console.log(response)
+                debugger
 
-                if (response.result.status === 'True') {
+                if (response.data.result.status === 'True') {
                     this.setState({
                         isLoading: false
                     })
                     NavigationService.navigate('SuccessScreen')
-
                 }
                 else {
                     Toast.show({
                         text: "Sign Up Failed! \nPlease try again!",
-                        duration: 3000,
+                        duration: 5000,
                         type: 'danger'
                     })
                     // this.props.showMessage(true, "Sign Up Failed! \nPlease try again!")
@@ -366,7 +317,6 @@ class SignUpLoginDetails extends Component {
                         isLoading: false
                     })
                 }
-
             })
             .catch(error => {
                 console.log(error);
@@ -378,7 +328,6 @@ class SignUpLoginDetails extends Component {
                     duration: 3000,
                     type: 'danger'
                 })
-                // this.props.showMessage(true, "Server Error. Try again later!");
             })
 
     }
@@ -413,12 +362,12 @@ class SignUpLoginDetails extends Component {
                                 labels={labels}
                             />
                         </View>
-                        <View style={{ backgroundColor: '#FFFF', paddingTop: 30, paddingHorizontal: 60 }}>
+                        <View style={{ backgroundColor: '#FFFF', paddingTop: 30, paddingHorizontal: 40 }}>
 
 
                             <View style={{
                                 boxSizing: 'border-box',
-                                paddingHorizontal: 25,
+                                paddingHorizontal: 20,
                                 paddingVertical: 25,
                                 // padding: 30,  
                                 borderRadius: 6,
@@ -634,7 +583,7 @@ class SignUpLoginDetails extends Component {
                                         onBlur={e => {
                                             let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-                                            if (reg.test(this.state.emailAddForgetUsernameGWA) === false) {
+                                            if (reg.test(this.state.emailAddForgetUsernameGWA) == false) {
                                                 console.log("Please enter a valid Email Address.");
                                                 this.setState({
                                                     ...this.state,
@@ -797,6 +746,7 @@ class SignUpLoginDetails extends Component {
                                     }}>
 
                                     <Picker
+                                        placeholder="Select your Security Question"
                                         mode="dropdown"
                                         placeholderIconColor="#007aff"
                                         selectedValue={this.state.selectedQuestion}
@@ -809,17 +759,32 @@ class SignUpLoginDetails extends Component {
                                         }}
                                         onValueChange={this.onValueChange2.bind(this)}
                                     >
-                                        <Picker.Item style={{ color: "#bfc6ea" }} label="Select your Security Question" value={0} />
-                                        {_.map(this.props.users.securityQuestions, (securityQuestions, index) => {
-                                            return (
-                                                <Picker.Item style={{ color: "#bfc6ea" }} label={securityQuestions.description} value={securityQuestions.characteristicValue} />
-                                            )
-                                        })
+                                        {Platform.OS === 'ios' ?
+
+                                            _.map(this.props.users.securityQuestions, (securityQuestions, index) => {
+                                                return (
+                                                    <Picker.Item style={{ color: "#bfc6ea" }} label={securityQuestions.description} value={securityQuestions.characteristicValue} />
+                                                )
+                                            })
+
+                                            :
+                                            <React.Fragment>
+                                                <Picker.Item style={{ color: "#bfc6ea" }} label="Select your Security Question" value={0} />
+
+                                                {_.map(this.props.users.securityQuestions, (securityQuestions, index) => {
+                                                    return (
+                                                        <Picker.Item style={{ color: "#bfc6ea" }} label={securityQuestions.description} value={securityQuestions.characteristicValue} />
+                                                    )
+                                                })}
+
+                                            </React.Fragment>
                                         }
+
+
                                     </Picker>
 
                                 </Item>
-                                <CustomText style={{ paddingVertical: 5 }}>Security Answer</CustomText>
+                                <CustomText style={{ paddingVertical: 5 }}>Security Answer *</CustomText>
                                 <Item regular
                                     style={{
                                         borderStyle: 'solid',
@@ -878,7 +843,7 @@ class SignUpLoginDetails extends Component {
                                         CheckBox: !this.state.CheckBox
                                     })} />
                                     <Body style={{ paddingLeft: 7 }}>
-                                        <CustomText>I agree to the <CustomText onPress={() => Linking.openURL('https://gwadev.xtendly.com/terms-and-conditions')} style={{ color: '#007bff', fontSize: 12 }}>Terms and Conditions</CustomText> *</CustomText>
+                                        <CustomText style={{ fontSize: 12 }}>I agree to the <CustomText onPress={() => Linking.openURL('https://gwadev.xtendly.com/terms-and-conditions')} style={{ color: '#007bff', fontSize: 10 }}>Terms and Conditions</CustomText> *</CustomText>
 
                                     </Body>
                                 </ListItem>

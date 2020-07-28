@@ -59,7 +59,8 @@ class SignUpAccountDetails extends Component {
             personId: this.props.personId,
             accountId: this.props.accountId,
             error: '',
-            isLoading: false
+            isLoading: false,
+            userBasicInfo: this.props.users.userBasicInfo
         }
     }
 
@@ -247,6 +248,13 @@ class SignUpAccountDetails extends Component {
                 </View>
                 <View style={{ paddingVertical: 10 }}>
                     <Button style={{ borderRadius: 6 }} block success onPress={() => {
+                        console.log('Yes', {
+                            userBasicInfo: this.state.userBasicInfo,
+                            billAddressSource: this.state.billAddressSource,
+                            personId: this.state.personId,
+                            userDetails: this.state.userDetails,
+                        }
+                        )
                         this.setState({
                             showModal: false,
                             isSuccess: true
@@ -267,7 +275,12 @@ class SignUpAccountDetails extends Component {
         return (
             /* MAIN VIEW COMPONENT */
             (this.state.isSuccess === true && this.state.showModal === false) ?
-                <SignUpLoginDetails userBasicInfo={this.props.users.userBasicInfo} billAddressSource={this.state.billAddressSource} personId={this.state.personId} userDetails={this.state.userDetails} />
+
+                <SignUpLoginDetails
+                    userBasicInfo={this.state.userBasicInfo}
+                    billAddressSource={this.state.billAddressSource}
+                    personId={this.state.personId}
+                    userDetails={this.state.userDetails} />
                 :
                 this.state.isGoBack === true ?
                     <SignUpCreateAccount />

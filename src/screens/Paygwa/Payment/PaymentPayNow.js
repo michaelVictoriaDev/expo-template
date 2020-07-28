@@ -39,9 +39,9 @@ class PaymentPayNow extends Component {
             isPaymentProcessing: false,
             cardDetails: {
                 cardHolderName: "Xtendly Dev",
-                // cardHolderName: "",
-                cardNumber: "4111111111111111",
-                // cardNumber: "",
+                cardHolderName: "",
+                // cardNumber: "4111111111111111",
+                cardNumber: "",
                 expDate: new Date(),
                 validExpDate: "",
                 cvv: "123",

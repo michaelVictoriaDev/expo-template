@@ -2,8 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Container, Right, Icon, Input, Content, Item, Text, Toast } from 'native-base';
 import {
-    View, TouchableOpacity, Image, Alert, BackHandler, Keyboard
+    View, TouchableOpacity, Image, Alert, BackHandler, Keyboard, Dimensions, StyleSheet
 } from 'react-native';
+
+import ImageZoom from 'react-native-image-pan-zoom';
+
+import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
+
 
 // import SignUpAccountDetails from './SignUpAccountDetails'
 import PayNowValidation from './PayNowValidation'
@@ -19,7 +24,7 @@ import {
     getAcovInfo
 } from '../../../actions/userSignUp';
 
-import { 
+import {
     fetchMultipleLatestBill,
 } from '../../../actions/userMyAccounts';
 
@@ -82,7 +87,8 @@ class PayNowCustomerInformation extends Component {
             isModalShow: false,
             userLatestBill: [],
             accountSummary: _.isUndefined(this.props.navigation) ? this.props.accountSummary : this.props.navigation.state.params.accountSummary,
-            event: _.isUndefined(this.props.navigation) ? this.props.event : this.props.navigation.state.params.event 
+            event: _.isUndefined(this.props.navigation) ? this.props.event : this.props.navigation.state.params.event,
+
         }
     }
     // For Function ProgressStep
@@ -114,6 +120,18 @@ class PayNowCustomerInformation extends Component {
         await this.props.fetchMultipleLatestBill(postData)
 
     }
+
+
+    logOutZoomState = (event, gestureState, zoomableViewEventObject) => {
+        // console.log('');
+        // console.log('');
+        // console.log('-------------');
+        // console.log('Event: ', event);
+        // console.log('GestureState: ', gestureState);
+        // console.log('ZoomableEventObject: ', zoomableViewEventObject);
+        // console.log('');
+        // console.log(`Zoomed from ${zoomableViewEventObject.lastZoomLevel} to  ${zoomableViewEventObject.zoomLevel}`);
+    };
 
     onSubmit() {
         if (_.isEmpty(this.state.accountId) || _.isEmpty(this.state.billingZipCode)) {
@@ -184,7 +202,7 @@ class PayNowCustomerInformation extends Component {
                                     isSuccess: true,
                                     userLatestBill: response.data.result
                                 })
-                                
+
 
                             })
                             .catch(error => {
@@ -257,16 +275,36 @@ class PayNowCustomerInformation extends Component {
                             avoidKeyboard={true}
                             onBackdropPress={() => this.setState({ isModalShow: false })}
                         >
-                            <View style={{ backgroundColor: colors.WHITE, padding: 10 }}>
-                                <Image source={require('../../../../assets/gwa-bill-preview.png')}
-                                    style={{
-                                        width: '100%',
-                                        //    maxWidth: '400',
-                                        height: '100%',
-                                        justifyContent: 'center', alignItems: 'center'
-                                    }} />
+
+                            <View style={{
+                                flex: 1,
+                                backgroundColor: colors.WHITE
+                            }}>
+
+                                <View style={styles.zoomWrapper}>
+                                    <ReactNativeZoomableView
+                                    captureEvent={true}
+                                        zoomEnabled={true}
+                                        maxZoom={1.5}
+                                        minZoom={0.5}
+                                        zoomStep={0.25}
+                                        initialZoom={0.9}
+                                        bindToBorders={true}
+                                        onZoomAfter={this.logOutZoomState}
+                                        style={styles.zoomableView}
+                                    >
+                                        <Image
+                                            style={styles.image}
+                                            source={require('../../../../assets/gwa-bill-preview.png')}
+                                            resizeMode="stretch"
+                                        />
+                                        {/* <Text style={styles.caption}>Vienna, Austria</Text> */}
+                                    </ReactNativeZoomableView>
+                                </View>
+
 
                             </View>
+
                         </Modal>
 
                         :
@@ -446,6 +484,30 @@ class PayNowCustomerInformation extends Component {
     }
 }
 
+
+const styles = StyleSheet.create({
+
+    zoomWrapper: {
+      flex: 1,
+      overflow: 'hidden',
+    },
+    zoomableView: {
+    //   padding: 10,
+      backgroundColor: '#fff',
+    },
+    image: {
+      flex: 1,
+      width: '100%',
+      height: '100%',
+    //   marginBottom: 10,
+    },
+    caption: {
+      fontSize: 10,
+      color: '#444',
+      alignSelf: 'center',
+    },
+  });
+
 const mapStateToProps = (state) => ({
 
 })
@@ -457,3 +519,5 @@ export default connect(mapStateToProps, {
     getAcovInfo,
     fetchMultipleLatestBill
 })(PayNowCustomerInformation);
+
+

@@ -212,7 +212,7 @@ class AccountSummaryBill extends Component {
                       alignItems: "center",
                       justifyContent: "center"
                     }}>
-                      
+
                     <CustomTextMedium style={{ color: colors.PRIMARY_COLOR, fontSize: 16 }} onPress={() => console.log('https://gwadev.xtendly.com/view-bill/{bill-id}')}>View</CustomTextMedium>
                   </Col>
                 </Row>
@@ -291,8 +291,13 @@ class AccountSummaryBill extends Component {
                         alignItems: "center",
                         justifyContent: "center"
                       }}>
-                      <Text style={{ color: colors.PRIMARY_COLOR }} onPress={() => Linking.openURL(GWA+ `/view-bill?bill-id=${data.Parent} `)}>View</Text>
-                      
+                      <Text style={{ color: colors.PRIMARY_COLOR }} onPress={() => {
+
+                        console.log(GWA + `/view-bill?bill-id=${data.Parent}`)
+                        Linking.openURL(GWA + `/view-bill?bill-id=${data.Parent}`)
+                      }
+                      }>View</Text>
+
                     </Col>
                   </Row>)
                 })

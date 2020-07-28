@@ -64,7 +64,7 @@ class AccountSummary extends Component {
                 justifyContent: "center"
               }}
             >
-              <CustomTextBold style={{ fontSize: 40 }}>${this.state.accountDetails.arrears.details.PayoffBalance}</CustomTextBold>
+              <CustomTextBold style={{ fontSize: 40 }}>$ {parseFloat(this.state.accountDetails.amountToBePaid).toFixed(2)}</CustomTextBold>
               <CustomTextBold style={{ paddingBottom: 10, color: '#8A8A8A', fontSize: 15 }}>
                 Amount Due
               </CustomTextBold>

@@ -253,7 +253,7 @@ class PayNowEnterPayment extends Component {
                                     <Input
                                         onChangeText={(input) => {
                                             this.setState({
-                                                cardNumber: input
+                                                confirmationEmail: input
                                             })
                                         }}
                                         blurOnSubmit={true}

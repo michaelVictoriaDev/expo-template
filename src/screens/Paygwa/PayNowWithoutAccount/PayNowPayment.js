@@ -31,6 +31,9 @@ import {
     savePaymentData
 } from '../../../actions/userMyAccounts';
 
+// import { TextInputMask } from 'react-native-masked-text'
+// import TextInputMask from 'react-native-text-input-mask';
+
 import NavigationService from '../../../NavigationService';
 import StepIndicator from 'react-native-step-indicator';
 import Modal from 'react-native-modal'
@@ -87,10 +90,10 @@ class PayNowPayment extends Component {
             isModalShowEmail: false,
             event: this.props.event,
             cardDetails: {
-                cardHolderName: "Xtendly Dev",
-                // cardHolderName: "",
-                cardNumber: "4111111111111111",
-                // cardNumber: "",
+                // cardHolderName: "Xtendly Dev",
+                cardHolderName: "",
+                // cardNumber: "4111111111111111",
+                cardNumber: "",
                 cvv: "123",
                 validExpDate: "",
                 selectedMonth: ('0' + (moment().month() + 1)).slice(-2),
@@ -98,7 +101,7 @@ class PayNowPayment extends Component {
                 customerName: '',
                 address: '',
                 amountToBePaid: '1',
-                confirmationEmail: this.props.dashboard.userAccountDetails.emailAddress,
+                confirmationEmail: this.props.userLatestBill.email,
             },
             errors: {
                 amountToBePaid: '',
@@ -124,7 +127,7 @@ class PayNowPayment extends Component {
 
     componentWillMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-        console.log('Im here', this.props.dashboard.orderData.accountSummary)
+        console.log('Im here2', this.props.accountSummary)
     }
 
     componentWillUnmount() {
@@ -142,7 +145,7 @@ class PayNowPayment extends Component {
 
     onSubmit() {
         if (this.state.cardDetails.amountToBePaid <= 0 || this.state.cardDetails.cardHolderName == "" || this.state.cardDetails.cardNumber == "" || this.state.cardDetails.cvv == "") {
-    
+
             var amountToBePaid
             var cardHolderName
             var cardNumber
@@ -203,7 +206,7 @@ class PayNowPayment extends Component {
         } else {
             console.log('proceed')
 
-            
+
             this.setState({
                 ...this.state,
                 cardDetails: {
@@ -221,7 +224,7 @@ class PayNowPayment extends Component {
 
             })
 
-            
+
 
             this.validateAmount()
         }
@@ -233,7 +236,7 @@ class PayNowPayment extends Component {
 
         console.log('data', this.state)
         // e.preventDefault()
-        const accountSummary = this.state.accountSummary
+        const accountSummary = this.state.userLatestBill
         const subtotal = this.state.cardDetails.amountToBePaid
         const cardNumber = this.state.cardDetails.cardNumber
         const usedCC = cardNumber.charAt(0) === "4" ?
@@ -250,7 +253,7 @@ class PayNowPayment extends Component {
 
         console.log('usedCC', this.state.usedCC)
         let arrIsAmountValid = []
-        if(this.state.cardDetails.cardNumber.charAt(0) === "4" || this.state.cardDetails.cardNumber.charAt(0) === "6"){
+        if (this.state.cardDetails.cardNumber.charAt(0) === "4" || this.state.cardDetails.cardNumber.charAt(0) === "6") {
             for (let count = 0; count < accountSummary.length; count++) {
                 accountSummary[count].validAmountToBePaid = true
             }
@@ -413,6 +416,17 @@ class PayNowPayment extends Component {
         }
     }
     executeRequests = () => {
+        var text = this.state.cardDetails.cardNumber
+        var replaceSpacingMask = text.replace(/[\n\r\s\t]+/g, ' ') 
+        console.log('replaceSpacingMask', replaceSpacingMask)
+        
+        this.setState({
+            ...this.state,
+            cardDetails: {
+                ...this.state.cardDetails,
+                cardNumber: replaceSpacingMask
+            }
+        })
 
 
         this.props.savePaymentData(this.state)
@@ -429,15 +443,15 @@ class PayNowPayment extends Component {
                         {
                             paymentResult: result,
                             accountSummary: [this.state.accountSummary],
-                            event : this.state.event
+                            event: this.state.event
 
                         })
                 } else if (result.data.Transaction_Approved == 'false') {
                     NavigationService.navigate('PaymentUserFailedWA',
                         {
                             paymentResult: result,
-                            accountSummary:[this.state.accountSummary],
-                            event : this.state.event
+                            accountSummary: [this.state.accountSummary],
+                            event: this.state.event
 
                         })
                 } else {
@@ -505,7 +519,16 @@ class PayNowPayment extends Component {
 
     amountToBePaidOnChange = (text) => {
         var value = text
-        value = this.formatAmount(value);
+
+        if (_.isNaN(value)) {
+            value = this.formatAmount(0.00);
+        } else {
+            value = this.formatAmount(value);
+        }
+
+
+
+        console.log('value', value)
         this.setState({
             ...this.state,
             cardDetails: {
@@ -786,7 +809,9 @@ class PayNowPayment extends Component {
                                     marginBottom: 5,
                                     borderWidth: 1
                                 }}>
-                                <NumberFormat
+
+
+                                {/* <NumberFormat
                                     mask="_"
                                     value={this.state.cardDetails.cardNumber}
                                     displayType={'text'} format="#### #### #### ####"
@@ -800,6 +825,34 @@ class PayNowPayment extends Component {
                                             onChangeText={this._handleMultiInput('cardNumber')}
                                         />
                                     )}
+                                /> */}
+
+                                <Input
+                                    maxLength={16}
+                                    textAlign={'left'}
+                                    autoCapitalize='none'
+                                    placeholderTextColor='lightgray'
+                                    keyboardType="numeric"
+                                    value={this.state.cardDetails.cardNumber}
+                                    onChangeText={(text) => {
+
+                                        const regex = /^(\d{0,4})(\d{0,4})(\d{0,4})(\d{0,4})$/g
+                                        const string = text
+                                        const onlyNumbers = string.replace(/[^\d]/g, '')
+
+                                        const result = onlyNumbers.replace(regex, (regex, $1, $2, $3, $4) =>
+                                            [$1, $2, $3, $4].filter(group => !!group).join(' ')
+                                        )
+                                        this.setState({
+                                            ...this.state,
+                                            cardDetails: {
+                                                ...this.state.cardDetails,
+                                                cardNumber: result
+                                            }
+                                        })
+                                    }}
+
+
                                 />
                                 {
                                     this.showCardType()
@@ -832,7 +885,7 @@ class PayNowPayment extends Component {
                                             <Picker
                                                 note
                                                 mode="dropdown"
-                                                style={{ width: 120 }}
+                                                style={{ width: 80 }}
                                                 selectedValue={this.state.cardDetails.selectedMonth}
                                                 onValueChange={(value) =>
 
@@ -858,7 +911,7 @@ class PayNowPayment extends Component {
                                             <Picker
                                                 note
                                                 mode="dropdown"
-                                                style={{ width: 120 }}
+                                                style={{ width: 80 }}
                                                 selectedValue={this.state.cardDetails.selectedYear}
                                                 onValueChange={(value) =>
                                                     this.setState({
