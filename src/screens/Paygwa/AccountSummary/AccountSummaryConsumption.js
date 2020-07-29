@@ -256,7 +256,7 @@ class AccountSummaryConsumption extends Component {
                           <Picker
                             mode="dropdown"
                             iosIcon={<Icon name="arrow-down" />}
-                            style={{ width: undefined }}
+                            style={{ width: '95%' }}
                             placeholderIconColor="#007aff"
                             selectedValue={this.state.selected}
                             onValueChange={(value) =>
@@ -265,7 +265,7 @@ class AccountSummaryConsumption extends Component {
                               })}
                           >
                             <Picker.Item label="Monthly Water Consumption" value={0} />
-                            <Picker.Item label="Monthly Bill Amount" value={1} />
+                            <Picker.Item label="Monthly Bill Amount      " value={1} />
                           </Picker>
                         </Item>
                       </Form>

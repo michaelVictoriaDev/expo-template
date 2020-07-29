@@ -163,7 +163,7 @@ class PayNowPayment extends Component {
 
             if (this.state.cardDetails.cardHolderName == "") {
                 console.log('1')
-                cardHolderName = `Please enter Card Holder Name.`
+                cardHolderName = `Please enter Cardholder Name.`
 
             } else {
                 console.log('2')
@@ -768,7 +768,7 @@ class PayNowPayment extends Component {
                                 :
                                 null
                             }
-                            <CustomText style={{ paddingVertical: 5, paddingVertical: 8 }}>Card Holder Name </CustomText>
+                            <CustomText style={{ paddingVertical: 5, paddingVertical: 8 }}>Cardholder Name </CustomText>
                             <Item regular
                                 style={{
                                     borderStyle: 'solid',
@@ -828,7 +828,7 @@ class PayNowPayment extends Component {
                                 /> */}
 
                                 <Input
-                                    maxLength={16}
+                                    maxLength={19}
                                     textAlign={'left'}
                                     autoCapitalize='none'
                                     placeholderTextColor='lightgray'
@@ -851,8 +851,6 @@ class PayNowPayment extends Component {
                                             }
                                         })
                                     }}
-
-
                                 />
                                 {
                                     this.showCardType()

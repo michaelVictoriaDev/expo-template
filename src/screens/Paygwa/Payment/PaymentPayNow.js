@@ -115,14 +115,14 @@ class PaymentPayNow extends Component {
         return (
             /* MAIN VIEW COMPONENT */
             <Container >
-                {/* <CustomHeader
+                <CustomHeader
                     fontSizeLeft={pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1)}
                     leftButtonFunction={this.props.navigation.goBack}
                     title="My Account"
                     RightIcon={<Right />}
-                /> */}
+                />
 
-                <Header style={{
+                {/* <Header style={{
                     backgroundColor: colors.PRIMARY_COLOR,
                 }}
                 >
@@ -131,7 +131,7 @@ class PaymentPayNow extends Component {
                         <Title style={{ color: colors.WHITE, fontSize: 18, fontFamily: 'Lato_Bold' }}>My Account</Title>
                     </Body>
                     <Right />
-                </Header>
+                </Header> */}
                 <OfflineNotice />
                 <Content>
                     <View style={{ paddingVertical: 25, paddingHorizontal: 25 }}>
@@ -176,20 +176,30 @@ class PaymentPayNow extends Component {
                                 marginBottom: 10
                             }}>
 
-                            <NumberFormat
-                                mask="_"
+                            <Input
+                                maxLength={19}
+                                textAlign={'left'}
+                                autoCapitalize='none'
+                                placeholderTextColor='lightgray'
+                                keyboardType="numeric"
                                 value={this.state.cardDetails.cardNumber}
-                                displayType={'text'} format="#### #### #### ####"
-                                renderText={value => (
-                                    <Input
-                                        textAlign={'left'}
-                                        autoCapitalize='none'
-                                        placeholderTextColor='lightgray'
-                                        keyboardType="numeric"
-                                        value={value}
-                                        onChangeText={this._handleMultiInput('cardNumber')}
-                                    />
-                                )}
+                                onChangeText={(text) => {
+
+                                    const regex = /^(\d{0,4})(\d{0,4})(\d{0,4})(\d{0,4})$/g
+                                    const string = text
+                                    const onlyNumbers = string.replace(/[^\d]/g, '')
+
+                                    const result = onlyNumbers.replace(regex, (regex, $1, $2, $3, $4) =>
+                                        [$1, $2, $3, $4].filter(group => !!group).join(' ')
+                                    )
+                                    this.setState({
+                                        ...this.state,
+                                        cardDetails: {
+                                            ...this.state.cardDetails,
+                                            cardNumber: result
+                                        }
+                                    })
+                                }}
                             />
                             {
                                 this.showCardType()
@@ -297,7 +307,7 @@ class PaymentPayNow extends Component {
                                         selectedAccountsId: this.state.selectedAccountsId,
                                         subtotal: this.state.subtotal,
                                         cardDetails: this.state.cardDetails,
-                                        screenAccountSummaryKey : this.props.navigation.state.params.screenAccountSummaryKey
+                                        screenAccountSummaryKey: this.props.navigation.state.params.screenAccountSummaryKey
                                     })
                             }}
                         >

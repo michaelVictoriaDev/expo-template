@@ -297,6 +297,20 @@ class PaymentView extends Component {
     // execute payment na 
 
     executeRequests = () => {
+        var text = this.state.cardDetails.cardNumber
+        var replaceSpacingMask = text.replace(/[\n\r\s\t]+/g, ' ') 
+        console.log('replaceSpacingMask', replaceSpacingMask)
+        
+        this.setState({
+            ...this.state,
+            cardDetails: {
+                ...this.state.cardDetails,
+                cardNumber: replaceSpacingMask
+            }
+        })
+
+
+
         this.props.savePaymentData(this.state)
             .then((result) => {
                 console.log('paymentResult', JSON.stringify(result))
@@ -358,7 +372,7 @@ class PaymentView extends Component {
                 <OfflineNotice />
                 <Content style={{ backgroundColor: '#ECEFF2' }}>
                     <View style={{ backgroundColor: colors.WHITE, borderBottomWidth: .3, borderColor: '#3b4043', paddingVertical: 20, paddingHorizontal: 25 }}>
-                        <CustomTextBold style={{ color: colors.PRIMARY_COLOR, fontSize: 18 }}>Review Your Order</CustomTextBold>
+                        <CustomTextBold style={{ color: colors.PRIMARY_COLOR, fontSize: 18 }}>Review Your Payment</CustomTextBold>
                         <CustomText style={{ fontSize: 14 }}>Kindly review before you proceed.</CustomText>
                     </View>
                     <View style={{ backgroundColor: '#e2e6ea', borderBottomWidth: .3, borderColor: '#3b4043', paddingVertical: 20, paddingHorizontal: 25 }}>
@@ -368,7 +382,7 @@ class PaymentView extends Component {
                         <Row style={{ paddingBottom: 10 }}>
                             <Col>
                                 <CustomText style={{ fontSize: 14 }} >
-                                    Credit Card Holder Name
+                                    Credit Cardholder Name
                                 </CustomText>
                             </Col>
                             <Col style={{ alignItems: 'flex-end' }}>
@@ -380,7 +394,7 @@ class PaymentView extends Component {
                         <Row style={{ paddingBottom: 10 }}>
                             <Col>
                                 <CustomText style={{ fontSize: 14 }} >
-                                    Credit Card Holder Name
+                                    Credit Cardholder Name
                                 </CustomText>
                             </Col>
                             <Col style={{ alignItems: 'flex-end' }}>

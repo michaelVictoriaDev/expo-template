@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Button, Container, Right, Icon, Input, Picker, Content, Item, Text, CheckBox, ListItem, Body, Toast } from 'native-base';
 import {
-    KeyboardAvoidingView, View, Alert, BackHandler, Linking, Keyboard, Platform
+    KeyboardAvoidingView, View, Alert, BackHandler, Linking, Keyboard, Platform, TouchableOpacity
 } from 'react-native';
 
 import { colors, pRatioToFontSize } from '../../../utils/constants';
@@ -16,6 +16,7 @@ import SignUpAccountDetails from './SignUpAccountDetails'
 import NavigationService from '../../../NavigationService';
 import axios from 'react-native-axios';
 import { PAYGWA_URL, DASHBOARD_URL, PAYNOW_URL } from 'react-native-dotenv';
+import { Row, Col, Grid } from 'react-native-easy-grid';
 
 const labels = ["My Account Number", "My Account Details", "My Login Details"];
 const customStyles = {
@@ -162,7 +163,7 @@ class SignUpLoginDetails extends Component {
                 userName = ``
 
             }
-            
+
             if (_.isEmpty(this.state.userDetails.password)) {
                 password = `Please enter your Password!`
 
@@ -197,7 +198,7 @@ class SignUpLoginDetails extends Component {
             }
             this.setState({
                 ...this.state,
-                userNameResult: userName ,
+                userNameResult: userName,
                 userDetails: {
                     ...this.state.userDetails,
                     errorPassword: password,
@@ -308,7 +309,7 @@ class SignUpLoginDetails extends Component {
                 }
                 else {
                     Toast.show({
-                        text: "Sign Up Failed! \nPlease try again!",
+                        text: "Sign up failed! Please try again.",
                         duration: 5000,
                         type: 'danger'
                     })
@@ -843,7 +844,15 @@ class SignUpLoginDetails extends Component {
                                         CheckBox: !this.state.CheckBox
                                     })} />
                                     <Body style={{ paddingLeft: 7 }}>
-                                        <CustomText style={{ fontSize: 12 }}>I agree to the <CustomText onPress={() => Linking.openURL('https://gwadev.xtendly.com/terms-and-conditions')} style={{ color: '#007bff', fontSize: 10 }}>Terms and Conditions</CustomText> *</CustomText>
+                                        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                                            <CustomText style={{ fontSize: 12 }}>I agree to the </CustomText>
+                                            <TouchableOpacity onPress={() => Linking.openURL('https://gwadev.xtendly.com/terms-and-conditions')}>
+                                                <CustomText style={{ color: '#007bff', fontSize: 10 }}>Terms and Conditions</CustomText>
+                                            </TouchableOpacity>
+                                            <CustomText> *</CustomText>
+
+                                        </View>
+
 
                                     </Body>
                                 </ListItem>

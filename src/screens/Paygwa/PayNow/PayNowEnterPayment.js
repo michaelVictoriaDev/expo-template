@@ -151,7 +151,7 @@ class PayNowEnterPayment extends Component {
                                     />
 
                                 </Item>
-                                <CustomText style={{ paddingVertical: 5 }}>Card Holder Name</CustomText>
+                                <CustomText style={{ paddingVertical: 5 }}>Cardholder Name</CustomText>
                                 <Item regular
                                     style={{
                                         borderStyle: 'solid',

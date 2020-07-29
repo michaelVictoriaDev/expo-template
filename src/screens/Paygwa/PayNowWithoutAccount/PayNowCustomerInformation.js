@@ -280,10 +280,22 @@ class PayNowCustomerInformation extends Component {
                                 flex: 1,
                                 backgroundColor: colors.WHITE
                             }}>
+                                <View style={{
+                            
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    alignItems: 'flex-end'
+
+                                }}>
+                                    <Button transparent small onPress={() => this.setState({ isModalShow: false })}  >
+                                        <Icon style={{ color: '#656667', fontSize: 20 }} name='md-close-circle' type='Ionicons' />
+                                    </Button>
+
+                                </View>
 
                                 <View style={styles.zoomWrapper}>
                                     <ReactNativeZoomableView
-                                    captureEvent={true}
+                                        captureEvent={true}
                                         zoomEnabled={true}
                                         maxZoom={1.5}
                                         minZoom={0.5}
@@ -488,25 +500,25 @@ class PayNowCustomerInformation extends Component {
 const styles = StyleSheet.create({
 
     zoomWrapper: {
-      flex: 1,
-      overflow: 'hidden',
+        flex: 1,
+        overflow: 'hidden',
     },
     zoomableView: {
-    //   padding: 10,
-      backgroundColor: '#fff',
+        //   padding: 10,
+        backgroundColor: '#fff',
     },
     image: {
-      flex: 1,
-      width: '100%',
-      height: '100%',
-    //   marginBottom: 10,
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        //   marginBottom: 10,
     },
     caption: {
-      fontSize: 10,
-      color: '#444',
-      alignSelf: 'center',
+        fontSize: 10,
+        color: '#444',
+        alignSelf: 'center',
     },
-  });
+});
 
 const mapStateToProps = (state) => ({
 
