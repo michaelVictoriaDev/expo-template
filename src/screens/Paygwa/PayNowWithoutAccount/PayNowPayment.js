@@ -31,8 +31,7 @@ import {
     savePaymentData
 } from '../../../actions/userMyAccounts';
 
-// import { TextInputMask } from 'react-native-masked-text'
-// import TextInputMask from 'react-native-text-input-mask';
+import { TextInputMask } from 'react-native-masked-text';
 
 import NavigationService from '../../../NavigationService';
 import StepIndicator from 'react-native-step-indicator';
@@ -94,13 +93,13 @@ class PayNowPayment extends Component {
                 cardHolderName: "",
                 // cardNumber: "4111111111111111",
                 cardNumber: "",
-                cvv: "123",
+                cvv: "",
                 validExpDate: "",
                 selectedMonth: ('0' + (moment().month() + 1)).slice(-2),
                 selectedYear: moment().format("YY"),
                 customerName: '',
                 address: '',
-                amountToBePaid: '1',
+                amountToBePaid: '0.00',
                 confirmationEmail: this.props.userLatestBill.email,
             },
             errors: {
@@ -234,24 +233,11 @@ class PayNowPayment extends Component {
 
     validateAmount() {
 
-        console.log('data', this.state)
-        // e.preventDefault()
+
         const accountSummary = this.state.userLatestBill
         const subtotal = this.state.cardDetails.amountToBePaid
         const cardNumber = this.state.cardDetails.cardNumber
-        const usedCC = cardNumber.charAt(0) === "4" ?
-            "visa"
-            :
-            cardNumber.charAt(0) === "6" ?
-                "discover"
-                :
-                parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) > 50 && parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) < 56 ?
-                    "master"
-                    :
-                    "invalid";
 
-
-        console.log('usedCC', this.state.usedCC)
         let arrIsAmountValid = []
         if (this.state.cardDetails.cardNumber.charAt(0) === "4" || this.state.cardDetails.cardNumber.charAt(0) === "6") {
             for (let count = 0; count < accountSummary.length; count++) {
@@ -277,7 +263,7 @@ class PayNowPayment extends Component {
                 isPaymentProcessing: false
             });
             // this.props.saveFormConfig({btnSubmitValue: "Continue"});
-            const accountSummary = this.state.accountSummary;
+            const accountSummary = this.state.userLatestBill;
             let message = 'Payment has exceeded the monthly maximum of $500 for non-residential accounts using ' + (usedCC === "visa" ? "Visa" : "Discover") + ' Card. ';
             if ((500 - parseInt(accountSummary[0].alreadyPaid)) > 0) {
                 message += "You can only pay up to " + ("$ " + (500 - parseInt(accountSummary[0].alreadyPaid))) + " for now using a " + (usedCC === "visa" ? "VISA" : "DISCOVER") + ", or you may complete your payment using Mastercard or " + (usedCC === "visa" ? "Discover card." : "Visa card.")
@@ -305,19 +291,21 @@ class PayNowPayment extends Component {
     validUserInputs(subtotal, accountSummary) {
         debugger
         const cardNumber = this.state.cardDetails.cardNumber
-        const usedCC = cardNumber.charAt(0) === "4" ?
+        const usedCC = cardNumber.charAt(0) === "7" ?
             "visa"
             :
-            cardNumber.charAt(0) === "6" ?
+            cardNumber.charAt(0) === "9" ?
                 "discover"
                 :
-                parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) > 50 && parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) < 56 ?
+                parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) > 53 && parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) < 59 ?
                     "master"
                     :
                     "invalid";
 
         console.clear()
+        console.log('usedCC', usedCC)
         if ((usedCC === "invalid")) {
+            debugger
             this.setState({
                 isPaymentProcessing: false
             })
@@ -328,7 +316,8 @@ class PayNowPayment extends Component {
             })
             // this.props.showMessage(true, 'Invalid Card Number Format!')
         }
-        else if (this.state.isVisaChecked && usedCC != "visa") {
+        else if (usedCC != "visa") {
+            debugger
             this.setState({
                 isPaymentProcessing: false
             })
@@ -339,7 +328,8 @@ class PayNowPayment extends Component {
             })
             // this.props.showMessage(true, 'Please enter a valid Visa Card Number!')
         }
-        else if (this.state.isMasterCardChecked && usedCC != "master") {
+        else if (usedCC != "master") {
+            debugger
             this.setState({
                 isPaymentProcessing: false
             })
@@ -350,7 +340,8 @@ class PayNowPayment extends Component {
                 type: 'warning'
             })
         }
-        else if (((this.state.cardDetails.cardNumber).length < 16 || (this.state.cardDetails.cardNumber).length > 16) && usedCC === "visa") {
+        else if (((this.state.cardDetails.cardNumber).length < 19 || (this.state.cardDetails.cardNumber).length > 19) && usedCC === "visa") {
+            debugger
             this.setState({
                 isPaymentProcessing: false
             })
@@ -361,7 +352,8 @@ class PayNowPayment extends Component {
                 type: 'warning'
             })
         }
-        else if (((this.state.cardDetails.cardNumber).length < 16 || (this.state.cardDetails.cardNumber).length > 16) && usedCC === "master") {
+        else if (((this.state.cardDetails.cardNumber).length < 19 || (this.state.cardDetails.cardNumber).length > 19) && usedCC === "master") {
+            debugger
             this.setState({
                 isPaymentProcessing: false
             })
@@ -372,7 +364,8 @@ class PayNowPayment extends Component {
             })
             // this.props.showMessage(true, 'Please enter a valid Mastercard Number!')
         }
-        else if (((this.state.cardDetails.cardNumber).length < 16 || (this.state.cardDetails.cardNumber).length > 16) && usedCC === "discover") {
+        else if (((this.state.cardDetails.cardNumber).length < 19 || (this.state.cardDetails.cardNumber).length > 19) && usedCC === "discover") {
+            debugger
             this.setState({
                 isPaymentProcessing: false
             })
@@ -390,7 +383,7 @@ class PayNowPayment extends Component {
                     subtotal: subtotal,
                     accountSummary: accountSummary
                 }, () => {
-                    this.executeRequests()
+                    // this.executeRequests()
                 })
             }
             else {
@@ -417,9 +410,9 @@ class PayNowPayment extends Component {
     }
     executeRequests = () => {
         var text = this.state.cardDetails.cardNumber
-        var replaceSpacingMask = text.replace(/[\n\r\s\t]+/g, ' ') 
+        var replaceSpacingMask = text.replace(/[\n\r\s\t]+/g, ' ')
         console.log('replaceSpacingMask', replaceSpacingMask)
-        
+
         this.setState({
             ...this.state,
             cardDetails: {
@@ -439,6 +432,7 @@ class PayNowPayment extends Component {
                 })
 
                 if (result.data.Transaction_Approved == 'true') {
+
                     NavigationService.navigate('PaymentSuccessWA',
                         {
                             paymentResult: result,
@@ -733,10 +727,30 @@ class PayNowPayment extends Component {
                                     borderRadius: 6,
                                     borderColor: 'lightgray',
                                     marginBottom: 5,
-                                    borderWidth: 1
+                                    borderWidth: 1,
+                                    height: 50,
+                                    paddingHorizontal: 8
                                 }}>
 
-                                <NumberFormat
+                                <TextInputMask
+                                    returnKeyType='done'
+
+                                    autoCapitalize='none'
+                                    placeholderTextColor='lightgray'
+                                    keyboardType="numeric"
+                                    type={'money'}
+                                    options={{
+                                        unit: '',
+                                        precision: 2,
+                                        separator: '.',
+                                        delimiter: ',',
+                                        suffixUnit: '',
+                                    }}
+                                    value={this.state.cardDetails.amountToBePaid}
+                                    onChangeText={(value) => this.amountToBePaidOnChange(value)}
+
+                                />
+                                {/* <NumberFormat
                                     value={this.state.cardDetails.amountToBePaid}
                                     displayType={'text'}
                                     thousandSeparator={true}
@@ -757,7 +771,7 @@ class PayNowPayment extends Component {
 
                                         </React.Fragment>
                                     )}
-                                />
+                                /> */}
                             </Item>
                             {!_.isEmpty(this.state.errors.amountToBePaid) ?
                                 <CustomText style={{

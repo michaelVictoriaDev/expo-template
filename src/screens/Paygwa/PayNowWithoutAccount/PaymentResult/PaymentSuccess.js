@@ -25,11 +25,11 @@ class PaymentSuccess extends Component {
         this.state = {
             paymentResult: this.props.navigation.state.params.paymentResult,
             accountSummary: this.props.navigation.state.params.accountSummary,
-            event : this.props.navigation.state.params.event
+            event: this.props.navigation.state.params.event
         }
     }
     componentDidMount() {
-        console.log('PaymentSuccess',this.props.navigation.state.params.accountSummary)
+        console.log('PaymentSuccess', this.props.navigation.state.params.accountSummary)
 
     }
 
@@ -65,7 +65,7 @@ class PaymentSuccess extends Component {
             <Container >
                 <CustomHeader
                     fontSizeLeft={pRatioToFontSize(+1) > 25 ? 25 : pRatioToFontSize(+1)}
-                    leftButtonFunction={this.props.navigation.goBack}
+                    leftButtonFunction={() => NavigationService.navigate('Login')}
                     title="Pay Now"
                     RightIcon={<Right />}
                 />
@@ -139,28 +139,19 @@ class PaymentSuccess extends Component {
                             {_.map(this.state.accountSummary, (item, index) => {
                                 debugger
                                 return (
-                                    <CustomText key={index} adjustsFontSizeToFit style={{ fontSize: 16, color: '#333333' }}>{item.accID}</CustomText>
+                                    <CustomText key={index} adjustsFontSizeToFit style={{ fontSize: 16, color: '#333333' }}>{item.arrears.details.AccountID}</CustomText>
                                 )
                             })
                             }
 
-                            <CustomTextBold adjustsFontSizeToFit style={{ paddingTop: 10, fontSize: 18, color: '#333333' }}>Total Amount</CustomTextBold>
+                            {/* <CustomTextBold adjustsFontSizeToFit style={{ paddingTop: 10, fontSize: 18, color: '#333333' }}>Total Amount</CustomTextBold> */}
                         </Col>
                         <Col size={50} style={{ alignItems: 'flex-end' }}>
-                            {_.map(this.state.accountSummary, (item, index) => {
-                                debugger
-                                return (
-                                    <CustomText key={index} adjustsFontSizeToFit style={{ fontSize: 16 }}>{"$ " + parseFloat(Math.round(item.amountToBePaid * 100) / 100).toFixed(2)}</CustomText>
-                                )
-                            })
-                            }
-                            {_.sumBy(this.state.accountSummary, (item, index) => {
-                                debugger
-                                return (
-                                    <CustomText key={index} adjustsFontSizeToFit style={{ paddingTop: 10, fontSize: 24 }}>{"$ " + parseFloat(Math.round(item.amountToBePaid * 100) / 100).toFixed(2)}</CustomText>
-                                )
-                            })
-                            }
+
+                            <CustomText adjustsFontSizeToFit style={{ fontSize: 16 }}>{"$ " + parseFloat(Math.round(result.data.DollarAmount * 100) / 100).toFixed(2)}</CustomText>
+                                
+
+
 
 
                         </Col>
@@ -181,7 +172,7 @@ class PaymentSuccess extends Component {
                                 }
                             }
                             }>
-                            <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>{this.state.event == 'fromAccountSummary' ? 'Back to Dashboard' : 'Back To Login' }</CustomText>
+                            <CustomText style={{ color: colors.WHITE, fontSize: 16 }}>{this.state.event == 'fromAccountSummary' ? 'Back to Dashboard' : 'Back To Login'}</CustomText>
                         </Button>
 
 

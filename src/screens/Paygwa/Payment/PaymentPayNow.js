@@ -38,14 +38,14 @@ class PaymentPayNow extends Component {
             subtotal: this.props.navigation.state.params.subtotal,
             isPaymentProcessing: false,
             cardDetails: {
-                cardHolderName: "Xtendly Dev",
+                // cardHolderName: "Xtendly Dev",
                 cardHolderName: "",
                 // cardNumber: "4111111111111111",
                 cardNumber: "",
                 expDate: new Date(),
                 validExpDate: "",
-                cvv: "123",
-                // cvv: "",
+                // cvv: "123",
+                cvv: "",
                 confirmationEmail: this.props.dashboard.userAccountDetails.emailAddress,
                 selectedMonth: ('0' + (moment().month() + 1)).slice(-2),
                 selectedYear: moment().format("YY")

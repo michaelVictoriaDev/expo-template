@@ -71,10 +71,10 @@ import { Root, Container } from "native-base";
 
 const AuthStack = createStackNavigator(
   {
-    Login : {
+    Login: {
       screen: LoginScreen,
-      navigationOptions : {
-        header : null
+      navigationOptions: {
+        header: null
       }
     }
   },
@@ -97,37 +97,26 @@ const MyAccountsStack = createStackNavigator(
     HelpAndSupport: {
       screen: HelpAndSupportScreen
     },
-    AccountProfile:{
+    AccountProfile: {
       screen: AccountProfileScreen
     },
     EditAccountProfile: {
       screen: EditAccountProfileScreen
     },
-    ChangePassword : {
-      screen : ChangePasswordScreen
+    ChangePassword: {
+      screen: ChangePasswordScreen
     },
     AccountSummary: {
       screen: AccountSummaryScreen
     },
-    PayNowWithoutAccount: {
-      screen: PayNowWithoutAccount
-    },
-    PaymentSuccessWA: {
-      screen: PaymentSuccessWAScreen
-    },
-    PaymentUserFailedWA: {
-      screen: PaymentUserFailedWAScreen
-    },
-    PaymentServerFailedWA: {
-      screen: PaymentServerFailedWAScreen
-    },
-    AccountSummaryBill : {
+
+    AccountSummaryBill: {
       screen: AccountSummaryBillScreen
     },
-    AccountSummaryConsumption : {
+    AccountSummaryConsumption: {
       screen: AccountSummaryConsumptionScreen
     },
-    AccountSummaryHistory : {
+    AccountSummaryHistory: {
       screen: AccountSummaryHistoryScreen
     },
     PaymentInput: {
@@ -152,8 +141,8 @@ const MyAccountsStack = createStackNavigator(
   {
     initialRouteName: 'MyAccounts',
     gesturesEnabled: false,
-    navigationOptions : {
-      header : null,
+    navigationOptions: {
+      header: null,
     }
   }
 )
@@ -161,7 +150,7 @@ const MyAccountsStack = createStackNavigator(
 
 const DrawerStack = createDrawerNavigator(
   {
-    MyAccounts : {
+    MyAccounts: {
       screen: MyAccountsStack,
     }
   },
@@ -183,8 +172,20 @@ const InitialStack = createStackNavigator(
     SignUpCreateAccount: {
       screen: SignUpCreateAccountScreen
     },
-    SuccessScreen : {
-      screen : SuccessScreen
+    PayNowWithoutAccount: {
+      screen: PayNowWithoutAccount
+    },
+    PaymentSuccessWA: {
+      screen: PaymentSuccessWAScreen
+    },
+    PaymentUserFailedWA: {
+      screen: PaymentUserFailedWAScreen
+    },
+    PaymentServerFailedWA: {
+      screen: PaymentServerFailedWAScreen
+    },
+    SuccessScreen: {
+      screen: SuccessScreen
     },
     PayNowWithoutAccount: {
       screen: PayNowWithoutAccount
@@ -202,26 +203,26 @@ const InitialStack = createStackNavigator(
 
 const CombinedStack = createSwitchNavigator(
   {
-    AuthStack : AuthStack,
+    AuthStack: AuthStack,
     InitialStack: InitialStack,
     DrawerStack: DrawerStack
   },
   {
-    initialRouteName : 'AuthStack'
+    initialRouteName: 'AuthStack'
   }
 )
 
 
 export default class App extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      isFontLoading : true,
+      isFontLoading: true,
     }
   }
 
-  
+
   async componentDidMount() {
     await Font.loadAsync({
       'Lato': require('./assets/fonts/Lato-Regular.ttf'),
@@ -232,15 +233,15 @@ export default class App extends Component {
       ...Ionicons.font,
     });
     this.setState({
-      isFontLoading : false
+      isFontLoading: false
     })
   }
 
   render() {
-    if( this.state.isFontLoading ) {
-      return(
+    if (this.state.isFontLoading) {
+      return (
         <Root>
-          <AppLoading/>
+          <AppLoading />
         </Root>
       )
     }
@@ -249,13 +250,12 @@ export default class App extends Component {
         <Root>
           <Provider store={store}>
             {/* <ConnectedRootContainer /> */}
-    
-            <CombinedStack ref={ navigationRef => 
-              {
-                NavigationService.setTopLevelNavigator(navigationRef)
-              }
-            }/>
-  
+
+            <CombinedStack ref={navigationRef => {
+              NavigationService.setTopLevelNavigator(navigationRef)
+            }
+            } />
+
           </Provider>
         </Root>
       );

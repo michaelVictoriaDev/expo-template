@@ -17,6 +17,8 @@ import NavigationService from '../../../NavigationService';
 import NumberFormat from 'react-number-format';
 import { Row, Col, Grid } from 'react-native-easy-grid';
 
+import { TextInputMask } from 'react-native-masked-text';
+
 
 const labels = ["Customer Information", "Validation", "Enter Payment"];
 const customStyles = {
@@ -53,7 +55,7 @@ class PayNowEnterPayment extends Component {
             selected2: 'key0',
             currentPosition: 3,
             isGoBack: false,
-            amountToBePaid: '1000.00'
+            amountToBePaid: ''
         }
     }
 
@@ -125,29 +127,25 @@ class PayNowEnterPayment extends Component {
                                         borderRadius: 6,
                                         borderColor: 'lightgray',
                                         marginBottom: 5,
-                                        borderWidth: 1
+                                        borderWidth: 1,
+                                        height: 50
                                     }}>
-                                    <NumberFormat
 
-
+                                    <TextInputMask
+                                    style={{ height : 50}}
+                                        type={'money'}
+                                        options={{
+                                            unit: '',
+                                            precision: 2,
+                                            separator: '.',
+                                            delimiter: ',',
+                                            suffixUnit: '',
+                                        }}
                                         value={this.state.amountToBePaid}
-                                        displayType={'text'}
-                                        thousandSeparator={true}
-                                        prefix={'$ '}
-                                        decimalScale={2}
-                                        fixedDecimalScale={true}
-                                        renderText={value => (
-                                            <Input
-                                                textAlign={'left'}
-                                                autoCapitalize='none'
-                                                placeholderTextColor='lightgray'
-                                                keyboardType="numeric"
-                                                value={value}
-                                                onChangeText={(value) => this.setState({
-                                                    amountToBePaid: value
-                                                })}
-                                            />
-                                        )}
+                                        onChangeText={(value) => this.setState({
+                                            amountToBePaid: value
+                                        })}
+                                    
                                     />
 
                                 </Item>
