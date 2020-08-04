@@ -27,9 +27,12 @@ USED FOR NAVIGATING WITHOUT PROPS
 
 
 function saveToPayEezy(postData) {
+    console.log('ok')
+    var text = postData.cardDetails.cardNumber
+    var replaceSpacingMask = text.replace(/[\n\r\s\t]+/g, '')
     console.log('saveToPayEezypostData', {
         amount: postData.subtotal,
-        card_num: postData.cardDetails.cardNumber,
+        card_num: replaceSpacingMask,
         exp_date: postData.cardDetails.validExpDate,
         card_holder: postData.cardDetails.cardHolderName,
         CAVV: postData.cardDetails.cvv,
@@ -40,7 +43,7 @@ function saveToPayEezy(postData) {
         .post(PAYNOW_URL + '/api/v1/payeezy',
             {
                 amount: postData.subtotal,
-                card_num: postData.cardDetails.cardNumber,
+                card_num: replaceSpacingMask,
                 exp_date: postData.cardDetails.validExpDate,
                 card_holder: postData.cardDetails.cardHolderName,
                 CAVV: postData.cardDetails.cvv,

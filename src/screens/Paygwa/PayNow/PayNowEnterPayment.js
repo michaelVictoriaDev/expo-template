@@ -140,6 +140,7 @@ class PayNowEnterPayment extends Component {
                                             separator: '.',
                                             delimiter: ',',
                                             suffixUnit: '',
+                                            returnKeyType: 'done'
                                         }}
                                         value={this.state.amountToBePaid}
                                         onChangeText={(value) => this.setState({

@@ -336,7 +336,7 @@ class SignUpLoginDetails extends Component {
     //RENDER MAIN COMPONENT
     render() {
         return (
-            /* MAIN VIEW COMPONENT */
+            /* MAIN VIEW COMPONENT*/
             (this.state.isGoBack === true) ?
                 <SignUpAccountDetails userBasicInfo={this.state.userBasicInfo} billAddressSource={this.state.billAddressSource} personId={this.state.personId} />
                 :
@@ -379,7 +379,7 @@ class SignUpLoginDetails extends Component {
 
                             }}>
                                 <CustomTextBold style={{ paddingBottom: 5, fontSize: 16 }}>Login Details</CustomTextBold>
-                                <CustomText style={{ paddingVertical: 5 }}>Username * (Your username must be different from your PayGPA username)</CustomText>
+                                <CustomText style={{ paddingVertical: 5 }}>Username* (Your username must be different from your PayGPA username)</CustomText>
                                 <Item regular
                                     style={{
                                         borderStyle: 'solid',
@@ -416,7 +416,7 @@ class SignUpLoginDetails extends Component {
                                     <CustomText style={{ paddingVertical: 5, color: colors.RED }}>{this.state.userNameResult}</CustomText>
                                 }
 
-                                <CustomText style={{ paddingVertical: 5 }}>Password * (Your password must be between 8 – 15 characters long)</CustomText>
+                                <CustomText style={{ paddingVertical: 5 }}>Password* (Your password must be between 8 – 15 characters long)</CustomText>
                                 <Item regular
                                     style={{
                                         borderStyle: 'solid',
@@ -484,7 +484,7 @@ class SignUpLoginDetails extends Component {
 
                                 }
 
-                                <CustomText style={{ paddingVertical: 5 }}>Confirm Password *</CustomText>
+                                <CustomText style={{ paddingVertical: 5 }}>Confirm Password*</CustomText>
                                 <Item regular
                                     style={{
                                         borderStyle: 'solid',
@@ -569,7 +569,7 @@ class SignUpLoginDetails extends Component {
 
                             }}>
                                 <CustomTextBold style={{ paddingBottom: 5, fontSize: 16 }}>Contact Details</CustomTextBold>
-                                <CustomText style={{ paddingVertical: 5 }}>Email Address *</CustomText>
+                                <CustomText style={{ paddingVertical: 5 }}>Email Address*</CustomText>
                                 <Item regular
                                     style={{
                                         borderStyle: 'solid',
@@ -732,7 +732,7 @@ class SignUpLoginDetails extends Component {
                             }}>
 
                                 <CustomTextBold style={{ paddingBottom: 5, fontSize: 16 }}>Security Details</CustomTextBold>
-                                <CustomText style={{ paddingVertical: 5 }}>Security Question *</CustomText>
+                                <CustomText style={{ paddingVertical: 5 }}>Security Question*</CustomText>
                                 <Item regular
                                     style={{
                                         flex: 1,
@@ -743,10 +743,14 @@ class SignUpLoginDetails extends Component {
                                         borderRadius: 6,
                                         borderColor: 'lightgray',
                                         marginBottom: 5,
-                                        borderWidth: 1
+                                        borderWidth: 1,
+                                        
                                     }}>
 
                                     <Picker
+                                        placeholderStyle={{ paddingLeft: 6 }}
+                                        itemTextStyle={{paddingLeft: 6}}
+                                        textStyle={{paddingLeft: 6}}
                                         placeholder="Select your Security Question"
                                         mode="dropdown"
                                         placeholderIconColor="#007aff"
@@ -770,7 +774,7 @@ class SignUpLoginDetails extends Component {
 
                                             :
                                             <React.Fragment>
-                                                <Picker.Item style={{ color: "#bfc6ea" }} label="Select your Security Question" value={0} />
+                                                <Picker.Item style={{ color: "#bfc6ea",  }} label="Select your Security Question" value={0} />
 
                                                 {_.map(this.props.users.securityQuestions, (securityQuestions, index) => {
                                                     return (
@@ -785,7 +789,7 @@ class SignUpLoginDetails extends Component {
                                     </Picker>
 
                                 </Item>
-                                <CustomText style={{ paddingVertical: 5 }}>Security Answer *</CustomText>
+                                <CustomText style={{ paddingVertical: 5 }}>Security Answer*</CustomText>
                                 <Item regular
                                     style={{
                                         borderStyle: 'solid',
@@ -838,8 +842,9 @@ class SignUpLoginDetails extends Component {
                                     <CustomText style={{ paddingVertical: 5, color: colors.RED }}>{this.state.userDetails.errorSecurityQuestion}</CustomText>
 
                                 }
+                                <View>
 
-                                <ListItem style={{ borderBottomWidth: 0 }}>
+                                <ListItem style={{ borderBottomWidth: 0, marginLeft: -1 }}>
                                     <CheckBox checked={this.state.CheckBox} onPress={(e) => this.setState({
                                         CheckBox: !this.state.CheckBox
                                     })} />
@@ -847,16 +852,16 @@ class SignUpLoginDetails extends Component {
                                         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                                             <CustomText style={{ fontSize: 12 }}>I agree to the </CustomText>
                                             <TouchableOpacity onPress={() => Linking.openURL('https://gwadev.xtendly.com/terms-and-conditions')}>
-                                                <CustomText style={{ color: '#007bff', fontSize: 10 }}>Terms and Conditions</CustomText>
+                                                <CustomText style={{ color: '#007bff', fontSize: 12 }}>Terms and Conditions</CustomText>
                                             </TouchableOpacity>
-                                            <CustomText> *</CustomText>
+                                            <CustomText>*</CustomText>
 
                                         </View>
 
 
                                     </Body>
                                 </ListItem>
-
+                                </View>
                             </View>
                             <View style={{ paddingTop: 30, paddingHorizontal: 30 }}>
                                 {this.state.isLoading ?
@@ -917,7 +922,7 @@ class SignUpLoginDetails extends Component {
                                 </Button>
                             </View>
 
-                            <CustomText style={{ textAlign: 'center', color: '#df0018', justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>Fields marked as * are mandatory</CustomText>
+                            <CustomText style={{ textAlign: 'center', color: '#df0018', justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>Fields marked as* are mandatory</CustomText>
                             <View style={{ paddingTop: 30 }} />
                         </View>
                     </Content>

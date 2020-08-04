@@ -134,7 +134,7 @@ export function fetchLogin(dataObject) {
 
 				dispatch(fetchLoginFail(String(error)));
 				Toast.show({
-					text: 'Error in log-in: Account might not be existing. ' + error,
+					text: 'Server not responding. Please try again later.',
 					duration: 3000,
 					type: 'danger'
 				})

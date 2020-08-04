@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Container, Right, Icon, Input, Content, Item, Text, Toast } from 'native-base';
 import {
-    View, TouchableOpacity, Image, Alert, BackHandler, Keyboard,  StyleSheet
+    View, TouchableOpacity, Image, Alert, BackHandler, Keyboard,  StyleSheet, Dimensions
 } from 'react-native';
 import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 
@@ -422,18 +422,18 @@ class SignUpCreateAccount extends Component {
 const styles = StyleSheet.create({
 
     zoomWrapper: {
-      flex: 1,
-      overflow: 'hidden',
+     // height: '80%',
+     flex: 1,
+     overflow: 'hidden',
     },
     zoomableView: {
-    //   padding: 10,
-      backgroundColor: '#fff',
+
     },
     image: {
-      flex: 1,
-      width: '100%',
-      height: '100%',
-    //   marginBottom: 10,
+        // height: '80%',
+        width: '100%',
+        height: Dimensions.get('screen').height ,
+        //   marginBottom: 10,
     },
     caption: {
       fontSize: 10,

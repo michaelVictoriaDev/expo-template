@@ -25,7 +25,7 @@ import CustomHeader from "../../../components/MultiCustomHeader";
 import { Grid, Row, Col } from "react-native-easy-grid";
 import { TouchableHighlight } from "react-native-gesture-handler";
 
-import { ScrollView, ActivityIndicator } from 'react-native';
+import { ScrollView, ActivityIndicator, Dimensions } from 'react-native';
 
 import {
   VictoryChart,
@@ -256,7 +256,7 @@ class AccountSummaryConsumption extends Component {
                           <Picker
                             mode="dropdown"
                             iosIcon={<Icon name="arrow-down" />}
-                            style={{ width: '95%' }}
+                            style={{ width: Dimensions.get('screen').width - 45}}
                             placeholderIconColor="#007aff"
                             selectedValue={this.state.selected}
                             onValueChange={(value) =>
@@ -265,7 +265,7 @@ class AccountSummaryConsumption extends Component {
                               })}
                           >
                             <Picker.Item label="Monthly Water Consumption" value={0} />
-                            <Picker.Item label="Monthly Bill Amount      " value={1} />
+                            <Picker.Item label="Monthly Bill Amount" value={1} />
                           </Picker>
                         </Item>
                       </Form>

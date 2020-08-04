@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Container, Right, Footer, FooterTab, Content } from 'native-base';
+import { Button, Container, Right, Footer, FooterTab, Content, Toast } from 'native-base';
 import {
     View
 } from 'react-native';
@@ -39,7 +39,9 @@ class PaymentView extends Component {
                 confirmationEmail: this.props.navigation.state.params.cardDetails.confirmationEmail,
                 selectedMonth: this.props.navigation.state.params.cardDetails.selectedMonth,
                 selectedYear: this.props.navigation.state.params.cardDetails.selectedYear
-            }
+            },
+            sVisaChecked: false,
+            isMasterCardChecked: false,
         }
     }
 
@@ -179,21 +181,33 @@ class PaymentView extends Component {
         });
     }
 
+    getUsedCC = () => {
+        const cardNumber = this.state.cardDetails.cardNumber
+        if(cardNumber.charAt(0) === "4"){
+            this.setState({
+                isVisaChecked: true
+            })
+            return "visa"; 
+        } 
+        else if(cardNumber.charAt(0) === "6"){
+            return "discover"; 
+        }    
+        else if(parseInt(cardNumber.charAt(0)+""+cardNumber.charAt(1)) > 50 && parseInt(cardNumber.charAt(0)+""+cardNumber.charAt(1)) < 56){
+            this.setState({
+                isMasterCardChecked: true
+            })
+            return "master"; 
+        }       
+        else{
+            return "invalid"; 
+        }
+    }
 
     validUserInputs(subtotal, accountSummary) {
         const cardNumber = this.state.cardDetails.cardNumber
-        const usedCC = cardNumber.charAt(0) === "4" ?
-            "visa"
-            :
-            cardNumber.charAt(0) === "6" ?
-                "discover"
-                :
-                parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) > 50 && parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) < 56 ?
-                    "master"
-                    :
-                    "invalid";
+        const usedCC = this.getUsedCC();
+        console.log('usedCC', usedCC)
 
-        console.clear()
         if ((usedCC === "invalid")) {
             this.setState({
                 isPaymentProcessing: false
@@ -227,7 +241,7 @@ class PaymentView extends Component {
                 type: 'warning'
             })
         }
-        else if (((this.state.cardDetails.cardNumber).length < 16 || (this.state.cardDetails.cardNumber).length > 16) && usedCC === "visa") {
+        else if (((this.state.cardDetails.cardNumber).length < 19 || (this.state.cardDetails.cardNumber).length > 19) && usedCC === "visa") {
             this.setState({
                 isPaymentProcessing: false
             })
@@ -238,7 +252,7 @@ class PaymentView extends Component {
                 type: 'warning'
             })
         }
-        else if (((this.state.cardDetails.cardNumber).length < 16 || (this.state.cardDetails.cardNumber).length > 16) && usedCC === "master") {
+        else if (((this.state.cardDetails.cardNumber).length < 19 || (this.state.cardDetails.cardNumber).length > 16) && usedCC === "master") {
             this.setState({
                 isPaymentProcessing: false
             })
@@ -249,7 +263,7 @@ class PaymentView extends Component {
             })
             // this.props.showMessage(true, 'Please enter a valid Mastercard Number!')
         }
-        else if (((this.state.cardDetails.cardNumber).length < 16 || (this.state.cardDetails.cardNumber).length > 16) && usedCC === "discover") {
+        else if (((this.state.cardDetails.cardNumber).length < 19 || (this.state.cardDetails.cardNumber).length > 19) && usedCC === "discover") {
             this.setState({
                 isPaymentProcessing: false
             })
@@ -297,20 +311,6 @@ class PaymentView extends Component {
     // execute payment na 
 
     executeRequests = () => {
-        var text = this.state.cardDetails.cardNumber
-        var replaceSpacingMask = text.replace(/[\n\r\s\t]+/g, ' ') 
-        console.log('replaceSpacingMask', replaceSpacingMask)
-        
-        this.setState({
-            ...this.state,
-            cardDetails: {
-                ...this.state.cardDetails,
-                cardNumber: replaceSpacingMask
-            }
-        })
-
-
-
         this.props.savePaymentData(this.state)
             .then((result) => {
                 console.log('paymentResult', JSON.stringify(result))

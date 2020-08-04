@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Container, Right, Icon, Input, Content, Item, Text, Toast } from 'native-base';
 import {
-    View, TouchableOpacity, Image, Alert, BackHandler, Keyboard, Dimensions, StyleSheet, Animated
+    View, TouchableOpacity, Image, Alert, BackHandler, Keyboard, Dimensions, StyleSheet
 } from 'react-native';
-import GestureHandler, { PinchGestureHandler } from 'react-native-gesture-handler';
+
 import ImageZoom from 'react-native-image-pan-zoom';
 
 import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
-
-import ImageView from "react-native-image-viewing";
 
 
 // import SignUpAccountDetails from './SignUpAccountDetails'
@@ -66,8 +64,6 @@ const customStyles = {
     labelFontFamily: 'Lato_Bold'
 }
 
-const screen = Dimensions.get('window');
-
 class PayNowCustomerInformation extends Component {
 
     constructor(props) {
@@ -92,7 +88,6 @@ class PayNowCustomerInformation extends Component {
             userLatestBill: [],
             accountSummary: _.isUndefined(this.props.navigation) ? this.props.accountSummary : this.props.navigation.state.params.accountSummary,
             event: _.isUndefined(this.props.navigation) ? this.props.event : this.props.navigation.state.params.event,
-            isVisible: true
 
         }
     }
@@ -276,19 +271,55 @@ class PayNowCustomerInformation extends Component {
                         RightIcon={<Right />}
                     />
                     {this.state.isModalShow ?
+                        <Modal isVisible={this.state.isModalShow} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
+                            avoidKeyboard={true}
+                            onBackdropPress={() => this.setState({ isModalShow: false })}
+                        >
 
-                        <View style={styles.container}>
-                            <ImageView
-                                presentationStyle='fullScreen'
-                                // backgroundColor={'white'}
-                                images={[
-                                    require('../../../../assets/gwa-bill-preview.png')
-                                ]}
-                                imageIndex={0}
-                                visible={this.state.isModalShow}
-                                onRequestClose={() => this.setState({ isModalShow: false })}
-                            />
-                        </View>
+                            <View style={{
+                                // flex: 1,
+                                height:"80%",
+                                backgroundColor: colors.WHITE
+                            }}>
+                                <View style={{
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    alignItems: 'flex-end'
+
+                                }}>
+                                    <Button transparent onPress={() => this.setState({ isModalShow: false })}  >
+                                        <Icon style={{ color: '#656667', fontSize: 25 }} name='md-close-circle' type='Ionicons' />
+                                    </Button>
+
+                                </View>
+
+                                <View style={styles.zoomWrapper}>
+                                    <ReactNativeZoomableView
+                                        captureEvent={true}
+                                        zoomEnabled={true}
+                                        maxZoom={1.5}
+                                        minZoom={0.5}
+                                        zoomStep={0.25}
+                                        initialZoom={0.9}
+                                        bindToBorders={true}
+                                        onZoomAfter={this.logOutZoomState}
+                                        style={styles.zoomableView}
+                                    >
+                                        <Image
+                                        
+                                            style={styles.image}
+                                            source={require('../../../../assets/gwa-bill-preview.png')}
+                                            resizeMode="both"
+                                        />
+                                        {/* <Text style={styles.caption}>Vienna, Austria</Text> */}
+                                    </ReactNativeZoomableView>
+                                </View>
+
+
+                            </View>
+
+                        </Modal>
+
                         :
                         null
 
@@ -468,28 +499,22 @@ class PayNowCustomerInformation extends Component {
 
 
 const styles = StyleSheet.create({
-    container: {
-        width: Dimensions.get('screen').width,
-        height: Dimensions.get('screen').height,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+
     zoomWrapper: {
         // height: '80%',
         flex: 1,
         justifyContent: 'center',
         overflow: 'hidden',
-
+       
     },
     zoomableView: {
-        padding: 10,
-        backgroundColor: '#fff',
+       padding: 10,
+     backgroundColor: '#fff',
     },
     image: {
         // height: '80%',
         width: Dimensions.get('screen').width,
-        height: Dimensions.get('screen').height,
+        height: Dimensions.get('screen').height ,
         //   marginBottom: 10,
     },
     caption: {

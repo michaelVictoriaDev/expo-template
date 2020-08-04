@@ -91,9 +91,9 @@ class PayNowPayment extends Component {
             cardDetails: {
                 // cardHolderName: "Xtendly Dev",
                 cardHolderName: "",
-                // cardNumber: "4111111111111111",
+                // cardNumber: "4111 1111 1111 1111",
                 cardNumber: "",
-                cvv: "",
+                cvv: "1",
                 validExpDate: "",
                 selectedMonth: ('0' + (moment().month() + 1)).slice(-2),
                 selectedYear: moment().format("YY"),
@@ -108,7 +108,9 @@ class PayNowPayment extends Component {
                 cardNumber: '',
                 cvv: '',
                 confirmationEmail: '',
-            }
+            },
+            isVisaChecked: false,
+            isMasterCardChecked: false,
         }
         // this.onSubmit = this.onSubmit.bind(this);
     }
@@ -143,6 +145,7 @@ class PayNowPayment extends Component {
     }
 
     onSubmit() {
+        Keyboard.dismiss()
         if (this.state.cardDetails.amountToBePaid <= 0 || this.state.cardDetails.cardHolderName == "" || this.state.cardDetails.cardNumber == "" || this.state.cardDetails.cvv == "") {
 
             var amountToBePaid
@@ -287,23 +290,34 @@ class PayNowPayment extends Component {
         }
     }
 
+    getUsedCC = () => {
+        const cardNumber = this.state.cardDetails.cardNumber
+        if (cardNumber.charAt(0) === "4") {
+            this.setState({
+                isVisaChecked: true
+            })
+            return "visa";
+        }
+        else if (cardNumber.charAt(0) === "6") {
+            return "discover";
+        }
+        else if (parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) > 50 && parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) < 56) {
+            this.setState({
+                isMasterCardChecked: true
+            })
+            return "master";
+        }
+        else {
+            return "invalid";
+        }
+    }
 
     validUserInputs(subtotal, accountSummary) {
         debugger
         const cardNumber = this.state.cardDetails.cardNumber
-        const usedCC = cardNumber.charAt(0) === "7" ?
-            "visa"
-            :
-            cardNumber.charAt(0) === "9" ?
-                "discover"
-                :
-                parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) > 53 && parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) < 59 ?
-                    "master"
-                    :
-                    "invalid";
-
-        console.clear()
+        const usedCC = this.getUsedCC();
         console.log('usedCC', usedCC)
+
         if ((usedCC === "invalid")) {
             debugger
             this.setState({
@@ -316,7 +330,7 @@ class PayNowPayment extends Component {
             })
             // this.props.showMessage(true, 'Invalid Card Number Format!')
         }
-        else if (usedCC != "visa") {
+        else if (this.state.isVisaChecked && usedCC != "visa") {
             debugger
             this.setState({
                 isPaymentProcessing: false
@@ -328,7 +342,7 @@ class PayNowPayment extends Component {
             })
             // this.props.showMessage(true, 'Please enter a valid Visa Card Number!')
         }
-        else if (usedCC != "master") {
+        else if (this.state.isMasterCardChecked && usedCC != "master") {
             debugger
             this.setState({
                 isPaymentProcessing: false
@@ -379,11 +393,13 @@ class PayNowPayment extends Component {
             let email = String(this.state.cardDetails.confirmationEmail);
             // eslint-disable-next-line
             if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+
                 this.setState({
                     subtotal: subtotal,
-                    accountSummary: accountSummary
+                    accountSummary: accountSummary,
+
                 }, () => {
-                    // this.executeRequests()
+                    this.executeRequests()
                 })
             }
             else {
@@ -398,10 +414,12 @@ class PayNowPayment extends Component {
             }
         }
         else {
+
             this.setState({
                 subtotal: subtotal,
                 accountSummary: accountSummary, // sorted na all
-                isPaymentProcessing: true
+                isPaymentProcessing: true,
+
             }, () => {
                 console.log('executeRequests')
                 this.executeRequests()
@@ -409,23 +427,14 @@ class PayNowPayment extends Component {
         }
     }
     executeRequests = () => {
-        var text = this.state.cardDetails.cardNumber
-        var replaceSpacingMask = text.replace(/[\n\r\s\t]+/g, ' ')
-        console.log('replaceSpacingMask', replaceSpacingMask)
 
-        this.setState({
-            ...this.state,
-            cardDetails: {
-                ...this.state.cardDetails,
-                cardNumber: replaceSpacingMask
-            }
-        })
 
 
         this.props.savePaymentData(this.state)
             .then((result) => {
                 console.log('paymentResult', JSON.stringify(result))
                 console.log('accountSummary', this.state.accountSummary)
+                console.log('DITO', result.data)
 
                 this.setState({
                     isPaymentProcessing: false
@@ -493,6 +502,7 @@ class PayNowPayment extends Component {
             return (<View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/discover-logo.png')} /></View>)
         }
         else if (parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) > 50 && parseInt(cardNumber.charAt(0) + "" + cardNumber.charAt(1)) < 56 ? true : false) {
+
             return (<View style={{ paddingRight: 5 }}><Image source={require('../../../../assets/credit-cards/master-logo.png')} /></View>)
         }
         else if (cardNumber === "") {
@@ -618,7 +628,7 @@ class PayNowPayment extends Component {
                                     alignItems: 'flex-end'
 
                                 }}>
-                                    <Button transparent small onPress={() => this.setState({ isModalShow: false })}  >
+                                    <Button transparent onPress={() => this.setState({ isModalShow: false })}  >
                                         <Icon style={{ color: '#656667', fontSize: 24 }} name='md-close-circle' type='Ionicons' />
                                     </Button>
 
@@ -685,7 +695,7 @@ class PayNowPayment extends Component {
                                     alignItems: 'flex-end'
 
                                 }}>
-                                    <Button transparent small onPress={() => this.setState({ isModalShowEmail: false })}  >
+                                    <Button transparent onPress={() => this.setState({ isModalShowEmail: false })}  >
                                         <Icon style={{ color: '#656667', fontSize: 24 }} name='md-close-circle' type='Ionicons' />
                                     </Button>
 
@@ -733,8 +743,8 @@ class PayNowPayment extends Component {
                                 }}>
 
                                 <TextInputMask
-                                    returnKeyType='done'
 
+                                    style={{ flex: 1 }}
                                     autoCapitalize='none'
                                     placeholderTextColor='lightgray'
                                     keyboardType="numeric"
@@ -745,6 +755,7 @@ class PayNowPayment extends Component {
                                         separator: '.',
                                         delimiter: ',',
                                         suffixUnit: '',
+                                        returnKeyType: 'done'
                                     }}
                                     value={this.state.cardDetails.amountToBePaid}
                                     onChangeText={(value) => this.amountToBePaidOnChange(value)}
@@ -958,6 +969,7 @@ class PayNowPayment extends Component {
                                             marginBottom: 10
                                         }}>
                                         <Input
+                                            returnKeyType='done'
                                             autoCapitalize='none'
                                             placeholderTextColor='lightgray'
                                             keyboardType="numeric"
