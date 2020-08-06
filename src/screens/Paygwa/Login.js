@@ -399,7 +399,7 @@ class Login extends Component {
         }
         else {
 
-            this.props.dispatch(fetchLogin(dataObject));
+            // this.props.dispatch(fetchLogin(dataObject));
             // if (reg.test(emailAdd) == false) {
             //   // Alert.alert('Email is incorrect format.')
             //   Toast.show({
@@ -453,805 +453,132 @@ class Login extends Component {
 
 
             return (
+              
                 <Container style={{ backgroundColor: colors.WHITE }} >
-                    {/* MODALS */}
+                   
 
-                    {this.state.isModalVisibleUsernameGWA ?
-                        <Modal isVisible={this.state.isModalVisibleUsernameGWA} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
-                            avoidKeyboard={true}
-                            onBackdropPress={() => this.setState({ isModalVisibleUsernameGWA: false })}
-                        >
-                            <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 20, paddingVertical: 20, borderRadius: 5 }}>
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                                    <CustomTextBold style={{ color: '#808283', paddingVertical: 5, fontSize: 20 }}>Forgot Username</CustomTextBold>
+                    <ImageBackground source={require('../../../assets/back-ground.png')} style={{ width: '100%', height: '100%' }}>
+                    <Content style={[styles.container]}>
+             
+                        <Offline />
+                        {/* LOGO */}
+
+                        <Content style={{ paddingTop: 10, paddingBottom: 100, paddingHorizontal: 18 }}>
+                            <View style={{ paddingVertical: 50 }} />
+                            <View style={[styles.login_form, { flex: this.state.isOnFocusInput ? 4 : 3, }]}>
+
+
+
+                                {/*LABEL*/}
+                                <View style={styles.gpwa_label_container, { marginTop: 15, alignItems: 'center' }}>
+                                    <CustomTextBold style={[styles.gpwa_label, { fontSize: 14 }]}>Log in to your Account</CustomTextBold>
                                 </View>
-                                {/* TEXT FIELD */}
-                                {
-                                    _.isEmpty(this.state.usernameWarningAccountNumberGWA) ?
-                                        <View style={{ padding: 5 }} />
-                                        :
-                                        <View style={{ padding: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.usernameWarningAccountNumberGWA}</CustomText></View>
-
-                                }
 
 
+
+                                {/* EMAIL ADDRESS */}
                                 <Item regular
-                                    style={styles.text_inputModal}>
+                                    style={styles.text_input}>
                                     <Input
-                                        autoCapitalize='none'
-                                        placeholder={'Account Number'}
-                                        placeholderTextColor='lightgray'
-                                        keyboardType='number-pad'
-                                        onChangeText={(input) => {
-                                            this.setState({
-                                                accountNumberForgetUsernameGWA: input
-                                                // accountNumberForgetUsernameGWA: `6650000000`
-                                            })
+                                        ref={compId => {
+                                            this.componentId['emailField'] = compId
                                         }}
-                                        value={this.state.accountNumberForgetUsernameGWA}
-                                        blurOnSubmit={false}
-                                    />
-
-                                </Item>
-                                {
-                                    _.isEmpty(this.state.usernameWarningEmailAddressGWA) ?
-                                        <View style={{ padding: 10 }} />
-                                        :
-                                        <View style={{ padding: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.usernameWarningEmailAddressGWA}</CustomText></View>
-
-                                }
-
-                                <Item regular
-                                    style={styles.text_inputModal, { paddingBottom: 5 }}>
-                                    <Input
                                         autoCapitalize='none'
                                         placeholder={'Email Address'}
                                         placeholderTextColor='lightgray'
-
                                         keyboardType='email-address'
-                                        onChangeText={(input) => {
-                                            this.setState({
-                                                emailAddForgetUsernameGWA: input
-                                                // emailAddForgetUsernameGWA: `davedar95@yahoo.com`
-                                            })
-                                        }}
-                                        value={this.state.emailAddForgetUsernameGWA}
-                                        blurOnSubmit={false}
-                                    />
-
-                                </Item>
-                                {/* BUTTON */}
-                                <View style={{ paddingVertical: 20, }}>
-                                    <Button
-                                        block success onPress={() => {
-
-
-                                            let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
-                                            if (_.isEmpty(this.state.emailAddForgetUsernameGWA) && _.isEmpty(this.state.accountNumberForgetUsernameGWA)) {
-                                                this.setState({
-                                                    usernameWarningAccountNumberGWA: `Please enter your Account Number.`,
-                                                    usernameWarningEmailAddressGWA: `Please enter your Email Address.`
-                                                })
-
-                                            } else if (_.isEmpty(this.state.accountNumberForgetUsernameGWA)) {
-                                                this.setState({
-                                                    usernameWarningAccountNumberGWA: `Please enter your Account Number.`,
-                                                })
-
-
-                                            } else if (_.isEmpty(this.state.emailAddForgetUsernameGWA)) {
-                                                this.setState({
-                                                    usernameWarningEmailAddressGWA: `Please enter your Email Adress.`
-                                                })
-                                            } else if (reg.test(this.state.emailAddForgetUsernameGWA) === false) {
-                                                console.log("Please enter a valid Email Address.");
-                                                this.setState({ usernameWarningEmailAddressGWA: `Please enter a valid Email Address.` })
-                                                return false;
-                                            }
-
-                                            else {
-                                                this.forgotYourUsernameGWA(this.state.accountNumberForgetUsernameGWA, this.state.emailAddForgetUsernameGWA)
-                                            }
-
-                                        }
-                                        }>
-                                        {this.state.loadingForgotYourUsernameGWA ?
-                                            <ActivityIndicator color={colors.PRIMARY_COLOR} />
-                                            :
-                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Submit</CustomTextMedium>
-                                        }
-
-                                    </Button>
-                                </View>
-                                <View style={{ paddingVertical: 10 }} >
-                                    <Button transparent block light onPress={() => this.setState({ isModalVisibleUsernameGWA: false })}  >
-                                        <CustomTextMedium style={{ color: colors.BLACK, fontSize: 16 }}>Cancel</CustomTextMedium>
-                                    </Button>
-                                </View>
-                            </View>
-                        </Modal>
-                        :
-                        false}
-
-                    {this.state.isModalVisiblePasswordGWA ?
-                        <Modal isVisible={this.state.isModalVisiblePasswordGWA} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
-                            avoidKeyboard={true}
-                            onBackdropPress={() => this.setState({ isModalVisiblePasswordGWA: false })}
-                        >
-                            <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 20, paddingVertical: 20, borderRadius: 5 }}>
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                                    <CustomTextBold style={{ color: '#808283', paddingVertical: 5, fontSize: 20 }}>Forgot Password</CustomTextBold>
-                                </View>
-                                {/* TEXT FIELD */}
-                                {_.isEmpty(this.state.passwordWarningAccountNumberGWA) ?
-                                    <View style={{ padding: 5 }} />
-                                    :
-                                    <View style={{ padding: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.passwordWarningAccountNumberGWA}</CustomText></View>
-                                }
-
-                                <Item regular
-                                    style={styles.text_inputModal}>
-                                    <Input
-                                        autoCapitalize='none'
-                                        placeholder={'Account Number'}
-                                        placeholderTextColor='lightgray'
-                                        keyboardType='number-pad'
-                                        onChangeText={(input) => {
-                                            this.setState({
-                                                accountNumberForgetPasswordGWA: input
-                                                // accountNumberForgetPasswordGWA: `6650000000`
-                                            })
-                                        }}
-                                        value={this.state.accountNumberForgetPasswordGWA}
-                                        blurOnSubmit={false}
-                                    />
-
-                                </Item>
-                                {_.isEmpty(this.state.passwordWarningUsernameGWA) ?
-                                    <View style={{ padding: 10 }} />
-                                    :
-                                    <View style={{ padding: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.passwordWarningUsernameGWA}</CustomText></View>
-                                }
-
-                                <Item regular
-                                    style={styles.text_inputModal, { paddingBottom: 5 }}>
-                                    <Input
-                                        autoCapitalize='none'
-                                        placeholder={'Username'}
-                                        placeholderTextColor='lightgray'
-                                        onChangeText={(input) => {
-                                            this.setState({
-                                                usernameForgetPasswordGWA: input
-                                                // usernameForgetPasswordGWA: `blas959`
-                                            })
-                                        }}
-                                        value={this.state.usernameForgetPasswordGWA}
-                                        blurOnSubmit={false}
-                                    />
-
-                                </Item>
-                                {/* BUTTON isModalVisiblePasswordGWA */}
-                                <View style={{ paddingVertical: 20 }}>
-                                    <Button block success onPress={() => {
-
-
-                                        if (_.isEmpty(this.state.accountNumberForgetPasswordGWA) && _.isEmpty(this.state.usernameForgetPasswordGWA)) {
-                                            this.setState({
-                                                passwordWarningAccountNumberGWA: `Please enter your Account Number.`,
-                                                passwordWarningUsernameGWA: `Please enter your Username.`
-                                            })
-
-                                        } else if (_.isEmpty(this.state.accountNumberForgetPasswordGWA)) {
-                                            this.setState({
-                                                passwordWarningAccountNumberGWA: `Please enter your Account Number.`,
-                                            })
-
-
-                                        } else if (_.isEmpty(this.state.usernameForgetPasswordGWA)) {
-                                            this.setState({
-                                                usernameWarningEmailAddressGWA: `Please enter your Username.`
-                                            })
-                                        } else {
-                                            this.forgotYourPasswordGWA(this.state.accountNumberForgetPasswordGWA, this.state.usernameForgetPasswordGWA)
-                                        }
-
-                                    }
-                                    }>
-                                        {this.state.loadingForgotYourPasswordGWA ?
-                                            <ActivityIndicator color={colors.PRIMARY_COLOR} />
-                                            :
-                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Submit</CustomTextMedium>
-                                        }
-                                    </Button>
-                                </View>
-                                <View style={{ paddingVertical: 10 }} >
-                                    <Button transparent block light onPress={() => this.setState({ isModalVisiblePasswordGWA: false })}  >
-                                        <CustomTextMedium style={{ color: colors.BLACK, fontSize: 16 }}>Cancel</CustomTextMedium>
-                                    </Button>
-                                </View>
-                            </View>
-                        </Modal>
-                        :
-                        null}
-
-                    {this.state.isModalVisibleUsernameGPA
-                        ? <Modal isVisible={this.state.isModalVisibleUsernameGPA} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
-                            avoidKeyboard={true}
-                            onBackdropPress={() => this.setState({ isModalVisibleUsernameGPA: false })}
-                        >
-                            <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 20, paddingVertical: 20, borderRadius: 5 }}>
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                                    <CustomTextBold style={{ color: '#808283', paddingVertical: 5, fontSize: 20 }}>Forgot Username</CustomTextBold>
-                                </View>
-                                {/* TEXT FIELD */}
-                                <Item regular
-                                    style={styles.text_inputModal}>
-                                    <Input
-                                        autoCapitalize='none'
-                                        placeholder={'Account Number'}
-                                        placeholderTextColor='lightgray'
-                                        keyboardType='number-pad'
+                                        onSubmitEditing={() => this.focusNextField('passField')}
                                         onChangeText={(input) => {
                                             this.setState({
                                                 emailAdd: input
                                             })
                                         }}
-                                        value={this.state.accountNumberForgetUsernameGWA}
+                                        value={this.state.emailAdd}
                                         blurOnSubmit={false}
                                     />
-
+                                    {/* <Icon name='person' style={{ color: 'lightgray' }} /> */}
                                 </Item>
-
+                                <View style={{ padding: 5 }} />
                                 <Item regular
-                                    style={styles.text_inputModal}>
+                                    style={styles.text_input}>
                                     <Input
-                                        autoCapitalize='none'
-                                        placeholder={'Email Address'}
-                                        placeholderTextColor='lightgray'
-                                        keyboardType='email-address'
-                                        onChangeText={(input) => {
-                                            // this.setState({
-                                            //     emailAdd: input
-                                            // })
+                                        ref={compId => {
+                                            this.componentId['passField'] = compId
                                         }}
-                                        value={this.state.emailAddForgetUsernameGWA}
-                                        blurOnSubmit={false}
+                                        placeholder={'Password'}
+                                        placeholderTextColor='lightgray'
+                                        secureTextEntry={this.state.hidePassword}
+                                        onChangeText={(input) => {
+                                            this.setState({
+                                                password: input
+                                            })
+                                        }}
+                                        blurOnSubmit={true}
+                                        onSubmitEditing={() => {
+                                            this.manualLogin(this.state.emailAdd, this.state.password);
+                                        }}
                                     />
-
                                 </Item>
-                                {/* BUTTON */}
-                                <View style={{ paddingVertical: 10 }}>
-                                    <Button block success onPress={() => {
-                                        this.setState({
-                                            isModalVisibleUsernameGPA: false,
-                                        })
-                                    }
+
+                                {/* MANUAL SIGN IN */}
+                                <Button block rounded transparent
+                                    disabled={this.props.payGwaUserDetails.userState.isLoginLoading}
+                                    style={[styles.buttons, { backgroundColor: '#1687C7', borderRadius: 6, borderWidth: 0.5, height: 50 }]}
+                                    onPress={() =>
+                                        // GWA\
+                                        this.props.navigation.navigate('MyAccounts',)
+                                        // this.manualLogin(this.state.emailAdd, this.state.password)
+                                        // this.manualLogin('gdoe', 'GDOE2018')
+                                        // this.manualLogin('relyant01', 'Relyant01')
+                                        // this.manualLogin('dblas95', 'sweetheart95')
+                                        // this.manualLogin('neilg671', 'TO1108370z!')
                                     }>
-                                        <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Submit</CustomTextMedium>
-                                    </Button>
+                                    <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>{'Login'} </CustomTextMedium>
+                                </Button>
+
+                                <View style={styles.gpwa_label_container, { marginTop: 10, alignItems: 'center' }}>
+                                    <CustomTextBold style={[styles.gpwa_label, { fontSize: 12 }]}>Don't have an account?</CustomTextBold>
                                 </View>
-                                <View style={{ paddingVertical: 10 }} >
-                                    <Button transparent block light onPress={() => this.setState({ isModalVisibleUsernameGPA: false })}  >
-                                        <CustomTextMedium style={{ color: colors.BLACK, fontSize: 16 }}>Cancel</CustomTextMedium>
-                                    </Button>
-                                </View>
-                            </View>
-                        </Modal>
-                        :
-                        null}
 
-                    {this.state.isModalVisiblePasswordGPA
-                        ?
-                        <Modal isVisible={this.state.isModalVisiblePasswordGPA} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
-                            avoidKeyboard={true}
-                            onBackdropPress={() => this.setState({ isModalVisiblePasswordGPA: false })}
-                        >
-                            <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 20, paddingVertical: 20, borderRadius: 5 }}>
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                                    <CustomTextBold style={{ color: '#808283', paddingVertical: 5, fontSize: 20 }}>Forgot Password</CustomTextBold>
-                                </View>
-                                {/* TEXT FIELD */}
-                                <Item regular
-                                    style={styles.text_inputModal}>
-                                    <Input
-                                        autoCapitalize='none'
-                                        placeholder={'Account Number'}
-                                        placeholderTextColor='lightgray'
-                                        keyboardType='number-pad'
-                                        onChangeText={(input) => {
-                                            // this.setState({
-                                            //     emailAdd: input
-                                            // })
-                                        }}
-                                        value={this.state.accountNumberForgetPasswordGPA}
-                                        blurOnSubmit={false}
-                                    />
-
-                                </Item>
-
-                                <Item regular
-                                    style={styles.text_inputModal}>
-                                    <Input
-                                        autoCapitalize='none'
-                                        placeholder={'Email Address'}
-                                        placeholderTextColor='lightgray'
-                                        keyboardType='email-address'
-                                        onChangeText={(input) => {
-                                            // this.setState({
-                                            //     emailAdd: input
-                                            // })
-                                        }}
-                                        value={this.state.emailAddForgetPasswordGPA}
-                                        blurOnSubmit={false}
-                                    />
-
-                                </Item>
-                                {/* BUTTON */}
-                                <View style={{ paddingVertical: 10 }}>
-                                    <Button block success onPress={() => {
-                                        this.setState({
-                                            isModalVisiblePasswordGPA: false,
-                                        })
-                                    }
+                                <Button block rounded transparent
+                                    style={{ backgroundColor: '#15B8E8', borderRadius: 6, borderWidth: 0.5, height: 50, marginTop: 10 }}
+                                    onPress={() =>
+                                        console.log('test')
                                     }>
-                                        <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Submit</CustomTextMedium>
-                                    </Button>
-                                </View>
-                                <View style={{ paddingVertical: 10 }} >
-                                    <Button transparent block light onPress={() => this.setState({ isModalVisiblePasswordGPA: false })}  >
-                                        <CustomTextMedium style={{ color: colors.BLACK, fontSize: 16 }}>Cancel</CustomTextMedium>
-                                    </Button>
-                                </View>
-                            </View>
-                        </Modal>
-                        : null}
-
-                    {/* QUESTIONS */}
-                    {this.state.isModalVisibleQuestionUsernameGWA ?
-                        <Modal isVisible={this.state.isModalVisibleQuestionUsernameGWA} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
-                            avoidKeyboard={true}
-                            onBackdropPress={() => this.setState({ isModalVisibleQuestionUsernameGWA: false })}
-                        >
-                            <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 20, paddingVertical: 20, borderRadius: 5 }}>
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                                    <CustomTextBold style={{ color: '#808283', paddingVertical: 5, fontSize: 20 }}>Forgot Username</CustomTextBold>
-                                </View>
-                                {/* TEXT FIELD */}
-                                <View style={{ paddingTop: 10, paddingBottom: 5, paddingLeft: 5, paddingRight: 5 }}><CustomTextBold style={{ fontSize: 16 }}>{this.state.securityQuestionUsernameGWA}?</CustomTextBold></View>
-                                {_.isEmpty(this.state.usernameWarningQuestionEmailAddressGWA) ?
-                                    <View style={{ paddingTop: 10, paddingBottom: 5, paddingLeft: 5, paddingRight: 5 }} />
-                                    :
-                                    <View style={{ paddingTop: 10, paddingBottom: 5, paddingLeft: 5, paddingRight: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.usernameWarningQuestionEmailAddressGWA}</CustomText></View>
-                                }
-
-                                <Item regular
-                                    style={styles.text_inputModal, { paddingBottom: 5 }}>
-                                    <Input
-                                        autoCapitalize='none'
-                                        placeholder={'Security Answer'}
-                                        placeholderTextColor='lightgray'
-
-                                        onChangeText={(input) => {
-                                            this.setState({
-                                                // emailAddForgetUsernameGWA: input
-                                                securityAnswerUsernameGWA: input
-                                            })
-                                        }}
-                                        value={this.state.securityAnswerUsernameGWA}
-                                        blurOnSubmit={false}
-                                    />
-
-                                </Item>
-
-                                {/* BUTTON */}
-                                <View style={{ paddingVertical: 20, }}>
-                                    <Button
-                                        block success onPress={() => {
-                                            this.setState({
-                                                loadingQuestionForgotYourUsernameGWA: true
-                                            })
+                                    <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Register</CustomTextMedium>
+                                </Button>
 
 
-                                            if (this.state.securityAnswerUsernameGWA === this.state.securityFinalAnswerUsernameGWA) {
-                                                // Clear the security Question
-                                                this.setState({
-                                                    usernameWarningQuestionEmailAddressGWA: ``
-                                                })
+                                {/* Forgot */}
+                                <View style={{ paddingVertical: 10, height: 50, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                    <CustomText style={[styles.demo_text, { color: colors.WHITE }]}>Forgot your </CustomText>
+                                    <TouchableOpacity
+                                        onPress={() => console.log('test')}
+                                    >
+                                        <CustomText style={[styles.demo_text, { color: colors.WHITE, textDecorationLine: 'underline' }]}
+                                        >
+                                            Username
+                                      </CustomText>
+                                    </TouchableOpacity>
+                                    <CustomText style={{color: colors.WHITE}}> or </CustomText>
+                                    <TouchableOpacity
+                                        onPress={() => console.log('test')}
+                                    >
+                                        <CustomText style={[styles.demo_text, { color: colors.WHITE, textDecorationLine: 'underline' }]}
+                                        >
+                                            Password?
+                                        </CustomText>
+                                    </TouchableOpacity>
 
-                                                this.nextStepForgotYourUsernameGWA(this.state.personIdForgotYourUsernameGWA)
-
-
-                                            } else {
-                                                setTimeout(() => { this.setState({ loadingQuestionForgotYourUsernameGWA: false }) }, 1000)
-                                                this.setState({
-                                                    usernameWarningQuestionEmailAddressGWA: `Security Answer is not valid.`
-                                                })
-
-                                            }
-
-                                        }
-                                        }>
-                                        {this.state.loadingQuestionForgotYourUsernameGWA ?
-                                            <ActivityIndicator color={colors.PRIMARY_COLOR} />
-                                            :
-                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Submit</CustomTextMedium>
-                                        }
-
-                                    </Button>
-                                </View>
-                                <View style={{ paddingVertical: 10 }} >
-                                    <Button transparent block light onPress={() => this.setState({ isModalVisibleQuestionUsernameGWA: false })}  >
-                                        <CustomTextMedium style={{ color: colors.BLACK, fontSize: 16 }}>Cancel</CustomTextMedium>
-                                    </Button>
                                 </View>
                             </View>
-                        </Modal>
-                        :
-                        null}
-
-                    {this.state.isModalVisibleQuestionPasswordGWA ?
-                        <Modal isVisible={this.state.isModalVisibleQuestionPasswordGWA} backdropColor={'rgba(0,0,0,.4)'} backdropOpacity={1}
-                            avoidKeyboard={true}
-                            onBackdropPress={() => this.setState({ isModalVisibleQuestionPasswordGWA: false })}
-                        >
-                            <View style={{ backgroundColor: colors.WHITE, paddingHorizontal: 20, paddingVertical: 20, borderRadius: 5 }}>
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }} >
-                                    <CustomTextBold style={{ color: '#808283', paddingVertical: 5, fontSize: 20 }}>Forgot Password</CustomTextBold>
-                                </View>
-                                {/* TEXT FIELD */}
-                                <View style={{ paddingTop: 10, paddingBottom: 5, paddingLeft: 5, paddingRight: 5 }}><CustomTextBold style={{ fontSize: 16 }}>{this.state.securityQuestionPasswordGWA}?</CustomTextBold></View>
-                                {_.isEmpty(this.state.passwordWarningEmailAddressGWA) ?
-                                    <View style={{ paddingTop: 10, paddingBottom: 5, paddingLeft: 5, paddingRight: 5 }} />
-                                    :
-                                    <View style={{ paddingTop: 10, paddingBottom: 5, paddingLeft: 5, paddingRight: 5 }}><CustomText style={{ color: colors.RED }}>{this.state.passwordWarningQuestionEmailAddressGWA}</CustomText></View>
-                                }
-
-                                <Item regular
-                                    style={styles.text_inputModal, { paddingBottom: 5 }}>
-                                    <Input
-                                        autoCapitalize='none'
-                                        placeholder={'Security Answer'}
-                                        placeholderTextColor='lightgray'
-
-                                        onChangeText={(input) => {
-                                            this.setState({
-                                                // emailAddForgetPasswordGWA: input
-                                                securityAnswerPasswordGWA: input
-                                            })
-                                        }}
-                                        value={this.state.securityAnswerPasswordGWA}
-                                        blurOnSubmit={false}
-                                    />
-
-                                </Item>
-
-                                {/* BUTTON */}
-                                <View style={{ paddingVertical: 20, }}>
-                                    <Button
-                                        block success onPress={() => {
-                                            this.setState({
-                                                loadingQuestionForgotYourPasswordGWA: true
-                                            })
-
-
-                                            if (this.state.securityAnswerPasswordGWA === this.state.securityFinalAnswerPasswordGWA) {
-                                                // Clear the security Question
-                                                this.setState({
-                                                    passwordWarningQuestionEmailAddressGWA: ``
-                                                })
-
-                                                this.nextStepForgotYourPasswordGWA(this.state.personIdForgotYourPasswordGWA)
-
-
-                                            } else {
-                                                setTimeout(() => { this.setState({ loadingQuestionForgotYourPasswordGWA: false }) }, 1000)
-                                                this.setState({
-                                                    passwordWarningQuestionEmailAddressGWA: `Security Answer is not valid.`
-                                                })
-
-                                            }
-
-                                        }
-                                        }>
-                                        {this.state.loadingQuestionForgotYourPasswordGWA ?
-                                            <ActivityIndicator color={colors.PRIMARY_COLOR} />
-                                            :
-                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Submit</CustomTextMedium>
-                                        }
-
-                                    </Button>
-                                </View>
-                                <View style={{ paddingVertical: 10 }} >
-                                    <Button transparent block light onPress={() => this.setState({ isModalVisibleQuestionPasswordGWA: false })}  >
-                                        <CustomTextMedium style={{ color: colors.BLACK, fontSize: 16 }}>Cancel</CustomTextMedium>
-                                    </Button>
-                                </View>
-                            </View>
-                        </Modal>
-                        :
-                        null}
-                    {/* MODAL END */}
-
-                    <Content style={[styles.container]}>
-                        <Offline />
-                        {/* LOGO */}
-                        {
-                            this.state.isOnFocusInput ? null
-                                :
-                                this.state.currentTab === 1 ?
-                                    <Image style={styles.gpwa_logo} source={require('../../../assets/gpa_logo_blue.png')} />
-                                    :
-                                    <Image style={styles.gpwa_logo_gwa} source={require('../../../assets/paygwa.png')} />
-
-
-
-                        }
-                        <Content style={{ paddingTop: 10, paddingBottom: 100, paddingHorizontal: 18, backgroundColor: 'white' }}>
-                            <Tabs
-                                tabBarUnderlineStyle={{ backgroundColor: '#1787C9' }}
-                                style={{ backgroundColor: 'white', borderColor: '#DADADA', borderBottomWidth: 0.9, borderTopWidth: 0.9, borderLeftWidth: 0.9, borderRightWidth: 0.9, borderRadius: 5 }}
-                                onChangeTab={({ i }) => {
-                                    console.log(i)
-                                    this.setState({ currentTab: i })
-                                }
-                                } >
-                                <Tab heading="PayGWA"
-                                    tabStyle={{ backgroundColor: 'white', color: '#9D9D9D', fontFamily: 'Lato_Bold' }}
-                                    textStyle={{ fontFamily: 'Lato_Bold', color: '#ADADAD' }}
-                                    activeTabStyle={{ backgroundColor: '#F1F4F5', color: '#68686B', fontFamily: 'Lato_Bold', }}
-                                    activeTextStyle={{ fontFamily: 'Lato_Bold', color: '#68686B' }} >
-                                    {/* TOP */}
-
-                                    {/* LOGIN FORM */}
-                                    <View style={[styles.login_form, { flex: this.state.isOnFocusInput ? 4 : 3, }]}>
-
-                                        <Button block rounded transparent
-                                            style={[styles.buttons, { backgroundColor: colors.LIGHT_GREEN, borderRadius: 6, borderWidth: 0.5, height: 50 }]}
-                                            onPress={() =>
-                                                NavigationService.navigate('PayNowWithoutAccount', {
-                                                    event: 'fromLogin'
-                                                })
-                                            }>
-                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Pay Now</CustomTextMedium>
-                                        </Button>
-                                        {/*LABEL*/}
-                                        <View style={styles.gpwa_label_container, { marginTop: 15, alignItems: 'center' }}>
-                                            <CustomTextBold style={[styles.gpwa_label, { fontSize: 14 }]}>Log in to your Account</CustomTextBold>
-                                        </View>
-
-
-
-                                        {/* EMAIL ADDRESS */}
-                                        <Item regular
-                                            style={styles.text_input}>
-                                            <Input
-                                                ref={compId => {
-                                                    this.componentId['emailField'] = compId
-                                                }}
-                                                autoCapitalize='none'
-                                                placeholder={'Email Address'}
-                                                placeholderTextColor='lightgray'
-                                                keyboardType='email-address'
-                                                onSubmitEditing={() => this.focusNextField('passField')}
-                                                onChangeText={(input) => {
-                                                    this.setState({
-                                                        emailAdd: input
-                                                    })
-                                                }}
-                                                value={this.state.emailAdd}
-                                                blurOnSubmit={false}
-                                            />
-                                            {/* <Icon name='person' style={{ color: 'lightgray' }} /> */}
-                                        </Item>
-                                        <View style={{ padding: 5 }} />
-                                        <Item regular
-                                            style={styles.text_input}>
-                                            <Input
-                                                ref={compId => {
-                                                    this.componentId['passField'] = compId
-                                                }}
-                                                placeholder={'Password'}
-                                                placeholderTextColor='lightgray'
-                                                secureTextEntry={this.state.hidePassword}
-                                                onChangeText={(input) => {
-                                                    this.setState({
-                                                        password: input
-                                                    })
-                                                }}
-                                                blurOnSubmit={true}
-                                                onSubmitEditing={() => {
-                                                    this.manualLogin(this.state.emailAdd, this.state.password);
-                                                }}
-                                            />
-                                        </Item>
-
-                                        {/* MANUAL SIGN IN */}
-                                        <Button block rounded transparent
-                                            disabled={this.props.payGwaUserDetails.userState.isLoginLoading}
-                                            style={[styles.buttons, { backgroundColor: '#1687C7', borderRadius: 6, borderWidth: 0.5, height: 50 }]}
-                                            onPress={() =>
-                                                // GWA
-                                                // this.manualLogin(this.state.emailAdd, this.state.password)
-                                                // this.manualLogin('gdoe', 'GDOE2018')
-                                                // this.manualLogin('relyant01', 'Relyant01')
-                                                // this.manualLogin('dblas95', 'sweetheart95')
-                                                this.manualLogin('neilg671', 'TO1108370z!')
-                                            }>
-                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>{this.props.payGwaUserDetails.userState.isLoginLoading ? 'Please wait...' :  'Login' } </CustomTextMedium>
-                                        </Button>
-
-                                        <View style={styles.gpwa_label_container, { marginTop: 10, alignItems: 'center' }}>
-                                            <CustomTextBold style={[styles.gpwa_label, { fontSize: 12 }]}>Don't have an account?</CustomTextBold>
-                                        </View>
-
-                                        <Button block rounded transparent
-                                            style={{ backgroundColor: '#15B8E8', borderRadius: 6, borderWidth: 0.5, height: 50, marginTop: 10 }}
-                                            onPress={() =>
-                                                // GWA
-                                                this.props.navigation.navigate("SignUpCreateAccount")
-                                            }>
-                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Register</CustomTextMedium>
-                                        </Button>
-
-
-                                        {/* Forgot */}
-                                        <View style={{ paddingVertical: 10, height: 50, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                            <CustomText style={[styles.demo_text, { color: colors.BLACK }]}>Forgot your </CustomText>
-                                            <TouchableOpacity
-                                                onPress={() => this.setState({ isModalVisibleUsernameGWA: true })}
-                                            >
-                                                <CustomText style={[styles.demo_text, { color: colors.BLACK, textDecorationLine: 'underline' }]}
-                                                >
-                                                    Username
-                                                </CustomText>
-                                            </TouchableOpacity>
-                                            <CustomText style={styles.content}> or </CustomText>
-                                            <TouchableOpacity
-                                                onPress={() => this.setState({ isModalVisiblePasswordGWA: true })}
-                                            >
-                                                <CustomText style={[styles.demo_text, { color: colors.BLACK, textDecorationLine: 'underline' }]}
-                                                >
-                                                    Password?
-                                            </CustomText>
-                                            </TouchableOpacity>
-
-                                        </View>
-                                    </View>
-                                    {/* END */}
-
-                                </Tab>
-                                <Tab heading="PayGPA"
-                                    tabStyle={{ backgroundColor: 'white', color: '#9D9D9D', fontFamily: 'Lato_Bold' }}
-                                    textStyle={{ fontFamily: 'Lato_Bold', color: '#ADADAD' }}
-                                    activeTabStyle={{ backgroundColor: '#F1F4F5', color: '#68686B', fontFamily: 'Lato_Bold' }}
-                                    activeTextStyle={{ fontFamily: 'Lato_Bold', color: '#68686B' }}>
-
-                                    {/* TOP */}
-
-                                    {/* LOGIN FORM */}
-                                    <View style={[styles.login_form, { flex: this.state.isOnFocusInput ? 4 : 3, }]}>
-
-                                        <Button block rounded transparent
-                                            style={[styles.buttons, { backgroundColor: colors.LIGHT_GREEN, borderRadius: 6, borderWidth: 0.5, height: 50 }]}
-                                            onPress={() =>
-                                                console.log('PayNow')
-                                            }>
-                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Quick Pay</CustomTextMedium>
-                                        </Button>
-                                        {/*LABEL*/}
-                                        <View style={styles.gpwa_label_container, { marginTop: 15, alignItems: 'center' }}>
-                                            <CustomTextBold style={[styles.gpwa_label, { fontSize: 14 }]}>Log in to your Account</CustomTextBold>
-                                        </View>
-
-
-
-                                        {/* EMAIL ADDRESS */}
-                                        <Item regular
-                                            style={styles.text_input}>
-                                            <Input
-                                                ref={compId => {
-                                                    this.componentId['emailFieldGPA'] = compId
-                                                }}
-                                                autoCapitalize='none'
-                                                placeholder={'Email Address'}
-                                                placeholderTextColor='lightgray'
-                                                keyboardType='email-address'
-                                                onSubmitEditing={() => this.focusNextField('passFieldGPA')}
-                                                onChangeText={(input) => {
-                                                    this.setState({
-                                                        emailAddGPA: input
-                                                    })
-                                                }}
-                                                value={this.state.emailAddGPA}
-                                                blurOnSubmit={false}
-                                            />
-                                            {/* <Icon name='person' style={{ color: 'lightgray' }} /> */}
-                                        </Item>
-                                        <View style={{ padding: 5 }} />
-                                        <Item regular
-                                            style={styles.text_input}>
-                                            <Input
-                                                ref={compId => {
-                                                    this.componentId['passField'] = compId
-                                                }}
-                                                placeholder={'Password'}
-                                                placeholderTextColor='lightgray'
-                                                secureTextEntry={this.state.hidePasswordGPA}
-                                                onChangeText={(input) => {
-                                                    this.setState({
-                                                        passwordGPA: input
-                                                    })
-                                                }}
-                                                blurOnSubmit={true}
-                                                onSubmitEditing={() => {
-                                                    this.manualLogin(this.state.emailAddGPA, this.state.passwordGPA);
-                                                }}
-                                            />
-                                        </Item>
-
-                                        {/* MANUAL SIGN IN */}
-                                        <Button block rounded transparent
-                                            style={[styles.buttons, { backgroundColor: '#1687C7', borderRadius: 6, borderWidth: 0.5, height: 50 }]}
-                                            onPress={() =>
-                                                console.log('GPALOGIN')
-                                                // this.manualLogin(this.state.emailAdd,this.state.password)
-                                                // this.manualLogin('gdoe', 'GDOE2018')
-                                                // this.manualLogin('Relyant', 'Relyant01')
-                                                // this.manualLogin('bevfrisas', '123')
-                                            }>
-                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Login</CustomTextMedium>
-                                        </Button>
-
-                                        <View style={styles.gpwa_label_container, { marginTop: 10, alignItems: 'center' }}>
-                                            <CustomTextBold style={[styles.gpwa_label, { fontSize: 12 }]}>Don't have an account?</CustomTextBold>
-                                        </View>
-
-                                        <Button block rounded transparent
-                                            style={{ backgroundColor: '#15B8E8', borderRadius: 6, borderWidth: 0.5, height: 50, marginTop: 10 }}
-                                            onPress={() =>
-                                                console.log('REG PAYGPA')
-                                                // this.manualLogin(this.state.emailAdd,this.state.password)
-                                                // this.manualLogin('gdoe', 'GDOE2018')
-                                                // this.manualLogin('Relyant01', 'Relyant01')
-                                                // this.manualLogin('bevfrisas', '123')
-                                            }>
-                                            <CustomTextMedium style={{ color: colors.WHITE, fontSize: 16 }}>Register</CustomTextMedium>
-                                        </Button>
-
-
-                                        {/* Forgot */}
-                                        <View style={{ paddingVertical: 10, height: 50, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                            <CustomText style={[styles.demo_text, { color: colors.BLACK }]}>Forgot your </CustomText>
-                                            <TouchableOpacity
-                                                onPress={() => this.setState({ isModalVisibleUsernameGPA: true })}
-                                            >
-                                                <CustomText style={[styles.demo_text, { color: colors.BLACK, textDecorationLine: 'underline' }]}
-                                                >
-                                                    Username
-                                                </CustomText>
-                                            </TouchableOpacity>
-                                            <CustomText style={styles.content}> or </CustomText>
-                                            <TouchableOpacity
-                                                onPress={() => this.setState({ isModalVisiblePasswordGPA: true })}
-                                            >
-                                                <CustomText style={[styles.demo_text, { color: colors.BLACK, textDecorationLine: 'underline' }]}
-                                                >
-                                                    Password?
-                                            </CustomText>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                    {/* END */}
-
-                                </Tab>
-
-
-                            </Tabs>
+                            {/* END */}
+                            
                         </Content>
-
+                  
 
                     </Content>
+                    </ImageBackground>
                 </Container>
             );
         }
@@ -1297,7 +624,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     gpwa_label: {
-        color: colors.BLACK
+        color: colors.WHITE
     },
     login_form: {
         flex: 4,

@@ -23,44 +23,6 @@ import NavigationService from './src/NavigationService';
 import LoginScreen from './src/screens/Paygwa/Login';
 import MyAccounts from './src/screens/Paygwa/MyAccounts';
 
-//Payment
-import PaymentInputScreen from './src/screens/Paygwa/Payment/PaymentInput';
-import PaymentViewScreen from './src/screens/Paygwa/Payment/PaymentView';
-import PaymentPayNowScreen from './src/screens/Paygwa/Payment/PaymentPayNow';
-
-// Payment Without Account
-import PayNowWithoutAccount from './src/screens/Paygwa/PayNowWithoutAccount/PayNowCustomerInformation'
-
-//PaymentResult Without Account
-import PaymentSuccessWAScreen from './src/screens/Paygwa/PayNowWithoutAccount/PaymentResult/PaymentSuccess';
-import PaymentUserFailedWAScreen from './src/screens/Paygwa/PayNowWithoutAccount/PaymentResult/PaymentUserFailed';
-import PaymentServerFailedWAScreen from './src/screens/Paygwa/PayNowWithoutAccount/PaymentResult/PaymentServerFailed';
-
-
-//PaymentResult
-import PaymentSuccessScreen from './src/screens/Paygwa/Payment/PaymentResult/PaymentSuccess';
-import PaymentUserFailedScreen from './src/screens/Paygwa/Payment/PaymentResult/PaymentUserFailed';
-import PaymentServerFailedScreen from './src/screens/Paygwa/Payment/PaymentResult/PaymentServerFailed';
-
-//SignUp Create Account
-import SignUpCreateAccountScreen from './src/screens/Paygwa/SignUp/SignUpCreateAccount';
-import SuccessScreen from './src/screens/Paygwa/SignUp/SuccessScreen';
-
-//PaynowIninitialLogin
-import PaynowScreen from './src/screens/Paygwa/PayNow/PayNowCustomerInformation';
-
-//Account Profile
-import AccountProfileScreen from './src/screens/Paygwa/AccountProfile';
-import EditAccountProfileScreen from './src/screens/Paygwa/EditAccountProfile';
-import ChangePasswordScreen from './src/screens/Paygwa/ChangePassword';
-
-//AccountSummary
-import AccountSummaryScreen from './src/screens/Paygwa/AccountSummary/AccountSummary';
-import AccountSummaryBillScreen from './src/screens/Paygwa/AccountSummary/AccountSummaryBill';
-import AccountSummaryConsumptionScreen from './src/screens/Paygwa/AccountSummary/AccountSummaryConsumption';
-import AccountSummaryHistoryScreen from './src/screens/Paygwa/AccountSummary/AccountSummaryHistory';
-
-
 //drawer
 import SurveyScreen from './src/screens/Paygwa/Survey';
 import NewsScreen from './src/screens/Paygwa/News'
@@ -87,58 +49,8 @@ const MyAccountsStack = createStackNavigator(
   {
     MyAccounts: {
       screen: MyAccounts
-    },
-    Survey: {
-      screen: SurveyScreen
-    },
-    News: {
-      screen: NewsScreen
-    },
-    HelpAndSupport: {
-      screen: HelpAndSupportScreen
-    },
-    AccountProfile: {
-      screen: AccountProfileScreen
-    },
-    EditAccountProfile: {
-      screen: EditAccountProfileScreen
-    },
-    ChangePassword: {
-      screen: ChangePasswordScreen
-    },
-    AccountSummary: {
-      screen: AccountSummaryScreen
-    },
-
-    AccountSummaryBill: {
-      screen: AccountSummaryBillScreen
-    },
-    AccountSummaryConsumption: {
-      screen: AccountSummaryConsumptionScreen
-    },
-    AccountSummaryHistory: {
-      screen: AccountSummaryHistoryScreen
-    },
-    PaymentInput: {
-      screen: PaymentInputScreen
-    },
-    PaymentView: {
-      screen: PaymentViewScreen
-    },
-    PaymentPayNow: {
-      screen: PaymentPayNowScreen
-    },
-    PaymentSuccess: {
-      screen: PaymentSuccessScreen
-    },
-    PaymentUserFailed: {
-      screen: PaymentUserFailedScreen
-    },
-    PaymentServerFailed: {
-      screen: PaymentServerFailedScreen
     }
-  },
-  {
+  },{
     initialRouteName: 'MyAccounts',
     gesturesEnabled: false,
     navigationOptions: {
@@ -168,28 +80,7 @@ const InitialStack = createStackNavigator(
   {
     Login: {
       screen: LoginScreen
-    },
-    SignUpCreateAccount: {
-      screen: SignUpCreateAccountScreen
-    },
-    PayNowWithoutAccount: {
-      screen: PayNowWithoutAccount
-    },
-    PaymentSuccessWA: {
-      screen: PaymentSuccessWAScreen
-    },
-    PaymentUserFailedWA: {
-      screen: PaymentUserFailedWAScreen
-    },
-    PaymentServerFailedWA: {
-      screen: PaymentServerFailedWAScreen
-    },
-    SuccessScreen: {
-      screen: SuccessScreen
-    },
-    PayNowWithoutAccount: {
-      screen: PayNowWithoutAccount
-    },
+    }
   },
   {
     initialRouteName: 'Login',

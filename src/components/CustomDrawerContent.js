@@ -93,7 +93,7 @@ class CustomDrawerContent extends Component {
 
 
   render() {
-    var fullName = _.get(this.props.dashboard.userAccountDetails, 'fullName', 'Not Applicable NONO')
+    var fullName = 'Juan Dela Cruz'
     var finalFullName = fullName.charAt(0) // returns 
     
     return (
@@ -123,7 +123,7 @@ class CustomDrawerContent extends Component {
               ellipsizeMode='tail'
               numberOfLines={1}
             >
-             {_.get(this.props.dashboard.userAccountDetails, 'fullName', 'NA')}</CustomText> 
+            Juan Dela Cruz</CustomText> 
               {/* {this.props.dashboard.userAccountDetails.fullName}</Text> */}
 
           </View>
@@ -133,13 +133,13 @@ class CustomDrawerContent extends Component {
             {/* <DrawerItems {...this.props} /> */}
             <Content contentContainerStyle={{ flex: 1, paddingTop: 20 }}>
 
-              {this.summaryDrawerButton()}
-              {this.profileDrawerButton()}
+              {/* {this.summaryDrawerButton()} */}
+              {/* {this.profileDrawerButton()} */}
               {/* {this.myAccountsDrawerButton()} */}
-              <View style={{ borderBottomColor: 'black', borderBottomWidth: 1, marginHorizontal: 30, marginTop: 15 }} />
-              {this.surveyDrawerButton()}
-              {this.newsDrawerButton()}
-              {this.helpAndSupportDrawerButton()}
+              {/* <View style={{ borderBottomColor: 'black', borderBottomWidth: 1, marginHorizontal: 30, marginTop: 15 }} /> */}
+              {/* {this.surveyDrawerButton()} */}
+              {/* {this.newsDrawerButton()} */}
+              {/* {this.helpAndSupportDrawerButton()} */}
               {/*LOG-OUT*/}
               {this.logoutDrawerButton()}
 

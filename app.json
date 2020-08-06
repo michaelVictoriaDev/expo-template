@@ -2,7 +2,7 @@
   "expo": {
     "name": "PayGPWA",
     "description": "PayGPWA",
-    "slug": "paygpwa",
+    "slug": "paygpwaDev",
     "privacy": "public",
     "platforms": [
       "ios",
@@ -13,13 +13,7 @@
     "primaryColor": "#cccccc",
     "icon": "./assets/icons/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
-      "ldpi": "./assets/splash/splash_LDPI.png",
-      "mdpi": "./assets/splash/splash_MDPI.png",
-      "hdpi": "./assets/splash/splash_HDPI.png",
-      "xhdpi": "./assets/splash/splash_XHDPI.png",
-      "xxhdpi": "./assets/splash/splash.png_XXHDPI",
-      "xxxhdpi": "./assets/splash/splash.png_XXXHDPI",
+      "image": "./assets/splash/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
