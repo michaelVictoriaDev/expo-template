@@ -11,15 +11,15 @@ import {
   fetchMultipleAddOpptyRequest,
   fetchMultipleLatestBill,
   saveOrderData
-} from '../../actions/userMyAccounts';
-import { colors, pRatioToFontSize } from '../../utils/constants';
-import CustomText from '../../components/CustomText';
-import OfflineNotice from '../../components/OfflineNotice';
-import CustomHeader from '../../components/MultiCustomHeader'
+} from '../actions/userMyAccounts';
+import { colors, pRatioToFontSize } from '../utils/constants';
+import CustomText from '../components/CustomText';
+import OfflineNotice from '../components/OfflineNotice';
+import CustomHeader from '../components/MultiCustomHeader'
 import _ from 'lodash'
 import { Row, Col } from 'react-native-easy-grid';
-import CustomTextBold from '../../components/CustomTextBold';
-import CustomTextMedium from '../../components/CustomTextMedium';
+import CustomTextBold from '../components/CustomTextBold';
+import CustomTextMedium from '../components/CustomTextMedium';
 
 class MyAccount extends Component {
   constructor(props) {

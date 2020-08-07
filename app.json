@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "PayGPWA",
-    "description": "PayGPWA",
-    "slug": "paygpwaDev",
+    "name": "ExpoTemplate",
+    "description": "ExpoTemplate",
+    "slug": "ExpoTemplateDev",
     "privacy": "public",
     "platforms": [
       "ios",
@@ -11,7 +11,7 @@
     "version": "3.0.3",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
-    "icon": "./assets/icons/icon.png",
+    "icon": "./assets/icons/app.png",
     "splash": {
       "image": "./assets/splash/splash.png",
       "resizeMode": "cover",
@@ -19,13 +19,13 @@
     },
     "ios": {
       "usesIcloudStorage": true,
-      "bundleIdentifier": "com.xtendly.paygpwa",
+      "bundleIdentifier": "com.xtendly.expotemplate",
       "buildNumber": "1",
       "supportsTablet": true
     },
     "android": {
       "versionCode": 1,
-      "package": "com.xtendly.paygpwa",
+      "package": "com.xtendly.expotemplate",
       "permissions": [
         "WAKE_LOCK"
       ]

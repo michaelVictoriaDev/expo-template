@@ -19,14 +19,16 @@ import { colors } from './src/utils/constants';
 import { createStackNavigator, createSwitchNavigator, createDrawerNavigator, createAnimatedSwitchNavigator } from 'react-navigation';
 import NavigationService from './src/NavigationService';
 
-// import InitialLoginScreen from './src/screens/Paygwa/InitialLogin';
-import LoginScreen from './src/screens/Paygwa/Login';
-import MyAccounts from './src/screens/Paygwa/MyAccounts';
+// import InitialLoginScreen from './src/screens/InitialLogin';
+import LoginScreen from './src/screens/Login';
+// import MyAccounts from './src/screens/MyAccounts';
+import MyAccounts from './src/screens/MyAccounts';
+
 
 //drawer
-import SurveyScreen from './src/screens/Paygwa/Survey';
-import NewsScreen from './src/screens/Paygwa/News'
-import HelpAndSupportScreen from './src/screens/Paygwa/HelpAndSupport'
+import SurveyScreen from './src/screens/Survey';
+import NewsScreen from './src/screens/News'
+import HelpAndSupportScreen from './src/screens/HelpAndSupport'
 
 import { CustomDrawerContent } from './src/components';
 import { Root, Container } from "native-base";

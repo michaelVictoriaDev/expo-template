@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Container, Right, Content, List, ListItem, Separator, Text, Left, Body, View, Button, Icon, Indic} from 'native-base';
 import { KeyboardAvoidingView , TextInput } from 'react-native'
 import { connect } from 'react-redux';
-import { colors, pRatioToFontSize } from '../../utils/constants';
+import { colors, pRatioToFontSize } from '../utils/constants';
 import _ from 'lodash';
-import CustomText from '../../components/CustomText';
-import CustomTextBold from '../../components/CustomTextBold';
-import OfflineNotice from '../../components/OfflineNotice';
-import CustomHeader from '../../components/MultiCustomHeader'
+import CustomText from '../components/CustomText';
+import CustomTextBold from '../components/CustomTextBold';
+import OfflineNotice from '../components/OfflineNotice';
+import CustomHeader from '../components/MultiCustomHeader'
 import { Grid, Row, Col } from 'react-native-easy-grid';
 
 import Image from 'react-native-image-progress';

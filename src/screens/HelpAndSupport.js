@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Container, Right, Content, Item, ListItem, Separator, Text, Left, Body, View, Button, Icon, Form, Picker, Footer, FooterTab, Input, Toast } from 'native-base';
 import { KeyboardAvoidingView, TextInput, ActivityIndicator, Keyboard } from 'react-native'
 import { connect } from 'react-redux';
-import { colors, pRatioToFontSize } from '../../utils/constants';
+import { colors, pRatioToFontSize } from '../utils/constants';
 import _ from 'lodash';
-import CustomText from '../../components/CustomText';
-import CustomTextBold from '../../components/CustomTextBold';
-import OfflineNotice from '../../components/OfflineNotice';
-import CustomHeader from '../../components/MultiCustomHeader'
+import CustomText from '../components/CustomText';
+import CustomTextBold from '../components/CustomTextBold';
+import OfflineNotice from '../components/OfflineNotice';
+import CustomHeader from '../components/MultiCustomHeader'
 import { Grid, Row, Col } from 'react-native-easy-grid';
 import { PAYGWA_URL, DASHBOARD_URL, PAYNOW_URL } from 'react-native-dotenv';
 import axios from 'react-native-axios'

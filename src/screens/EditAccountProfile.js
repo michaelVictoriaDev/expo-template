@@ -2,16 +2,16 @@ import React, { Component, Fragment } from 'react';
 import { Container, Right, Content, List, ListItem, Separator, Text, View, Button, Icon, Item, Picker, Toast, Spinner, Header, Title, Left, Body } from 'native-base';
 import { TextInput, Keyboard, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
-import { colors, pRatioToFontSize } from '../../utils/constants';
+import { colors, pRatioToFontSize } from '../utils/constants';
 import _ from 'lodash';
-import CustomText from '../../components/CustomText';
-import CustomTextBold from '../../components/CustomTextBold';
-import OfflineNotice from '../../components/OfflineNotice';
-import CustomHeader from '../../components/MultiCustomHeader'
+import CustomText from '../components/CustomText';
+import CustomTextBold from '../components/CustomTextBold';
+import OfflineNotice from '../components/OfflineNotice';
+import CustomHeader from '../components/MultiCustomHeader'
 import { Grid, Row, Col } from 'react-native-easy-grid';
 import axios from 'react-native-axios';
 import { PAYGWA_URL, DASHBOARD_URL, PAYNOW_URL } from 'react-native-dotenv';
-import { fetchOldUserDetails, getSequQuestions, getCountry, updateUserDetails, updateUserPassword } from '../../actions/userMyAccounts'
+import { fetchOldUserDetails, getSequQuestions, getCountry, updateUserDetails, updateUserPassword } from '../actions/userMyAccounts'
 
 class EditAccountProfile extends Component {
 

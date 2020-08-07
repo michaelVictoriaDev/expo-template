@@ -2,20 +2,20 @@ import React, { Component } from 'react';
 import { StyleSheet, PixelRatio, Image, Keyboard, Dimensions, Linking, ImageBackground, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux';
 import { View, Input, Item, Button, Toast, Tab, Tabs, Header, Container, Content } from 'native-base';
-import { colors, pRatioToFontSize } from '../../utils/constants';
-import { fetchLogin } from '../../actions';
+import { colors, pRatioToFontSize } from '../utils/constants';
+import { fetchLogin } from '../actions';
 import _, { times } from 'lodash';
 import * as AppAuth from 'expo-app-auth';
-import CustomText from '../../components/CustomText';
-import CustomTextBold from '../../components/CustomTextBold';
-import CustomTextMedium from '../../components/CustomTextMedium';
-import Offline from '../../components/OfflineNotice';
+import CustomText from '../components/CustomText';
+import CustomTextBold from '../components/CustomTextBold';
+import CustomTextMedium from '../components/CustomTextMedium';
+import Offline from '../components/OfflineNotice';
 import * as Font from 'expo-font';
 import Modal from 'react-native-modal';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'react-native-axios'
 import { PAYGWA_URL, DASHBOARD_URL, PAYNOW_URL } from 'react-native-dotenv';
-import NavigationService from '../../NavigationService'
+import NavigationService from '../NavigationService'
 
 class Login extends Component {
 
@@ -420,8 +420,8 @@ class Login extends Component {
     async componentDidMount() {
 
         await Font.loadAsync({
-            'Lato': require('../../../assets/fonts/Lato-Regular.ttf'),
-            'Lato_Bold': require('../../../assets/fonts/Lato-Bold.ttf')
+            'Lato': require('../../assets/fonts/Lato-Regular.ttf'),
+            'Lato_Bold': require('../../assets/fonts/Lato-Bold.ttf')
         });
         await this.getPixelRatio();
         this.keyboardDidShowListener = Keyboard.addListener(
@@ -457,7 +457,7 @@ class Login extends Component {
                 <Container style={{ backgroundColor: colors.WHITE }} >
                    
 
-                    <ImageBackground source={require('../../../assets/back-ground.png')} style={{ width: '100%', height: '100%' }}>
+                    <ImageBackground source={require('../../assets/back-ground.png')} style={{ width: '100%', height: '100%' }}>
                     <Content style={[styles.container]}>
              
                         <Offline />
